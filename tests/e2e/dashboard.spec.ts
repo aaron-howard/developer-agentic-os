@@ -19,7 +19,10 @@ test.describe("Developer Agentic OS dashboard", () => {
 
   test("shows the live workspace switcher and keeps the active selection after reload", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByRole("heading", { name: "Workspace Switcher" })).toBeVisible();
+    const switcher = page.getByRole("button", { name: "Workspace Switcher: Change the active repository context" });
+    await expect(switcher).toBeVisible();
+    await switcher.click();
+    await expect(page.locator("#workspace-switcher")).toBeVisible();
     const repositories = page.getByRole("button", { name: /Git available|Git unavailable/ });
     const count = await repositories.count();
     if (count > 0) {

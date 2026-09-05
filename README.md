@@ -11,15 +11,9 @@ npm install
 npm run dev
 ```
 
-Open `http://localhost:3000/`.
+Open `http://localhost:3000/`. This is the live application and includes the current Workspace, Work Queue, routine executor, and Second Brain updates.
 
-The approved static visual reference remains available at `index.html`:
-
-```powershell
-python -m http.server 5173
-```
-
-Then open `http://127.0.0.1:5173/index.html`.
+The approved static visual reference remains available at `index.html`, but it is a frozen prototype and does not receive React/Next application updates. Use the Next.js app above for the current experience.
 
 ## Local Store
 
@@ -86,7 +80,7 @@ npm run test:e2e
 npm run build
 ```
 
-Expected status for a healthy checkout: every command exits with code `0`; the unit and contract suite reports 20 passing tests, and the Playwright suite reports 10 passing desktop/mobile smoke tests. Playwright uses a local dev server on port `3100` and installs Chromium with:
+Expected status for a healthy checkout: every command exits with code `0`; the unit and contract suite reports 36 passing tests, and the Playwright suite reports 16 passing desktop/mobile smoke tests. Playwright uses an isolated local dev server on port `3100` and installs Chromium with:
 
 ```powershell
 npx playwright install chromium

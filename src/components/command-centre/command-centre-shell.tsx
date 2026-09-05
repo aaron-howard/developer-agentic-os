@@ -31,6 +31,8 @@ import {
   Search,
   Settings,
   SlidersHorizontal,
+  PanelLeftClose,
+  PanelRightClose,
   Timer,
   Zap,
   CheckCircle2,
@@ -38,6 +40,7 @@ import {
 } from "lucide-react";
 
 const microApps: Array<{ icon: LucideIcon; title: string; description: string }> = [
+  { icon: GitBranch, title: "Workspace Switcher", description: "Change the active repository context" },
   { icon: Image, title: "Generations", description: "Every image and video generated" },
   { icon: Monitor, title: "Teleprompter", description: "Scripted workspace camera" },
   { icon: Route, title: "Second Brain", description: "Workspace graph and living map" },
@@ -272,6 +275,10 @@ async function requireOk<T>(response: Response): Promise<T> {
 
 export function CommandCentreShell() {
   const [layoutOpen, setLayoutOpen] = useState(false);
+  const [leftRailOpen, setLeftRailOpen] = useState(true);
+  const [rightRailOpen, setRightRailOpen] = useState(true);
+  const [renderOrbitSize, setRenderOrbitSize] = useState(baselineLayout.orbitSize);
+  const [workspaceSwitcherOpen, setWorkspaceSwitcherOpen] = useState(false);
   const [integrationOpen, setIntegrationOpen] = useState(false);
   const [graph, setGraph] = useState<ClientGraph | null>(null);
   const [dashboard, setDashboard] = useState<DashboardData>({ artifacts: [], skills: [], routines: [], integrations: [], executor: { running: false, leaseExpiresAt: null, lastTickAt: null, lastRunAt: null, lastError: null } });
@@ -302,6 +309,15 @@ export function CommandCentreShell() {
     const { width, height } = element.getBoundingClientRect();
     initialResizeSizes.current.set(id, { width, height });
     activeResizeIds.current.add(id);
+  }, []);
+
+  const orbitRef = useCallback((node: HTMLDivElement | null) => {
+    if (!node) return;
+    const update = () => setRenderOrbitSize(Math.round(node.getBoundingClientRect().width));
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(node);
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
@@ -487,30 +503,8 @@ export function CommandCentreShell() {
     : orbitIcons.map((_, index) => ({ id: `placeholder:${index}`, type: "file" as const, label: `Node ${index + 1}` }));
 
   return (
-    <main className="app-shell" aria-label="Developer Agentic OS dashboard" style={{ "--app-max-width": `${layout.pageWidth}px`, "--orbit-size": `${layout.orbitSize}px` } as CSSProperties}>
+    <main className={`app-shell ${leftRailOpen ? "" : "left-rail-collapsed"} ${rightRailOpen ? "" : "right-rail-collapsed"}`} aria-label="Developer Agentic OS dashboard" style={{ "--app-max-width": `${layout.pageWidth}px`, "--orbit-size": `${layout.orbitSize}px` } as CSSProperties}>
       <aside className="rail" aria-label="Micro applications and calendar">
-        <section className="module workspace-switcher" aria-label="Workspace Switcher">
-          <ModuleHeading icon={GitBranch} title="Workspace Switcher" />
-          {workspaceLoading ? <p className="dashboard-placeholder">Loading repositories...</p> : null}
-          {workspaceError ? <p className="dashboard-banner error">{workspaceError}</p> : null}
-          {workspace ? (
-            <div className="repository-list" role="list" aria-label="Registered repositories">
-              {workspace.repositories.map((repository) => (
-                <button className={`repository-option ${repository.id === workspace.context.id ? "active" : ""}`} key={repository.id} type="button" aria-pressed={repository.id === workspace.context.id} onClick={() => void switchRepository(repository.id)}>
-                  <span className="repository-main">
-                    <strong>{repository.name}</strong>
-                    <small>{repository.git.available ? repository.git.currentBranch ?? "detached HEAD" : "Git unavailable"}</small>
-                  </span>
-                  <span className="repository-meta">
-                    <span className={`git-indicator ${repository.git.available ? "connected" : "unavailable"}`} title={repository.git.message} aria-label={repository.git.available ? "Git available" : "Git unavailable"} />
-                    <small>{repository.git.available ? `${repository.git.recentCommits.length} recent` : "No activity"}</small>
-                  </span>
-                </button>
-              ))}
-            </div>
-          ) : null}
-          {workspace?.repositories.length === 0 ? <p className="dashboard-placeholder">No registered repositories.</p> : null}
-        </section>
         <section className="module resizable-widget" data-resizable-id="micro-apps" ref={resizeRef("micro-apps")} style={resizableStyle("micro-apps", layout)} onPointerDown={(event) => markResizeStart("micro-apps", event.currentTarget)}>
           <ModuleHeading
             icon={Grip}
@@ -523,17 +517,39 @@ export function CommandCentreShell() {
           />
           <div className="micro-list">
             {microApps.map(({ icon: Icon, title, description }) => (
-              <article className="micro-app" key={title}>
+              <button className={`micro-app ${title === "Workspace Switcher" && workspaceSwitcherOpen ? "active" : ""}`} key={title} type="button" aria-label={`${title}: ${description}`} aria-expanded={title === "Workspace Switcher" ? workspaceSwitcherOpen : undefined} onClick={title === "Workspace Switcher" ? () => setWorkspaceSwitcherOpen((open) => !open) : undefined}>
                 <div className="app-icon">
                   <Icon size={14} aria-hidden="true" />
                 </div>
                 <div>
+                  <strong>{title}</strong>
                   <span>{description}</span>
                 </div>
                 <div className="signal-dots">---</div>
-              </article>
+              </button>
             ))}
           </div>
+          {workspaceSwitcherOpen ? <div className="workspace-switcher-detail" id="workspace-switcher" aria-label="Workspace Switcher">
+            {workspaceLoading ? <p className="dashboard-placeholder">Loading repositories...</p> : null}
+            {workspaceError ? <p className="dashboard-banner error">{workspaceError}</p> : null}
+            {workspace ? (
+              <div className="repository-list" role="list" aria-label="Registered repositories">
+                {workspace.repositories.map((repository) => (
+                  <button className={`repository-option ${repository.id === workspace.context.id ? "active" : ""}`} key={repository.id} type="button" aria-pressed={repository.id === workspace.context.id} onClick={() => void switchRepository(repository.id)}>
+                    <span className="repository-main">
+                      <strong>{repository.name}</strong>
+                      <small>{repository.git.available ? repository.git.currentBranch ?? "detached HEAD" : "Git unavailable"}</small>
+                    </span>
+                    <span className="repository-meta">
+                      <span className={`git-indicator ${repository.git.available ? "connected" : "unavailable"}`} title={repository.git.message} aria-label={repository.git.available ? "Git available" : "Git unavailable"} />
+                      <small>{repository.git.available ? `${repository.git.recentCommits.length} recent` : "No activity"}</small>
+                    </span>
+                  </button>
+                ))}
+              </div>
+            ) : null}
+            {workspace?.repositories.length === 0 ? <p className="dashboard-placeholder">No registered repositories.</p> : null}
+          </div> : null}
         </section>
 
         <section className="module resizable-widget" data-resizable-id="calendar" ref={resizeRef("calendar")} style={resizableStyle("calendar", layout)} onPointerDown={(event) => markResizeStart("calendar", event.currentTarget)}>
@@ -589,6 +605,8 @@ export function CommandCentreShell() {
             <button type="button" aria-label="Search"><Search size={16} /></button>
             <button type="button" aria-label="Apps"><LayoutGrid size={16} /></button>
             <button type="button" aria-label="Integration status" onClick={() => setIntegrationOpen((open) => !open)}><Info size={16} /></button>
+            <button type="button" aria-label={`${leftRailOpen ? "Collapse" : "Expand"} left rail`} onClick={() => setLeftRailOpen((open) => !open)}><PanelLeftClose size={16} /></button>
+            <button type="button" aria-label={`${rightRailOpen ? "Collapse" : "Expand"} right rail`} onClick={() => setRightRailOpen((open) => !open)}><PanelRightClose size={16} /></button>
             <button type="button" aria-label="Layout" onClick={() => setLayoutOpen(true)}><SlidersHorizontal size={16} /></button>
           </nav>
           {integrationOpen ? (
@@ -608,8 +626,8 @@ export function CommandCentreShell() {
           {actionStatus ? <p className="dashboard-banner" role="status">{actionStatus}</p> : null}
         </header>
         <div className="orbital-stage">
-          <Constellation />
-          <div className="orbit">
+          <div className="orbit" ref={orbitRef} style={{ "--orbit-radius": `${renderOrbitSize / 2}px` } as CSSProperties}>
+            <Constellation />
             <div className="core-cluster" />
             {graph ? <GraphLinks graph={graph} nodes={graphNodes} /> : null}
             <div className="node-ring">
@@ -712,7 +730,7 @@ export function CommandCentreShell() {
         </section>
 
         <section className="module resizable-widget" data-resizable-id="routines" ref={resizeRef("routines")} style={resizableStyle("routines", layout)} onPointerDown={(event) => markResizeStart("routines", event.currentTarget)}>
-          <ModuleHeading icon={CircleDotDashed} title="Routines" action={<span className="routine-controls"><span className="tiny">{dashboard.executor.running ? "background on" : "background off"}</span><button className="outline-button" type="button" onClick={() => void controlExecutor(dashboard.executor.running ? "stop" : "start")}>{dashboard.executor.running ? "Stop" : "Start"}</button><button className="outline-button" type="button" onClick={() => void controlExecutor("trigger")}>Trigger</button></span>} />
+          <ModuleHeading icon={CircleDotDashed} title="Routines" action={<span className="routine-controls"><span className="tiny">{dashboard.executor.running ? "background on" : "background off"}</span><span className="routine-control-buttons"><button className="outline-button" type="button" onClick={() => void controlExecutor(dashboard.executor.running ? "stop" : "start")}>{dashboard.executor.running ? "Stop" : "Start"}</button><button className="outline-button" type="button" onClick={() => void controlExecutor("trigger")}>Trigger</button></span></span>} />
           <div className="routine-table">
             <div className="routine-header"><span>Time</span><span>Routine</span><span>Status</span></div>
             {dashboardLoading ? <div className="dashboard-placeholder">Loading routines...</div> : null}

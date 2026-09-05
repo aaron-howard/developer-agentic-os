@@ -40,7 +40,7 @@ body {
     var(--bg);
   background-size: 44px 44px, 44px 44px, auto, auto, auto;
   color: var(--foreground);
-  font-family: "Courier New", "IBM Plex Mono", monospace;
+  font-family: "IBM Plex Mono", "Courier New", monospace;
 }
 
 button,
@@ -54,7 +54,7 @@ a {
 }
 
 .app-shell {
-  width: min(var(--app-max-width), 100%);
+  width: min(var(--app-max-width), calc(100vw - 40px));
   min-height: 100vh;
   margin: 0 auto;
   padding: 28px 30px 34px;
@@ -62,12 +62,37 @@ a {
   grid-template-columns: minmax(280px, 360px) minmax(420px, 1fr) minmax(300px, 360px);
   gap: 20px;
   position: relative;
+  align-items: start;
+}
+
+.app-shell.left-rail-collapsed {
+  grid-template-columns: 0 minmax(420px, 1fr) minmax(300px, 360px);
+}
+
+.app-shell.right-rail-collapsed {
+  grid-template-columns: minmax(280px, 360px) minmax(420px, 1fr) 0;
+}
+
+.app-shell.left-rail-collapsed.right-rail-collapsed {
+  grid-template-columns: 0 minmax(420px, 1fr) 0;
+}
+
+.left-rail-collapsed > .rail,
+.right-rail-collapsed > .right-rail {
+  visibility: hidden;
+  overflow: hidden;
+  pointer-events: none;
 }
 
 .rail,
 .right-rail,
 .core {
   min-width: 0;
+}
+
+.core,
+.right-rail {
+  align-self: start;
 }
 
 .module {
@@ -85,6 +110,7 @@ a {
 
 .resizable-widget {
   resize: both;
+  max-width: none;
 }
 
 .resizable-widget::after {
@@ -347,6 +373,23 @@ h2 {
   gap: 10px;
   align-items: center;
   min-height: 34px;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.micro-app.active,
+.micro-app:hover {
+  background: rgba(243, 238, 229, 0.12);
+}
+
+.workspace-switcher-detail {
+  margin: 8px 0 2px 28px;
+  padding: 8px 0 2px;
+  border-top: 1px solid rgba(232, 216, 188, 0.12);
 }
 
 .app-icon {
@@ -368,7 +411,7 @@ h2 {
 .micro-app span {
   display: block;
   color: var(--muted);
-  font-size: 0.62rem;
+  font-size: 0.7rem;
   margin-top: 1px;
 }
 
@@ -654,22 +697,25 @@ h1 span {
 
 .orbital-stage {
   min-height: 620px;
+  height: max(760px, calc(var(--orbit-size) + 80px));
+  padding-top: 40px;
+  overflow: hidden;
   position: relative;
   display: grid;
-  place-items: center;
-  margin-top: -4px;
+  place-items: start center;
+  margin-top: 0;
 }
 
 .constellation {
   position: absolute;
-  inset: 8% 2% 2%;
-  width: 96%;
-  height: 90%;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
 }
 
 .orbit {
-  width: min(var(--orbit-size), 74vw);
+  width: min(var(--orbit-size), calc(100% - 48px), 74vw);
   aspect-ratio: 1;
   border: 1px solid rgba(232, 216, 188, 0.28);
   border-radius: 50%;
@@ -696,7 +742,7 @@ h1 span {
 .core-cluster {
   position: absolute;
   left: 50%;
-  top: 52%;
+  top: 50%;
   width: 190px;
   height: 190px;
   transform: translate(-50%, -50%);
@@ -751,7 +797,7 @@ h1 span {
   color: var(--foreground);
   display: grid;
   place-items: center;
-  transform: rotate(var(--angle)) translate(calc(min(var(--orbit-size), 74vw) / 2)) rotate(calc(-1 * var(--angle)));
+  transform: rotate(var(--angle)) translate(var(--orbit-radius)) rotate(calc(-1 * var(--angle)));
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04), 0 7px 18px var(--shadow);
 }
 
@@ -1172,17 +1218,19 @@ h1 span {
 
   .orbital-stage {
     min-height: 470px;
+    height: calc(min(420px, 82vw) + 64px);
+    padding-top: 32px;
   }
 
   .orbit {
-    width: min(420px, 82vw);
+    width: min(420px, calc(82vw - 48px));
   }
 
   .orb-node {
     width: 38px;
     height: 38px;
     margin: -19px;
-    transform: rotate(var(--angle)) translate(calc(min(420px, 82vw) / 2)) rotate(calc(-1 * var(--angle)));
+    transform: rotate(var(--angle)) translate(var(--orbit-radius)) rotate(calc(-1 * var(--angle)));
   }
 
   .orb-node small {
@@ -1265,4 +1313,27 @@ h1 span {
 .matrix-row button:hover {
   border-color: var(--orange);
   color: var(--orange);
+}
+
+.work-queue-module {
+  max-height: min(760px, calc(100vh - 56px));
+  overflow-y: auto;
+}
+
+.module-heading:has(.routine-controls) {
+  flex-wrap: wrap;
+}
+
+.routine-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  width: 100%;
+}
+
+.routine-control-buttons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
