@@ -99,6 +99,24 @@ test.describe("Developer Agentic OS dashboard", () => {
     await expect(email.getByRole("button")).toHaveCount(0);
   });
 
+  test("shows the operations provider catalog and refreshes integration health", async ({ page }) => {
+    let integrationRequests = 0;
+    await page.route("**/api/integrations**", async (route) => {
+      integrationRequests += 1;
+      await route.continue();
+    });
+
+    await page.goto("/");
+    await page.getByRole("button", { name: "Integration status" }).click();
+    const status = page.getByRole("status", { name: "Integration status" });
+    for (const name of ["Local Git", "GitHub", "Vercel", "Sentry", "Cloudflare", "CodeRabbit", "WorkOS", "Clerk", "Convex", "NeonDB", "Upstash", "Email", "Slack"]) {
+      await expect(status).toContainText(name);
+    }
+
+    await status.getByRole("button", { name: "Refresh integration status" }).click();
+    await expect.poll(() => integrationRequests).toBeGreaterThanOrEqual(2);
+  });
+
   test("creates, edits, finalizes, and inspects a Session Handoff", async ({ page }) => {
     await page.goto("/");
     const app = page.getByRole("button", { name: "Session Handoff: Draft and finalize repository context" });

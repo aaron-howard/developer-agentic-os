@@ -838,11 +838,51 @@ h1 span {
 
 .integration-row {
   display: flex;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
   padding: 7px 0;
   color: var(--muted);
   font-size: 0.68rem;
+}
+
+.integration-row > div {
+  display: grid;
+  gap: 3px;
+}
+
+.integration-row small {
+  max-width: 150px;
+  color: var(--muted);
+  font-size: 0.56rem;
+  line-height: 1.35;
+}
+
+.integration-popover-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 5px;
+  color: var(--text);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+}
+
+.integration-popover-heading button {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 1px solid rgba(232, 216, 188, 0.2);
+  color: var(--muted);
+  background: transparent;
+}
+
+.integration-popover-heading button:hover {
+  color: var(--text);
+  border-color: var(--teal);
 }
 
 .integration-status {
@@ -853,6 +893,20 @@ h1 span {
 
 .integration-status.connected {
   color: var(--teal);
+}
+
+.integration-status.unconfigured,
+.integration-status.deferred,
+.integration-status.available {
+  color: var(--muted);
+}
+
+.integration-status.healthy {
+  color: var(--teal);
+}
+
+.integration-status.unhealthy {
+  color: var(--orange);
 }
 
 .integration-status.error {

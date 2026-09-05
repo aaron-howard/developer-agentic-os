@@ -66,20 +66,40 @@ test("non-git folders return a clear unavailable git state", async () => {
   }
 });
 
-test("integration registry reports local git, optional github, and deferred integrations", async () => {
+test("integration registry reports the operations provider catalog and credential states", async () => {
   const root = await createGitRepo();
   try {
     const withoutToken = await getIntegrationStatuses(root, {});
     const localGit = withoutToken.find((integration) => integration.id === "local-git");
     const github = withoutToken.find((integration) => integration.id === "github");
-    const jira = withoutToken.find((integration) => integration.id === "jira");
+    const vercel = withoutToken.find((integration) => integration.id === "vercel");
+    const providerIds = withoutToken.map((integration) => integration.id);
+
+    assert.deepEqual(providerIds, [
+      "local-git",
+      "github",
+      "vercel",
+      "sentry",
+      "cloudflare",
+      "coderabbit",
+      "workos",
+      "clerk",
+      "convex",
+      "neondb",
+      "upstash",
+      "email",
+      "slack",
+    ]);
     assert.equal(localGit?.required, true);
     assert.equal(localGit?.status, "connected");
-    assert.equal(github?.status, "available");
-    assert.equal(jira?.status, "available");
+    assert.equal(github?.status, "unconfigured");
+    assert.equal(vercel?.status, "unconfigured");
+    assert.equal(withoutToken.find((integration) => integration.id === "sentry")?.status, "deferred");
+    assert.equal(withoutToken.find((integration) => integration.id === "email")?.status, "available");
 
-    const withToken = await getIntegrationStatuses(root, { GITHUB_TOKEN: "redacted-test-token" });
+    const withToken = await getIntegrationStatuses(root, { GITHUB_TOKEN: "redacted-test-token", VERCEL_TOKEN: "redacted-vercel-token" });
     assert.equal(withToken.find((integration) => integration.id === "github")?.status, "connected");
+    assert.equal(withToken.find((integration) => integration.id === "vercel")?.status, "connected");
   } finally {
     await rm(root, { recursive: true, force: true });
   }

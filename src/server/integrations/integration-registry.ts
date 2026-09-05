@@ -6,6 +6,7 @@ export async function getIntegrationStatuses(root = process.cwd(), env: Record<s
   const git = await new LocalGitAdapter(root).getStatus();
   const email = new LocalEmailAdapter(root, env).getStatus();
   const hasGitHubToken = Boolean(env.GITHUB_TOKEN || env.GH_TOKEN);
+  const hasVercelToken = Boolean(env.VERCEL_TOKEN || env.VERCEL_API_TOKEN);
 
   return [
     {
@@ -22,36 +23,48 @@ export async function getIntegrationStatuses(root = process.cwd(), env: Record<s
       name: "GitHub",
       kind: "scm",
       required: false,
-      status: hasGitHubToken ? "connected" : "available",
+      status: hasGitHubToken ? "connected" : "unconfigured",
       capabilities: ["PR metadata", "branch metadata"],
       setup: "Set GITHUB_TOKEN or GH_TOKEN to enable GitHub metadata.",
-      message: hasGitHubToken ? "GitHub token detected." : "GitHub is available when token credentials are present.",
+      message: hasGitHubToken ? "GitHub token detected." : "GitHub credentials are not configured.",
     },
-    available("gitlab", "GitLab", "scm", ["merge request metadata", "branch metadata"], "Deferred from the first build."),
-    available("jira", "Jira", "issue-tracker", ["issue state", "delivery context"], "Deferred from the first build."),
-    available("linear", "Linear", "issue-tracker", ["issue state", "cycle context"], "Deferred from the first build."),
-    available("slack", "Slack", "chat", ["routine notifications"], "Deferred from the first build."),
+    {
+      id: "vercel",
+      name: "Vercel",
+      kind: "cloud",
+      required: false,
+      status: hasVercelToken ? "connected" : "unconfigured",
+      capabilities: ["deployments", "build logs", "runtime logs"],
+      setup: "Set VERCEL_TOKEN or VERCEL_API_TOKEN to enable Vercel operations.",
+      message: hasVercelToken ? "Vercel token detected." : "Vercel credentials are not configured.",
+    },
+    deferred("sentry", "Sentry", "observability", ["events and outages", "breached metrics", "warnings", "traces", "errors"]),
+    deferred("cloudflare", "Cloudflare", "cloud", ["domains", "workers"]),
+    deferred("coderabbit", "CodeRabbit", "observability", ["code review insights"]),
+    deferred("workos", "WorkOS", "identity", ["identity health"]),
+    deferred("clerk", "Clerk", "identity", ["authentication health"]),
+    deferred("convex", "Convex", "database", ["health"]),
+    deferred("neondb", "NeonDB", "database", ["health"]),
+    deferred("upstash", "Upstash", "database", ["health"]),
     email,
-    available("observability", "Observability", "observability", ["release risk signals"], "Deferred from the first build."),
-    available("cloudflare", "Cloudflare", "cloud", ["edge sync", "D1 storage", "workflows"], "Deferred from the first build."),
+    deferred("slack", "Slack", "chat", ["routine notifications"]),
   ];
 }
 
-function available(
+function deferred(
   id: string,
   name: string,
   kind: IntegrationAdapterStatus["kind"],
   capabilities: string[],
-  message: string,
 ): IntegrationAdapterStatus {
   return {
     id,
     name,
     kind,
     required: false,
-    status: "available",
+    status: "deferred",
     capabilities,
-    setup: "Not required for the first build.",
-    message,
+    setup: "This integration is staged for a later milestone.",
+    message: "Health monitoring is staged for a later milestone.",
   };
 }

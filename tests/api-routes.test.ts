@@ -45,6 +45,12 @@ test("collection routes return their typed top-level contracts", async () => {
   assert.ok(Array.isArray(graphBody.links));
 });
 
+test("integration routes preserve repository context boundaries", async () => {
+  const response = await getIntegrations(new Request("http://localhost/api/integrations?repositoryId=missing-context"));
+  assert.equal(response.status, 404);
+  assert.match(JSON.stringify(await body(response)), /Repository context not found/);
+});
+
 test("artifact routes validate input and reject unknown artifacts", async () => {
   const invalid = await postArtifact(new Request("http://localhost/api/artifacts", { method: "POST", body: "{}" }));
   assert.equal(invalid.status, 400);

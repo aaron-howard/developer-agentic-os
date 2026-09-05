@@ -33,6 +33,7 @@ import {
   Play,
   Plus,
   Route,
+  RefreshCw,
   Search,
   Settings,
   SlidersHorizontal,
@@ -760,10 +761,17 @@ export function CommandCentreShell() {
           </nav>
           {integrationOpen ? (
             <div className="integration-popover" role="status" aria-label="Integration status">
+              <div className="integration-popover-heading">
+                <span>Operations health</span>
+                <button type="button" aria-label="Refresh integration status" title="Refresh integration status" onClick={() => void loadDashboard(workspace?.context.id)}><RefreshCw size={13} /></button>
+              </div>
               {dashboardLoading ? <span className="dashboard-placeholder">Loading integrations...</span> : null}
               {dashboard.integrations.map((integration) => (
                 <div className="integration-row" key={integration.id}>
-                  <span>{integration.name}</span>
+                  <div>
+                    <span>{integration.name}</span>
+                    <small>{integration.setup ?? integration.message}</small>
+                  </div>
                   <b className={`integration-status ${integration.status}`}>{integration.status}</b>
                 </div>
               ))}
