@@ -932,6 +932,11 @@ h1 span {
   white-space: nowrap;
 }
 
+.vercel-deployment {
+  display: grid;
+  gap: 3px;
+}
+
 .integration-status.error {
   color: var(--orange);
 }

@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { ArtifactIndexEntry } from "@/types/artifact";
 import type { IntegrationAdapterStatus } from "@/types/integration";
 import type { GitHubOperations } from "@/types/github";
+import type { VercelOperations } from "@/types/vercel";
 import type { RoutineDefinition, RoutineExecutorStatus } from "@/types/routine";
 import type { SkillCommand } from "@/types/skill";
 import type { RepositoryContext, RepositorySwitcherEntry } from "@/types/workspace";
@@ -295,6 +296,8 @@ export function CommandCentreShell() {
   const [integrationOpen, setIntegrationOpen] = useState(false);
   const [githubOperations, setGitHubOperations] = useState<GitHubOperations | null>(null);
   const [githubOperationsLoading, setGitHubOperationsLoading] = useState(false);
+  const [vercelOperations, setVercelOperations] = useState<VercelOperations | null>(null);
+  const [vercelOperationsLoading, setVercelOperationsLoading] = useState(false);
   const [graph, setGraph] = useState<ClientGraph | null>(null);
   const [dashboard, setDashboard] = useState<DashboardData>({ artifacts: [], skills: [], routines: [], integrations: [], focusBoard: null, executor: { running: false, leaseExpiresAt: null, lastTickAt: null, lastRunAt: null, lastError: null } });
   const [dashboardLoading, setDashboardLoading] = useState(true);
@@ -375,10 +378,11 @@ export function CommandCentreShell() {
       fetch(`/api/routines${contextQuery}`).then((response) => requireOk<{ routines: RoutineDefinition[]; executor: RoutineExecutorStatus }>(response)),
       fetch(`/api/integrations${contextQuery}`).then((response) => requireOk<{ integrations: IntegrationAdapterStatus[] }>(response)),
       fetch(`/api/integrations/github${contextQuery}`).then((response) => requireOk<GitHubOperations>(response)),
+      fetch(`/api/integrations/vercel${contextQuery}`).then((response) => requireOk<VercelOperations>(response)),
       fetch(`/api/focus-board${contextQuery}`).then((response) => requireOk<FocusBoard>(response)),
     ]);
 
-    const [graphResult, artifactsResult, skillsResult, routinesResult, integrationsResult, githubResult, focusBoardResult] = requests;
+    const [graphResult, artifactsResult, skillsResult, routinesResult, integrationsResult, githubResult, vercelResult, focusBoardResult] = requests;
     if (graphResult.status === "fulfilled") setGraph({ ...graphResult.value, links: graphResult.value.links ?? [] });
     const failures = requests.filter((result) => result.status === "rejected");
     setDashboard({
@@ -390,6 +394,7 @@ export function CommandCentreShell() {
       focusBoard: focusBoardResult.status === "fulfilled" ? focusBoardResult.value : null,
     });
     if (githubResult.status === "fulfilled") setGitHubOperations(githubResult.value);
+    if (vercelResult.status === "fulfilled") setVercelOperations(vercelResult.value);
     setDashboardError(failures.length ? "Some workspace data could not be loaded." : null);
     setDashboardLoading(false);
   }, []);
@@ -406,10 +411,27 @@ export function CommandCentreShell() {
     }
   }, []);
 
+  const loadVercelOperations = useCallback(async (repositoryId: string) => {
+    setVercelOperationsLoading(true);
+    try {
+      const result = await fetch(`/api/integrations/vercel?repositoryId=${encodeURIComponent(repositoryId)}`).then((response) => requireOk<VercelOperations>(response));
+      setVercelOperations(result);
+    } catch {
+      setVercelOperations(null);
+    } finally {
+      setVercelOperationsLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
     if (!integrationOpen || !workspace?.context.id || githubOperations) return;
     void loadGitHubOperations(workspace.context.id);
   }, [integrationOpen, loadGitHubOperations, workspace?.context.id]);
+
+  useEffect(() => {
+    if (!integrationOpen || !workspace?.context.id || vercelOperations) return;
+    void loadVercelOperations(workspace.context.id);
+  }, [integrationOpen, loadVercelOperations, vercelOperations, workspace?.context.id]);
 
   useEffect(() => {
     let isMounted = true;
@@ -785,7 +807,7 @@ export function CommandCentreShell() {
             <div className="integration-popover" role="status" aria-label="Integration status">
               <div className="integration-popover-heading">
                 <span>Operations health</span>
-                <button type="button" aria-label="Refresh integration status" title="Refresh integration status" onClick={() => { void loadDashboard(workspace?.context.id); if (workspace?.context.id) void loadGitHubOperations(workspace.context.id); }}><RefreshCw size={13} /></button>
+                <button type="button" aria-label="Refresh integration status" title="Refresh integration status" onClick={() => { void loadDashboard(workspace?.context.id); if (workspace?.context.id) { void loadGitHubOperations(workspace.context.id); void loadVercelOperations(workspace.context.id); } }}><RefreshCw size={13} /></button>
               </div>
               {dashboardLoading ? <span className="dashboard-placeholder">Loading integrations...</span> : null}
               {dashboard.integrations.map((integration) => (
@@ -808,6 +830,22 @@ export function CommandCentreShell() {
                     {githubOperations.issues.slice(0, 3).map((issue) => <a key={issue.number} href={issue.url} target="_blank" rel="noreferrer">Issue #{issue.number}: {issue.title}</a>)}
                     {githubOperations.pullRequests.slice(0, 3).map((pullRequest) => <a key={pullRequest.number} href={pullRequest.url} target="_blank" rel="noreferrer">PR #{pullRequest.number}: {pullRequest.title} ({pullRequest.mergeable})</a>)}
                     {githubOperations.actions.slice(0, 3).map((action) => <a key={action.id} href={action.url} target="_blank" rel="noreferrer">Action: {action.name} ({action.conclusion ?? action.status})</a>)}
+                  </>
+                ) : null}
+              </div>
+              <div className="github-operations" aria-label="Vercel operations">
+                <strong>Vercel operations</strong>
+                {vercelOperationsLoading ? <span className="dashboard-placeholder">Checking Vercel...</span> : null}
+                {!vercelOperationsLoading && vercelOperations ? (
+                  <>
+                    <span className={`integration-status ${vercelOperations.status}`}>{vercelOperations.message}</span>
+                    <span>Deployments: {vercelOperations.deployments.length}</span>
+                    {vercelOperations.deployments.slice(0, 3).map((deployment) => (
+                      <span key={deployment.id} className="vercel-deployment">
+                        <span>{deployment.name} ({deployment.state})</span>
+                        <span><a href={deployment.buildLogUrl} target="_blank" rel="noreferrer">Build logs</a> <a href={deployment.runtimeLogUrl} target="_blank" rel="noreferrer">Runtime logs</a></span>
+                      </span>
+                    ))}
                   </>
                 ) : null}
               </div>

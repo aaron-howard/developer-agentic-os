@@ -97,7 +97,7 @@ test("integration registry reports the operations provider catalog and credentia
     assert.equal(withoutToken.find((integration) => integration.id === "sentry")?.status, "deferred");
     assert.equal(withoutToken.find((integration) => integration.id === "email")?.status, "available");
 
-    const withToken = await getIntegrationStatuses(root, { GITHUB_TOKEN: "redacted-test-token", VERCEL_TOKEN: "redacted-vercel-token" });
+    const withToken = await getIntegrationStatuses(root, { GITHUB_TOKEN: "redacted-test-token", VERCEL_TOKEN: "redacted-vercel-token", VERCEL_PROJECT_ID: "prj_test" });
     assert.equal(withToken.find((integration) => integration.id === "github")?.status, "connected");
     assert.equal(withToken.find((integration) => integration.id === "vercel")?.status, "connected");
   } finally {

@@ -6,6 +6,7 @@ import { GET as getFocusBoard } from "../src/app/api/focus-board/route";
 import { GET as getArtifact } from "../src/app/api/artifacts/[id]/route";
 import { GET as getIntegrations } from "../src/app/api/integrations/route";
 import { GET as getGitHubOperations } from "../src/app/api/integrations/github/route";
+import { GET as getVercelOperations } from "../src/app/api/integrations/vercel/route";
 import { GET as getRepoIndex } from "../src/app/api/repo/index/route";
 import { POST as refreshRepo } from "../src/app/api/repo/refresh/route";
 import { GET as getRoutineRuns } from "../src/app/api/routine-runs/route";
@@ -97,6 +98,12 @@ test("repository routes reject unregistered roots", async () => {
 
 test("github operations route rejects an unknown repository context", async () => {
   const response = await getGitHubOperations(new Request("http://localhost/api/integrations/github?repositoryId=missing-context"));
+  assert.equal(response.status, 404);
+  assert.match(JSON.stringify(await body(response)), /Repository context not found/);
+});
+
+test("vercel operations route rejects an unknown repository context", async () => {
+  const response = await getVercelOperations(new Request("http://localhost/api/integrations/vercel?repositoryId=missing-context"));
   assert.equal(response.status, 404);
   assert.match(JSON.stringify(await body(response)), /Repository context not found/);
 });

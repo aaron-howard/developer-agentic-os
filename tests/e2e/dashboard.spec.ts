@@ -113,6 +113,7 @@ test.describe("Developer Agentic OS dashboard", () => {
       await expect(status).toContainText(name);
     }
     await expect(status).toContainText("GitHub operations");
+    await expect(status).toContainText("Vercel operations");
 
     await status.getByRole("button", { name: "Refresh integration status" }).click();
     await expect.poll(() => integrationRequests).toBeGreaterThanOrEqual(2);

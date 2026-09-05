@@ -7,6 +7,7 @@ export async function getIntegrationStatuses(root = process.cwd(), env: Record<s
   const email = new LocalEmailAdapter(root, env).getStatus();
   const hasGitHubToken = Boolean(env.GITHUB_TOKEN || env.GH_TOKEN);
   const hasVercelToken = Boolean(env.VERCEL_TOKEN || env.VERCEL_API_TOKEN);
+  const hasVercelProject = Boolean(env.VERCEL_PROJECT_ID);
 
   return [
     {
@@ -28,15 +29,24 @@ export async function getIntegrationStatuses(root = process.cwd(), env: Record<s
       setup: "Set GITHUB_TOKEN or GH_TOKEN and GITHUB_REPOSITORY to enable GitHub operations.",
       message: hasGitHubToken ? "GitHub credentials detected." : "GitHub credentials are not configured.",
     },
-    {
+    env.VERCEL_INTEGRATION_ENABLED === "false" ? {
       id: "vercel",
       name: "Vercel",
       kind: "cloud",
       required: false,
-      status: hasVercelToken ? "connected" : "unconfigured",
+      status: "disabled",
       capabilities: ["deployments", "build logs", "runtime logs"],
-      setup: "Set VERCEL_TOKEN or VERCEL_API_TOKEN to enable Vercel operations.",
-      message: hasVercelToken ? "Vercel token detected." : "Vercel credentials are not configured.",
+      setup: "Set VERCEL_INTEGRATION_ENABLED=true to enable Vercel operations.",
+      message: "Vercel integration is disabled by configuration.",
+    } : {
+      id: "vercel",
+      name: "Vercel",
+      kind: "cloud",
+      required: false,
+      status: hasVercelToken && hasVercelProject ? "connected" : "unconfigured",
+      capabilities: ["deployments", "build logs", "runtime logs"],
+      setup: "Set VERCEL_TOKEN or VERCEL_API_TOKEN and VERCEL_PROJECT_ID to enable Vercel operations.",
+      message: hasVercelToken && hasVercelProject ? "Vercel credentials detected." : "Vercel credentials or project configuration are missing.",
     },
     deferred("sentry", "Sentry", "observability", ["events and outages", "breached metrics", "warnings", "traces", "errors"]),
     deferred("cloudflare", "Cloudflare", "cloud", ["domains", "workers"]),
