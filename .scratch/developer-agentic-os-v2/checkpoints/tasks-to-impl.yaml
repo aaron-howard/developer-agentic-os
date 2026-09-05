@@ -1,0 +1,83 @@
+checkpoint: tasks-to-impl
+feature: developer-agentic-os-v2
+completed_tasks:
+  - id: "01"
+    title: "Scaffold Next.js App Shell"
+    ticket: ".scratch/developer-agentic-os-v2/issues/01-scaffold-nextjs-app-shell.md"
+    status: completed
+    requirements:
+      - "Developer Agentic OS opens as a real application"
+      - "Approved static prototype remains as visual reference"
+      - "Baseline validation commands are runnable"
+  - id: "02"
+    title: "Port Approved Command Centre UI"
+    ticket: ".scratch/developer-agentic-os-v2/issues/02-port-approved-command-centre-ui.md"
+    status: completed
+    requirements:
+      - "Root page renders the approved dark command-centre layout"
+      - "First screen includes Micro Apps, Calendar, Artifacts, Second Brain, Email, Skills Deck, and Routines"
+      - "Removed product references stay absent"
+  - id: "03"
+    title: "Add Layout Resizing And Reset"
+    ticket: ".scratch/developer-agentic-os-v2/issues/03-add-layout-resizing-and-reset.md"
+    status: completed
+    requirements:
+      - "Page and orbit sizing can be changed from the UI"
+      - "Widget and skill-card dimensions are bounded and persisted locally"
+      - "Reset Layout restores approved baseline dimensions"
+      - "Mobile resizing is vertical-only and avoids horizontal overflow"
+  - id: "04"
+    title: "Implement Local Store And Artifact Flow"
+    ticket: ".scratch/developer-agentic-os-v2/issues/04-implement-local-store-and-artifact-flow.md"
+    status: completed
+    requirements:
+      - "Local Store initializes automatically"
+      - "Artifacts are stored as JSON files with an index"
+      - "Artifacts can be listed and opened by ID"
+      - "Unsafe artifact IDs are rejected"
+  - id: "05"
+    title: "Implement Repo Memory And Local Git"
+    ticket: ".scratch/developer-agentic-os-v2/issues/05-implement-repo-memory-and-local-git.md"
+    status: completed
+    requirements:
+      - "Local git status is available for the workspace"
+      - "Current branch, recent commits, and changed files are detected"
+      - "Repo Memory Snapshot can be refreshed and persisted"
+      - "Non-git folders show a clear unavailable state"
+  - id: "06"
+    title: "Implement Integration Status Surface"
+    ticket: ".scratch/developer-agentic-os-v2/issues/06-implement-integration-status-surface.md"
+    status: completed
+    requirements:
+      - "Local git appears as mandatory and connected when available"
+      - "GitHub activates when token credentials exist and is available otherwise"
+      - "Deferred integrations appear available with setup guidance"
+  - id: "07"
+    title: "Implement Skill Registry And Built-In Skill Runs"
+    ticket: ".scratch/developer-agentic-os-v2/issues/07-implement-skill-registry-and-built-in-skill-runs.md"
+    status: completed
+    requirements:
+      - "Skill Registry lists built-in and placeholder skills"
+      - "Built-In Skill runs create Skill Run Records"
+      - "Successful durable outputs create Artifacts"
+      - "Failed runs record errors and do not create success Artifacts"
+      - "Required skill inputs are enforced"
+  - id: "08"
+    title: "Implement Routine Runs And History"
+    ticket: ".scratch/developer-agentic-os-v2/issues/08-implement-routine-runs-and-history.md"
+    status: completed
+    requirements:
+      - "Routines list real and placeholder definitions"
+      - "Manual routine runs create Routine Execution Records"
+      - "Durable routine output links produced Artifact IDs"
+      - "Pause and resume are supported per routine"
+validation:
+  lint: pass
+  typecheck: pass
+  test: pass
+  build: pass
+  browser_smoke: pass
+next_frontier:
+  - id: "09"
+    title: "Implement Second Brain Graph And Inspector"
+    ticket: ".scratch/developer-agentic-os-v2/issues/09-implement-second-brain-graph-and-inspector.md"

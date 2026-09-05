@@ -1,0 +1,23 @@
+# dependencies
+node_modules/
+
+# next.js
+.next/
+out/
+
+# local env
+.env
+.env*.local
+
+# local app state
+.developer-agentic-os/
+
+# build/test artifacts
+coverage/
+tsconfig.tsbuildinfo
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*

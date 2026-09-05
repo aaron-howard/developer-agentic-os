@@ -1,0 +1,838 @@
+"use client";
+
+import type { CSSProperties } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import type { ArtifactIndexEntry } from "@/types/artifact";
+import type { IntegrationAdapterStatus } from "@/types/integration";
+import type { RoutineDefinition, RoutineExecutorStatus } from "@/types/routine";
+import type { SkillCommand } from "@/types/skill";
+import type { RepositoryContext, RepositorySwitcherEntry } from "@/types/workspace";
+import type { WorkItem, WorkItemPriority, WorkItemStatus } from "@/types/work-item";
+import {
+  Archive,
+  BarChart3,
+  CalendarDays,
+  CircleDotDashed,
+  Database,
+  FileText,
+  GitBranch,
+  Globe,
+  Grip,
+  Image,
+  Info,
+  LayoutGrid,
+  Mail,
+  MailCheck,
+  Monitor,
+  PenTool,
+  Play,
+  Plus,
+  Route,
+  Search,
+  Settings,
+  SlidersHorizontal,
+  Timer,
+  Zap,
+  CheckCircle2,
+  type LucideIcon,
+} from "lucide-react";
+
+const microApps: Array<{ icon: LucideIcon; title: string; description: string }> = [
+  { icon: Image, title: "Generations", description: "Every image and video generated" },
+  { icon: Monitor, title: "Teleprompter", description: "Scripted workspace camera" },
+  { icon: Route, title: "Second Brain", description: "Workspace graph and living map" },
+  { icon: PenTool, title: "Excalidraw", description: "Hand-drawn diagrams ready to export" },
+];
+
+type DashboardData = {
+  artifacts: ArtifactIndexEntry[];
+  skills: SkillCommand[];
+  routines: RoutineDefinition[];
+  executor: RoutineExecutorStatus;
+  integrations: IntegrationAdapterStatus[];
+};
+
+type WorkspaceData = {
+  context: RepositoryContext;
+  repositories: RepositorySwitcherEntry[];
+};
+
+type LayoutState = {
+  pageWidth: number;
+  orbitSize: number;
+  widgetSizes: Record<string, { width: number; height: number }>;
+};
+
+type ClientGraphNode = {
+  id: string;
+  type: "repo" | "area" | "file" | "artifact" | "skill" | "work_item" | "routine";
+  label: string;
+  path?: string;
+  metadata?: Record<string, string | number | boolean | null>;
+};
+
+type ClientGraphLink = {
+  source: string;
+  target: string;
+  type: "contains" | "references" | "produced" | "used_context" | "triggers";
+};
+
+type ClientGraph = {
+  nodes: ClientGraphNode[];
+  links: ClientGraphLink[];
+};
+
+const layoutStorageKey = "developer-agentic-os-layout-v1";
+const baselineLayout: LayoutState = { pageWidth: 1480, orbitSize: 660, widgetSizes: {} };
+
+function usePersistedLayout() {
+  const [layout, setLayout] = useState<LayoutState>(baselineLayout);
+  const [hasLoadedLayout, setHasLoadedLayout] = useState(false);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(layoutStorageKey);
+      if (saved) setLayout({ ...baselineLayout, ...JSON.parse(saved) });
+    } catch {
+      setLayout(baselineLayout);
+    } finally {
+      setHasLoadedLayout(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!hasLoadedLayout) return;
+    localStorage.setItem(layoutStorageKey, JSON.stringify(layout));
+  }, [hasLoadedLayout, layout]);
+
+  const setPageWidth = useCallback((pageWidth: number) => setLayout((current) => ({ ...current, pageWidth })), []);
+  const setOrbitSize = useCallback((orbitSize: number) => setLayout((current) => ({ ...current, orbitSize })), []);
+  const setWidgetSize = useCallback((id: string, size: { width: number; height: number }) => {
+    setLayout((current) => {
+      const existing = current.widgetSizes[id];
+      if (existing && Math.abs(existing.width - size.width) < 1 && Math.abs(existing.height - size.height) < 1) return current;
+      return { ...current, widgetSizes: { ...current.widgetSizes, [id]: size } };
+    });
+  }, []);
+  const resetLayout = useCallback(() => {
+    localStorage.removeItem(layoutStorageKey);
+    setLayout(baselineLayout);
+  }, []);
+
+  return { layout, setPageWidth, setOrbitSize, setWidgetSize, resetLayout };
+}
+
+function useResizePersistence(
+  setWidgetSize: (id: string, size: { width: number; height: number }) => void,
+  activeResizeIds: { current: Set<string> },
+  initialResizeSizes: { current: Map<string, { width: number; height: number }> },
+) {
+  const observers = useRef(new Map<string, ResizeObserver>());
+
+  useEffect(() => () => {
+    observers.current.forEach((observer) => observer.disconnect());
+    observers.current.clear();
+  }, []);
+
+  return useCallback((id: string) => (node: HTMLElement | null) => {
+    observers.current.get(id)?.disconnect();
+    observers.current.delete(id);
+    if (!node) return;
+
+    const observer = new ResizeObserver(([entry]) => {
+      if (!entry) return;
+      if (!activeResizeIds.current.has(id)) return;
+      const initial = initialResizeSizes.current.get(id);
+      const { width, height } = node.getBoundingClientRect();
+      if (initial && Math.abs(initial.width - width) < 1 && Math.abs(initial.height - height) < 1) return;
+      setWidgetSize(id, { width: Math.round(width), height: Math.round(height) });
+    });
+    observer.observe(node);
+    observers.current.set(id, observer);
+  }, [activeResizeIds, initialResizeSizes, setWidgetSize]);
+}
+
+function resizableStyle(id: string, layout: LayoutState): CSSProperties | undefined {
+  const size = layout.widgetSizes[id];
+  return size ? { width: `${size.width}px`, height: `${size.height}px` } : undefined;
+}
+
+const orbitIcons: LucideIcon[] = [
+  Zap,
+  Zap,
+  Zap,
+  Mail,
+  Play,
+  BarChart3,
+  Globe,
+  Zap,
+  Zap,
+  Zap,
+  Database,
+  Timer,
+  Search,
+  Archive,
+  FileText,
+  Mail,
+  Play,
+  CircleDotDashed,
+  MailCheck,
+  FileText,
+  LayoutGrid,
+  GitBranch,
+  Monitor,
+  Database,
+  Info,
+  Zap,
+];
+
+function ModuleHeading({ icon: Icon, title, action }: { icon: LucideIcon; title: string; action?: React.ReactNode }) {
+  return (
+    <div className="module-heading">
+      <div className="heading-left">
+        <Icon className="icon-box" aria-hidden="true" size={19} />
+        <h2>{title}</h2>
+      </div>
+      {action}
+    </div>
+  );
+}
+
+function OutlineButton({ children }: { children: React.ReactNode }) {
+  return (
+    <button className="outline-button" type="button">
+      {children}
+    </button>
+  );
+}
+
+function Constellation() {
+  const dots = Array.from({ length: 72 }, (_, index) => {
+    const angle = index * 137.5;
+    const radius = 24 + (index % 18) * 10;
+    const x = 350 + Math.cos((angle * Math.PI) / 180) * radius;
+    const y = 318 + Math.sin((angle * Math.PI) / 180) * radius * 0.86;
+    return { x, y, hot: index % 11 === 0 };
+  });
+
+  return (
+    <svg className="constellation" viewBox="0 0 700 620" role="img" aria-label="Workspace constellation map">
+      {dots.slice(0, 46).map((dot, index) => {
+        const target = dots[(index * 7 + 9) % dots.length];
+        return (
+          <line
+            key={`line-${index}`}
+            x1={dot.x.toFixed(1)}
+            y1={dot.y.toFixed(1)}
+            x2={target.x.toFixed(1)}
+            y2={target.y.toFixed(1)}
+            stroke="rgba(232,216,188,0.11)"
+            strokeWidth="1"
+          />
+        );
+      })}
+      {dots.map((dot, index) => (
+        <circle
+          key={`dot-${index}`}
+          cx={dot.x.toFixed(1)}
+          cy={dot.y.toFixed(1)}
+          r={dot.hot ? 2.2 : 1.3}
+          fill={dot.hot ? "#ff6a1b" : "rgba(243,238,229,0.58)"}
+        />
+      ))}
+    </svg>
+  );
+}
+
+function GraphLinks({ graph, nodes }: { graph: ClientGraph; nodes: ClientGraphNode[] }) {
+  const nodePositions = new Map(nodes.map((node, index) => [node.id, polarPosition(index, nodes.length)]));
+
+  return (
+    <svg className="graph-links" viewBox="0 0 100 100" aria-hidden="true">
+      {graph.links.map((link) => {
+        const source = nodePositions.get(link.source);
+        const target = nodePositions.get(link.target);
+        if (!source || !target) return null;
+        return <line className={`graph-link ${link.type}`} key={`${link.source}-${link.target}-${link.type}`} x1={source.x} y1={source.y} x2={target.x} y2={target.y} />;
+      })}
+    </svg>
+  );
+}
+
+function polarPosition(index: number, count: number): { x: number; y: number } {
+  const angle = ((360 / Math.max(count, 1)) * index - 90) * (Math.PI / 180);
+  const radius = 41;
+  return { x: 50 + Math.cos(angle) * radius, y: 50 + Math.sin(angle) * radius };
+}
+
+async function requireOk<T>(response: Response): Promise<T> {
+  if (!response.ok) throw new Error(`Request failed with ${response.status}`);
+  return response.json() as Promise<T>;
+}
+
+export function CommandCentreShell() {
+  const [layoutOpen, setLayoutOpen] = useState(false);
+  const [integrationOpen, setIntegrationOpen] = useState(false);
+  const [graph, setGraph] = useState<ClientGraph | null>(null);
+  const [dashboard, setDashboard] = useState<DashboardData>({ artifacts: [], skills: [], routines: [], integrations: [], executor: { running: false, leaseExpiresAt: null, lastTickAt: null, lastRunAt: null, lastError: null } });
+  const [dashboardLoading, setDashboardLoading] = useState(true);
+  const [dashboardError, setDashboardError] = useState<string | null>(null);
+  const [actionStatus, setActionStatus] = useState<string | null>(null);
+  const [configuredSkill, setConfiguredSkill] = useState<SkillCommand | null>(null);
+  const [selectedNode, setSelectedNode] = useState<ClientGraphNode | null>(null);
+  const [artifactContent, setArtifactContent] = useState<string | null>(null);
+  const [inspectorStatus, setInspectorStatus] = useState<string | null>(null);
+  const [workspace, setWorkspace] = useState<WorkspaceData | null>(null);
+  const [workspaceLoading, setWorkspaceLoading] = useState(true);
+  const [workspaceError, setWorkspaceError] = useState<string | null>(null);
+  const [workItems, setWorkItems] = useState<WorkItem[]>([]);
+  const [workItemStatusFilter, setWorkItemStatusFilter] = useState<WorkItemStatus | "all">("all");
+  const [workItemRepositoryFilter, setWorkItemRepositoryFilter] = useState<string>("active");
+  const [selectedWorkItem, setSelectedWorkItem] = useState<WorkItem | null>(null);
+  const [workItemTitle, setWorkItemTitle] = useState("");
+  const [workItemNotes, setWorkItemNotes] = useState("");
+  const [workItemPriority, setWorkItemPriority] = useState<WorkItemPriority>("normal");
+  const [workItemDueAt, setWorkItemDueAt] = useState("");
+  const [workItemReferences, setWorkItemReferences] = useState("");
+  const activeResizeIds = useRef(new Set<string>());
+  const initialResizeSizes = useRef(new Map<string, { width: number; height: number }>());
+  const { layout, setPageWidth, setOrbitSize, setWidgetSize, resetLayout } = usePersistedLayout();
+  const resizeRef = useResizePersistence(setWidgetSize, activeResizeIds, initialResizeSizes);
+  const markResizeStart = useCallback((id: string, element: HTMLElement) => {
+    const { width, height } = element.getBoundingClientRect();
+    initialResizeSizes.current.set(id, { width, height });
+    activeResizeIds.current.add(id);
+  }, []);
+
+  useEffect(() => {
+    const clearActiveResize = () => {
+      activeResizeIds.current.clear();
+      initialResizeSizes.current.clear();
+    };
+    window.addEventListener("pointerup", clearActiveResize);
+    return () => window.removeEventListener("pointerup", clearActiveResize);
+  }, []);
+
+  const loadDashboard = useCallback(async (repositoryId?: string) => {
+    setDashboardLoading(true);
+    const contextQuery = repositoryId ? `?repositoryId=${encodeURIComponent(repositoryId)}` : "";
+    const artifactQuery = repositoryId ? `?repositoryId=${encodeURIComponent(repositoryId)}&limit=6` : "?limit=6";
+    const requests = await Promise.allSettled([
+      fetch(`/api/second-brain/graph${contextQuery}`).then((response) => requireOk<ClientGraph>(response)),
+      fetch(`/api/artifacts${artifactQuery}`).then((response) => requireOk<{ artifacts: ArtifactIndexEntry[] }>(response)),
+      fetch("/api/skills").then((response) => requireOk<{ skills: SkillCommand[] }>(response)),
+      fetch(`/api/routines${contextQuery}`).then((response) => requireOk<{ routines: RoutineDefinition[]; executor: RoutineExecutorStatus }>(response)),
+      fetch(`/api/integrations${contextQuery}`).then((response) => requireOk<{ integrations: IntegrationAdapterStatus[] }>(response)),
+    ]);
+
+    const [graphResult, artifactsResult, skillsResult, routinesResult, integrationsResult] = requests;
+    if (graphResult.status === "fulfilled") setGraph({ ...graphResult.value, links: graphResult.value.links ?? [] });
+    const failures = requests.filter((result) => result.status === "rejected");
+    setDashboard({
+      artifacts: artifactsResult.status === "fulfilled" ? artifactsResult.value.artifacts : [],
+      skills: skillsResult.status === "fulfilled" ? skillsResult.value.skills : [],
+      routines: routinesResult.status === "fulfilled" ? routinesResult.value.routines : [],
+      executor: routinesResult.status === "fulfilled" ? routinesResult.value.executor : dashboard.executor,
+      integrations: integrationsResult.status === "fulfilled" ? integrationsResult.value.integrations : [],
+    });
+    setDashboardError(failures.length ? "Some workspace data could not be loaded." : null);
+    setDashboardLoading(false);
+  }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadWorkspace() {
+      try {
+        const [context, repositories] = await Promise.all([
+          fetch("/api/workspace/context").then((response) => requireOk<{ context: RepositoryContext }>(response)),
+          fetch("/api/workspace/repositories").then((response) => requireOk<{ repositories: RepositorySwitcherEntry[] }>(response)),
+        ]);
+        if (!isMounted) return;
+        setWorkspace({ context: context.context, repositories: repositories.repositories });
+        setWorkspaceError(null);
+        void loadDashboard(context.context.id);
+      } catch {
+        if (isMounted) setWorkspaceError("Workspace contexts could not be loaded.");
+      } finally {
+        if (isMounted) setWorkspaceLoading(false);
+      }
+    }
+
+    void loadWorkspace();
+    return () => {
+      isMounted = false;
+    };
+  }, [loadDashboard]);
+
+  const switchRepository = useCallback(async (id: string) => {
+    if (!workspace || id === workspace.context.id) return;
+    setWorkspaceError(null);
+    try {
+      const response = await fetch("/api/workspace/context", { method: "PUT", headers: { "content-type": "application/json" }, body: JSON.stringify({ id }) });
+      const result = await requireOk<{ context: RepositoryContext }>(response);
+      setWorkspace((current) => current ? { ...current, context: result.context } : current);
+      await loadDashboard();
+    } catch {
+      setWorkspaceError("Repository context could not be switched.");
+    }
+  }, [loadDashboard, workspace]);
+
+  const loadWorkItems = useCallback(async (repositoryId = workItemRepositoryFilter, status = workItemStatusFilter) => {
+    const params = new URLSearchParams();
+    if (repositoryId !== "all" && repositoryId !== "active") params.set("repositoryId", repositoryId);
+    if (status !== "all") params.set("status", status);
+    const response = await fetch(`/api/work-items?${params.toString()}`);
+    const result = await requireOk<{ workItems: WorkItem[] }>(response);
+    setWorkItems(result.workItems);
+  }, [workItemRepositoryFilter, workItemStatusFilter]);
+
+  useEffect(() => {
+    void loadWorkItems(workItemRepositoryFilter === "active" ? workspace?.context.id ?? "all" : workItemRepositoryFilter, workItemStatusFilter).catch(() => setWorkItems([]));
+  }, [loadWorkItems, workItemRepositoryFilter, workItemStatusFilter, workspace?.context.id]);
+
+  const createWorkItem = useCallback(async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!workspace?.context.id || !workItemTitle.trim()) return;
+    const contextRefs = workItemReferences.split("\n").map((value) => value.trim()).filter(Boolean).map((value) => {
+      const [kind, ...refParts] = value.split(":");
+      return { kind, ref: refParts.join(":").trim() };
+    });
+    const response = await fetch("/api/work-items", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ title: workItemTitle, notes: workItemNotes, priority: workItemPriority, dueAt: workItemDueAt || null, contextRefs, repositoryId: workspace.context.id }) });
+    if (!response.ok) return;
+    setWorkItemTitle("");
+    setWorkItemNotes("");
+    setWorkItemPriority("normal");
+    setWorkItemDueAt("");
+    setWorkItemReferences("");
+    await loadWorkItems(workItemRepositoryFilter === "active" ? workspace.context.id : workItemRepositoryFilter, workItemStatusFilter);
+  }, [loadWorkItems, workItemDueAt, workItemNotes, workItemPriority, workItemReferences, workItemRepositoryFilter, workItemStatusFilter, workItemTitle, workspace]);
+
+  const updateWorkItemStatus = useCallback(async (item: WorkItem, status: WorkItemStatus) => {
+    const response = await fetch(`/api/work-items/${item.id}`, { method: "PATCH", headers: { "content-type": "application/json" }, body: JSON.stringify({ status }) });
+    if (!response.ok) return;
+    const updated = await response.json() as WorkItem;
+    setSelectedWorkItem(updated);
+    await loadWorkItems(workItemRepositoryFilter === "active" ? workspace?.context.id ?? "all" : workItemRepositoryFilter, workItemStatusFilter);
+  }, [loadWorkItems, workItemRepositoryFilter, workItemStatusFilter, workspace?.context.id]);
+
+  const inspectNode = useCallback((node: ClientGraphNode) => {
+    setSelectedNode(node);
+    setArtifactContent(null);
+    setInspectorStatus(null);
+  }, []);
+
+  const runSkill = useCallback(async (skillId: string) => {
+    setActionStatus("Running skill...");
+    const response = await fetch(`/api/skills/${skillId}/run`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ repositoryId: workspace?.context.id }) });
+    setActionStatus(response.ok ? "Skill completed and artifact saved." : "Skill failed.");
+  }, [workspace?.context.id]);
+
+  const runRoutine = useCallback(async (routineId: string) => {
+    setActionStatus("Running routine...");
+    const response = await fetch(`/api/routines/${routineId}/run`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ repositoryId: workspace?.context.id }) });
+    setActionStatus(response.ok ? "Routine completed." : "Routine failed.");
+  }, [workspace?.context.id]);
+
+  const controlExecutor = useCallback(async (action: "start" | "stop" | "trigger") => {
+    setActionStatus(action === "start" ? "Starting background routines..." : action === "stop" ? "Stopping background routines..." : "Checking due routines...");
+    const response = await fetch("/api/routines/executor", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ action, repositoryId: workspace?.context.id }) });
+    setActionStatus(response.ok ? `Background executor ${action === "trigger" ? "checked" : `${action}ed`}.` : "Background executor action failed.");
+    if (response.ok) await loadDashboard(workspace?.context.id);
+  }, [loadDashboard, workspace?.context.id]);
+
+  const runInspectedSkill = useCallback(async () => {
+    if (!selectedNode || selectedNode.type !== "skill") return;
+    await runSkill(selectedNode.id.replace("skill:", ""));
+  }, [runSkill, selectedNode]);
+
+  const openInspectedArtifact = useCallback(async () => {
+    if (!selectedNode || selectedNode.type !== "artifact") return;
+    const repositoryQuery = workspace?.context.id ? `?repositoryId=${encodeURIComponent(workspace.context.id)}` : "";
+    const response = await fetch(`/api/artifacts/${selectedNode.id.replace("artifact:", "")}${repositoryQuery}`);
+    if (!response.ok) {
+      setInspectorStatus("Artifact could not be loaded.");
+      return;
+    }
+    const artifact = await response.json() as { content: unknown };
+    setArtifactContent(typeof artifact.content === "string" ? artifact.content : JSON.stringify(artifact.content, null, 2));
+    setInspectorStatus(null);
+  }, [selectedNode, workspace?.context.id]);
+
+  const copyInspectedPath = useCallback(async () => {
+    if (!selectedNode?.path) return;
+    await navigator.clipboard.writeText(selectedNode.path);
+    setInspectorStatus("Path copied.");
+  }, [selectedNode]);
+
+  const navigateInspectedNode = useCallback(async () => {
+    if (!selectedNode) return;
+    if (selectedNode.type === "repo") {
+      const repositoryId = selectedNode.metadata?.repositoryId;
+      if (typeof repositoryId === "string") await switchRepository(repositoryId);
+      setInspectorStatus("Active repository context selected.");
+      return;
+    }
+    if (selectedNode.type === "work_item") {
+      const item = workItems.find((candidate) => candidate.id === selectedNode.id.replace("work_item:", ""));
+      if (item) {
+        setSelectedWorkItem(item);
+        setSelectedNode(null);
+      } else setInspectorStatus("Work item is outside the current queue view.");
+    }
+  }, [selectedNode, switchRepository, workItems]);
+
+  const graphNodes = graph?.nodes.length
+    ? [...graph.nodes.filter((node) => ["repo", "work_item", "routine", "skill", "artifact"].includes(node.type)), ...graph.nodes.filter((node) => !["repo", "work_item", "routine", "skill", "artifact"].includes(node.type))].slice(0, orbitIcons.length)
+    : orbitIcons.map((_, index) => ({ id: `placeholder:${index}`, type: "file" as const, label: `Node ${index + 1}` }));
+
+  return (
+    <main className="app-shell" aria-label="Developer Agentic OS dashboard" style={{ "--app-max-width": `${layout.pageWidth}px`, "--orbit-size": `${layout.orbitSize}px` } as CSSProperties}>
+      <aside className="rail" aria-label="Micro applications and calendar">
+        <section className="module workspace-switcher" aria-label="Workspace Switcher">
+          <ModuleHeading icon={GitBranch} title="Workspace Switcher" />
+          {workspaceLoading ? <p className="dashboard-placeholder">Loading repositories...</p> : null}
+          {workspaceError ? <p className="dashboard-banner error">{workspaceError}</p> : null}
+          {workspace ? (
+            <div className="repository-list" role="list" aria-label="Registered repositories">
+              {workspace.repositories.map((repository) => (
+                <button className={`repository-option ${repository.id === workspace.context.id ? "active" : ""}`} key={repository.id} type="button" aria-pressed={repository.id === workspace.context.id} onClick={() => void switchRepository(repository.id)}>
+                  <span className="repository-main">
+                    <strong>{repository.name}</strong>
+                    <small>{repository.git.available ? repository.git.currentBranch ?? "detached HEAD" : "Git unavailable"}</small>
+                  </span>
+                  <span className="repository-meta">
+                    <span className={`git-indicator ${repository.git.available ? "connected" : "unavailable"}`} title={repository.git.message} aria-label={repository.git.available ? "Git available" : "Git unavailable"} />
+                    <small>{repository.git.available ? `${repository.git.recentCommits.length} recent` : "No activity"}</small>
+                  </span>
+                </button>
+              ))}
+            </div>
+          ) : null}
+          {workspace?.repositories.length === 0 ? <p className="dashboard-placeholder">No registered repositories.</p> : null}
+        </section>
+        <section className="module resizable-widget" data-resizable-id="micro-apps" ref={resizeRef("micro-apps")} style={resizableStyle("micro-apps", layout)} onPointerDown={(event) => markResizeStart("micro-apps", event.currentTarget)}>
+          <ModuleHeading
+            icon={Grip}
+            title="Micro Apps"
+            action={
+              <OutlineButton>
+                <Plus size={12} aria-hidden="true" /> Add App
+              </OutlineButton>
+            }
+          />
+          <div className="micro-list">
+            {microApps.map(({ icon: Icon, title, description }) => (
+              <article className="micro-app" key={title}>
+                <div className="app-icon">
+                  <Icon size={14} aria-hidden="true" />
+                </div>
+                <div>
+                  <span>{description}</span>
+                </div>
+                <div className="signal-dots">---</div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="module resizable-widget" data-resizable-id="calendar" ref={resizeRef("calendar")} style={resizableStyle("calendar", layout)} onPointerDown={(event) => markResizeStart("calendar", event.currentTarget)}>
+          <ModuleHeading icon={CalendarDays} title="Calendar" action={<OutlineButton>Open Cal</OutlineButton>} />
+          <div className="clock-card">
+            <div className="clock-face" aria-hidden="true" />
+            <div>
+              <div className="date-row">WK34 | Aug 20 2026 (Thu)</div>
+              <div className="main-time">02:32:43 pm</div>
+              <div className="caption">Aest synced</div>
+            </div>
+          </div>
+          <div className="tz-row">
+            <div className="tz"><strong>09:32 pm</strong><span>USA PT</span></div>
+            <div className="tz"><strong>12:32 am</strong><span>USA ET</span></div>
+            <div className="tz"><strong>05:32 am</strong><span>London</span></div>
+          </div>
+          <div className="quarter-grid" aria-label="Quarter heatmap">
+            {Array.from({ length: 56 }, (_, index) => (
+              <span className={`q-cell ${index === 25 ? "done" : index > 42 || index % 17 === 0 ? "dim" : ""}`} key={index} />
+            ))}
+          </div>
+          <div className="agenda">
+            <div className="agenda-row"><strong>Team standup</strong><time>3:30pm</time></div>
+            <div className="agenda-row"><strong>Partnership intro - Nordic SaaS</strong><time>5:00pm</time></div>
+            <div className="agenda-row"><strong>Team meet - sprint review</strong><time>6:30pm</time></div>
+          </div>
+        </section>
+
+        <section className="module resizable-widget" data-resizable-id="artifacts" ref={resizeRef("artifacts")} style={resizableStyle("artifacts", layout)} onPointerDown={(event) => markResizeStart("artifacts", event.currentTarget)}>
+          <ModuleHeading icon={Archive} title="Artifacts" action={<span className="tiny">{dashboard.artifacts.length} recent</span>} />
+          <div className="artifact-strip" aria-label="Recent artifact activity">
+            {dashboardLoading ? <span className="dashboard-placeholder">Loading artifacts...</span> : null}
+            {!dashboardLoading && dashboard.artifacts.length === 0 ? <span className="dashboard-placeholder">No artifacts yet.</span> : null}
+            {dashboard.artifacts.map((artifact, index) => (
+              <button className={`artifact-dot ${index % 3 === 0 ? "hot" : index % 3 === 1 ? "active" : ""}`} key={artifact.id} title={artifact.name} type="button" onClick={() => inspectNode({ id: `artifact:${artifact.id}`, type: "artifact", label: artifact.name, metadata: { artifactType: artifact.type, createdAt: artifact.createdAt } })}>
+                <span />
+                <small>{artifact.name}</small>
+              </button>
+            ))}
+          </div>
+        </section>
+      </aside>
+
+      <section className="core" aria-label="Central workspace graph">
+        <header className="brand">
+          <div className="brand-mark">
+            <span className="hex-mark" aria-hidden="true" />
+            <h1>Developer <span>Agentic OS</span></h1>
+          </div>
+          <p className="subtitle">Jay E | Developer Workspace</p>
+          <nav className="toolbar" aria-label="Workspace controls">
+            <button type="button" aria-label="Search"><Search size={16} /></button>
+            <button type="button" aria-label="Apps"><LayoutGrid size={16} /></button>
+            <button type="button" aria-label="Integration status" onClick={() => setIntegrationOpen((open) => !open)}><Info size={16} /></button>
+            <button type="button" aria-label="Layout" onClick={() => setLayoutOpen(true)}><SlidersHorizontal size={16} /></button>
+          </nav>
+          {integrationOpen ? (
+            <div className="integration-popover" role="status" aria-label="Integration status">
+              {dashboardLoading ? <span className="dashboard-placeholder">Loading integrations...</span> : null}
+              {dashboard.integrations.map((integration) => (
+                <div className="integration-row" key={integration.id}>
+                  <span>{integration.name}</span>
+                  <b className={`integration-status ${integration.status}`}>{integration.status}</b>
+                </div>
+              ))}
+              {!dashboardLoading && dashboard.integrations.length === 0 ? <span className="dashboard-placeholder">No integration status available.</span> : null}
+            </div>
+          ) : null}
+          {dashboardLoading ? <p className="dashboard-banner">Syncing workspace data...</p> : null}
+          {dashboardError ? <p className="dashboard-banner error">{dashboardError}</p> : null}
+          {actionStatus ? <p className="dashboard-banner" role="status">{actionStatus}</p> : null}
+        </header>
+        <div className="orbital-stage">
+          <Constellation />
+          <div className="orbit">
+            <div className="core-cluster" />
+            {graph ? <GraphLinks graph={graph} nodes={graphNodes} /> : null}
+            <div className="node-ring">
+              {graphNodes.map((node, index) => {
+                const Icon = iconForNode(node.type);
+                const angle = (360 / orbitIcons.length) * index - 90;
+                const tone = node.type === "artifact" ? "hot" : node.type === "skill" ? "blue" : "";
+                return (
+                  <button className={`orb-node ${tone}`} style={{ "--angle": `${angle}deg` } as CSSProperties} key={node.id} type="button" aria-label={node.type === "work_item" ? "Inspect graph work item" : `Inspect ${node.label}`} onClick={() => inspectNode(node)}>
+                    <Icon size={19} aria-hidden="true" />
+                    <small>{String(index + 1).padStart(2, "0")}</small>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside className="right-rail" aria-label="Email, skills, and routines">
+        <section className="module work-queue-module" aria-label="Work Queue">
+          <ModuleHeading icon={CheckCircle2} title="Work Queue" action={<span className="tiny">{workItems.length} visible</span>} />
+          <form className="work-item-capture" onSubmit={(event) => void createWorkItem(event)}>
+            <input aria-label="Work item title" placeholder="Capture a work item" value={workItemTitle} onChange={(event) => setWorkItemTitle(event.target.value)} />
+            <textarea aria-label="Work item notes" placeholder="Notes (optional)" value={workItemNotes} onChange={(event) => setWorkItemNotes(event.target.value)} />
+            <input aria-label="Work item due date" type="datetime-local" value={workItemDueAt} onChange={(event) => setWorkItemDueAt(event.target.value)} />
+            <textarea aria-label="Work item context references" placeholder="References: file:path or skill:id (one per line)" value={workItemReferences} onChange={(event) => setWorkItemReferences(event.target.value)} />
+            <div className="work-item-capture-row">
+              <select aria-label="Work item priority" value={workItemPriority} onChange={(event) => setWorkItemPriority(event.target.value as WorkItemPriority)}>
+                {(["low", "normal", "high", "urgent"] as const).map((priority) => <option key={priority} value={priority}>{priority}</option>)}
+              </select>
+              <button className="outline-button" type="submit"><Plus size={12} aria-hidden="true" /> Capture</button>
+            </div>
+          </form>
+          <div className="work-queue-filters">
+            <select aria-label="Filter work items by repository" value={workItemRepositoryFilter} onChange={(event) => setWorkItemRepositoryFilter(event.target.value)}>
+              <option value="active">Active repository</option>
+              <option value="all">All repositories</option>
+              {workspace?.repositories.map((repository) => <option key={repository.id} value={repository.id}>{repository.name}</option>)}
+            </select>
+            <select aria-label="Filter work items by status" value={workItemStatusFilter} onChange={(event) => setWorkItemStatusFilter(event.target.value as WorkItemStatus | "all")}>
+              <option value="all">All statuses</option>
+              {(["open", "in_progress", "blocked", "completed"] as const).map((status) => <option key={status} value={status}>{status.replace("_", " ")}</option>)}
+            </select>
+          </div>
+          <div className="work-item-list" aria-label="Work items">
+            {workItems.length === 0 ? <p className="dashboard-placeholder">No work items in this view.</p> : null}
+            {workItems.map((item) => (
+              <button className={`work-item-row ${item.status}`} key={item.id} type="button" onClick={() => setSelectedWorkItem(item)}>
+                <span><strong>{item.title}</strong><small>{item.priority} / {item.status.replace("_", " ")}</small></span>
+                {item.status === "completed" ? <CheckCircle2 size={14} aria-label="Completed" /> : null}
+              </button>
+            ))}
+          </div>
+        </section>
+        <section className="module resizable-widget" data-resizable-id="email" ref={resizeRef("email")} style={resizableStyle("email", layout)} onPointerDown={(event) => markResizeStart("email", event.currentTarget)}>
+          <ModuleHeading icon={Mail} title="Email" action={<span className="tiny">updated 5m ago</span>} />
+          <div className="email-count"><strong>47</strong><span>Emails<br />past 24h</span></div>
+          <div className="caption">Flagged - needs Jay</div>
+          <div className="mail-list">
+            <div className="mail-item"><MailCheck size={13} /><strong>Sponsorship proposal - AI dev tools brand</strong><time>2h</time></div>
+            <div className="mail-item"><MailCheck size={13} /><strong>Enterprise plan inquiry - 40 seats</strong><time>4h</time></div>
+            <div className="mail-item"><MailCheck size={13} /><strong>Partnership newsletter cross-promo</strong><time>7h</time></div>
+          </div>
+          <div className="mix-bar"><span /><span /><span /><span /></div>
+          <div className="mix-legend"><span>9 partners</span><span>14 leads</span><span>6 personal</span><span>18 other</span></div>
+          <p className="sync">Synced 02:36 PM - team@developer.local</p>
+        </section>
+
+        <section className="module resizable-widget" data-resizable-id="skills-deck" ref={resizeRef("skills-deck")} style={resizableStyle("skills-deck", layout)} onPointerDown={(event) => markResizeStart("skills-deck", event.currentTarget)}>
+          <ModuleHeading
+            icon={Zap}
+            title="Skills Deck"
+            action={
+              <OutlineButton>
+                <Plus size={12} aria-hidden="true" /> Add Skill
+              </OutlineButton>
+            }
+          />
+          <div className="skills-grid">
+            {dashboardLoading ? <span className="dashboard-placeholder">Loading skills...</span> : null}
+            {!dashboardLoading && dashboard.skills.length === 0 ? <span className="dashboard-placeholder">No skills available.</span> : null}
+            {dashboard.skills.map((skill) => {
+              const Icon = iconForSkill(skill.id);
+              return (
+              <article className="skill-card resizable-widget" data-resizable-id={`skill-${skill.id}`} ref={resizeRef(`skill-${skill.id}`)} style={resizableStyle(`skill-${skill.id}`, layout)} onPointerDown={(event) => markResizeStart(`skill-${skill.id}`, event.currentTarget)} key={skill.id}>
+                <div>
+                  <Icon className="skill-icon" size={22} aria-hidden="true" />
+                  <strong className="skill-title">{skill.command}</strong>
+                  <span><b className={`model ${skill.model.toLowerCase()}`}>{skill.model}</b> <span className="effort">{skill.effort}</span></span>
+                </div>
+                <div className="skill-actions">
+                  <button className="icon-button run" type="button" aria-label={`Run ${skill.command}`} onClick={() => void runSkill(skill.id)}><Play size={16} /></button>
+                  <button className="icon-button" type="button" aria-label={`Configure ${skill.command}`} onClick={() => setConfiguredSkill(skill)}><Settings size={15} /></button>
+                </div>
+              </article>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="module resizable-widget" data-resizable-id="routines" ref={resizeRef("routines")} style={resizableStyle("routines", layout)} onPointerDown={(event) => markResizeStart("routines", event.currentTarget)}>
+          <ModuleHeading icon={CircleDotDashed} title="Routines" action={<span className="routine-controls"><span className="tiny">{dashboard.executor.running ? "background on" : "background off"}</span><button className="outline-button" type="button" onClick={() => void controlExecutor(dashboard.executor.running ? "stop" : "start")}>{dashboard.executor.running ? "Stop" : "Start"}</button><button className="outline-button" type="button" onClick={() => void controlExecutor("trigger")}>Trigger</button></span>} />
+          <div className="routine-table">
+            <div className="routine-header"><span>Time</span><span>Routine</span><span>Status</span></div>
+            {dashboardLoading ? <div className="dashboard-placeholder">Loading routines...</div> : null}
+            {!dashboardLoading && dashboard.routines.length === 0 ? <div className="dashboard-placeholder">No routines available.</div> : null}
+            {dashboard.routines.map((routine) => (
+              <div className={`routine-row ${routine.status}`} key={routine.id}>
+                <span className="time-chip">{routine.scheduleLabel}</span>
+                <span><strong className="routine-name">{routine.name}<small className="routine-meta">{routine.kind} {routine.lastRunAt ? `| last ${formatRoutineTime(routine.lastRunAt)}` : "| not run"} {routine.nextDueAt ? `| next ${formatRoutineTime(routine.nextDueAt)}` : ""}</small></strong></span>
+                <span className="routine-actions">
+                  <span className={`status ${routine.status === "next" ? "next" : ""}`}>{routine.status}</span>
+                  {routine.kind === "built-in" ? <button className="icon-button run" type="button" aria-label={`Run ${routine.name}`} onClick={() => void runRoutine(routine.id)}><Play size={13} /></button> : null}
+                </span>
+              </div>
+            ))}
+          </div>
+        </section>
+      </aside>
+      {layoutOpen ? (
+        <div className="layout-popover" role="presentation" onClick={() => setLayoutOpen(false)}>
+          <section className="layout-panel" role="dialog" aria-modal="true" aria-labelledby="layout-title" onClick={(event) => event.stopPropagation()}>
+            <div className="layout-panel-header">
+              <h3 id="layout-title">Layout <span>resize</span></h3>
+              <button className="icon-button" type="button" aria-label="Close layout controls" onClick={() => setLayoutOpen(false)}>x</button>
+            </div>
+            <label className="layout-control" htmlFor="page-width-control">
+              <span>Page width</span>
+              <output>{layout.pageWidth}px</output>
+              <input id="page-width-control" type="range" min="1040" max="1680" step="20" value={layout.pageWidth} onChange={(event) => setPageWidth(Number(event.target.value))} />
+            </label>
+            <label className="layout-control" htmlFor="orbit-size-control">
+              <span>Orbit size</span>
+              <output>{layout.orbitSize}px</output>
+              <input id="orbit-size-control" type="range" min="480" max="780" step="10" value={layout.orbitSize} onChange={(event) => setOrbitSize(Number(event.target.value))} />
+            </label>
+            <button className="reset-layout-button" type="button" onClick={resetLayout}>Reset Layout</button>
+          </section>
+        </div>
+      ) : null}
+      {configuredSkill ? (
+        <div className="layout-popover" role="presentation" onClick={() => setConfiguredSkill(null)}>
+          <section className="layout-panel skill-config-panel" role="dialog" aria-modal="true" aria-labelledby="skill-config-title" onClick={(event) => event.stopPropagation()}>
+            <div className="layout-panel-header">
+              <h3 id="skill-config-title">{configuredSkill.command} <span>matrix</span></h3>
+              <button className="icon-button" type="button" aria-label="Close skill configuration" onClick={() => setConfiguredSkill(null)}>x</button>
+            </div>
+            <div className="model-effort-matrix" aria-label="Model by effort matrix">
+              <span />
+              {(["low", "medium", "high", "xhigh", "max"] as const).map((effort) => <strong key={effort}>{effort}</strong>)}
+              {(["sonnet", "opus", "fable"] as const).map((model) => (
+                <div className="matrix-row" key={model}>
+                  <b>{model}</b>
+                  {(["low", "medium", "high", "xhigh", "max"] as const).map((effort) => <button className={configuredSkill.model === model && configuredSkill.effort === effort ? "selected" : ""} key={effort} type="button" aria-label={`${model} ${effort}`} onClick={() => setConfiguredSkill({ ...configuredSkill, model, effort })}>+</button>)}
+                </div>
+              ))}
+            </div>
+            <p className="caption">Default: {configuredSkill.model} / {configuredSkill.effort}</p>
+          </section>
+        </div>
+      ) : null}
+      {selectedNode ? (
+        <aside className="inspector-panel" aria-label="Inspector Panel">
+          <div className="inspector-header">
+            <div>
+              <span className="tiny">{selectedNode.type}</span>
+              <h3>{selectedNode.label}</h3>
+            </div>
+            <button className="icon-button" type="button" aria-label="Close inspector" onClick={() => setSelectedNode(null)}>x</button>
+          </div>
+          {selectedNode.path ? <p className="inspector-line">Path: <code>{selectedNode.path}</code></p> : null}
+          {selectedNode.metadata ? Object.entries(selectedNode.metadata).map(([key, value]) => <p className="inspector-line" key={key}>{key}: <code>{String(value)}</code></p>) : null}
+          <div className="inspector-actions">
+            {selectedNode.type === "artifact" ? <button className="outline-button" type="button" onClick={openInspectedArtifact}>Open Artifact</button> : null}
+            {selectedNode.type === "skill" ? <button className="outline-button" type="button" onClick={runInspectedSkill}>Run Skill</button> : null}
+            {selectedNode.type === "routine" ? <button className="outline-button" type="button" onClick={() => void runRoutine(selectedNode.id.replace("routine:", ""))}>Run Routine</button> : null}
+            {selectedNode.type === "repo" || selectedNode.type === "work_item" ? <button className="outline-button" type="button" onClick={() => void navigateInspectedNode()}>{selectedNode.type === "repo" ? "Use Active Context" : "Open Work Item"}</button> : null}
+            {selectedNode.type === "file" ? <button className="outline-button" type="button" onClick={copyInspectedPath}>Copy Path</button> : null}
+            {(selectedNode.type === "repo" || selectedNode.type === "area") ? <button className="outline-button" type="button" onClick={() => window.location.reload()}>Refresh Graph</button> : null}
+          </div>
+          {inspectorStatus ? <p className="inspector-status">{inspectorStatus}</p> : null}
+          {artifactContent !== null ? <pre className="inspector-content">{artifactContent}</pre> : null}
+        </aside>
+      ) : null}
+      {selectedWorkItem ? (
+        <aside className="inspector-panel" aria-label="Work Item Inspector">
+          <div className="inspector-header">
+            <div><span className="tiny">work item / {selectedWorkItem.status}</span><h3>{selectedWorkItem.title}</h3></div>
+            <button className="icon-button" type="button" aria-label="Close work item inspector" onClick={() => setSelectedWorkItem(null)}>x</button>
+          </div>
+          <p className="inspector-line">Repository Context ID: <code>{selectedWorkItem.repositoryId}</code></p>
+          <p className="inspector-line">Priority: <code>{selectedWorkItem.priority}</code></p>
+          <p className="inspector-line">Due: <code>{selectedWorkItem.dueAt ?? selectedWorkItem.dueNote ?? "not set"}</code></p>
+          <p className="inspector-line">Notes: <code>{selectedWorkItem.notes || "none"}</code></p>
+          <p className="inspector-line">References: <code>{selectedWorkItem.contextRefs.length ? selectedWorkItem.contextRefs.map((reference) => `${reference.kind}:${reference.ref}`).join(", ") : "none"}</code></p>
+          <div className="inspector-actions">
+            {(["open", "in_progress", "blocked", "completed"] as const).filter((status) => status !== selectedWorkItem.status).map((status) => <button className="outline-button" key={status} type="button" onClick={() => void updateWorkItemStatus(selectedWorkItem, status)}>{status.replace("_", " ")}</button>)}
+          </div>
+          <div className="work-history"><span className="tiny">Completion history</span>{selectedWorkItem.statusHistory.map((change) => <p className="inspector-line" key={`${change.status}-${change.changedAt}`}><code>{change.status}</code> {new Date(change.changedAt).toLocaleString()}</p>)}</div>
+        </aside>
+      ) : null}
+    </main>
+  );
+}
+
+function iconForNode(type: ClientGraphNode["type"]): LucideIcon {
+  if (type === "repo") return Database;
+  if (type === "area") return LayoutGrid;
+  if (type === "artifact") return Archive;
+  if (type === "skill") return Zap;
+  if (type === "work_item") return CheckCircle2;
+  if (type === "routine") return Timer;
+  return FileText;
+}
+
+function iconForSkill(id: string): LucideIcon {
+  if (id.includes("branch")) return GitBranch;
+  if (id.includes("release")) return CircleDotDashed;
+  if (id.includes("sprint")) return CalendarDays;
+  return Zap;
+}
+
+function formatRoutineTime(value: string): string {
+  return new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }).format(new Date(value));
+}

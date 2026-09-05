@@ -1,0 +1,57 @@
+batch: "08-implement-routine-runs-and-history"
+status: completed
+artifact_path: ".scratch/developer-agentic-os-v2"
+required_endpoints: []
+tasks:
+  - id: "08"
+    title: "Implement Routine Runs And History"
+    status: completed
+    ticket: ".scratch/developer-agentic-os-v2/issues/08-implement-routine-runs-and-history.md"
+    acceptance:
+      - criterion: "The Routines panel lists real first-build routines and placeholder routines."
+        status: pass
+      - criterion: "A routine can be run manually from the UI."
+        status: pass
+      - criterion: "A routine can be paused and resumed."
+        status: pass
+      - criterion: "Routine status uses the approved lifecycle states."
+        status: pass
+      - criterion: "Every routine run creates a Routine Execution Record."
+        status: pass
+      - criterion: "Durable routine output links to produced Artifact IDs."
+        status: pass
+changes:
+  - "Added typed Routine Definition, Routine Status, Routine Execution Record, and Routine Run Result models."
+  - "Implemented RoutineHistoryStore under `.developer-agentic-os/routines/history.json`."
+  - "Implemented Routine Registry with three real routines and two placeholder routines."
+  - "Routines invoke Skill Registry handlers where behavior overlaps."
+  - "Manual routine runs record history and link produced Artifact IDs."
+  - "Added pause and resume behavior per routine."
+  - "Added `/api/routines`, `/api/routines/[id]/run`, `/api/routines/[id]/pause`, `/api/routines/[id]/resume`, and `/api/routine-runs` route handlers."
+  - "Added TypeScript behavior tests for routine listing, manual run, pause/resume, placeholder failure, and linked artifacts."
+validation:
+  - command: "npm test"
+    result: pass
+    tests: 18
+    passed: 18
+    failed: 0
+  - command: "npm run lint"
+    result: pass
+  - command: "npm run typecheck"
+    result: pass
+  - command: "npm run build"
+    result: pass
+  - command: "npm run dev"
+    result: pass
+  - command: "browser smoke at http://localhost:3000/"
+    result: pass
+    checks:
+      - "GET /api/routines returns three real routines and two placeholders"
+      - "POST /api/routines/weekly_sprint_digest/run succeeds and links an artifact"
+      - "GET /api/routine-runs returns recent routine history"
+      - "POST /api/routines/nightly_repo_digest/pause returns paused"
+      - "POST /api/routines/nightly_repo_digest/resume returns queued"
+      - "POST /api/routines/artifact_cleanup/run returns 422 for placeholder routine"
+warnings: []
+next_steps:
+  - "Work ticket 09: Implement Second Brain Graph And Inspector."
