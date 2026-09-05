@@ -12,6 +12,8 @@ export type LocalStorePaths = {
   skillRuns: string;
   routines: string;
   workItems: string;
+  incomingSignals: string;
+  handoffs: string;
 };
 
 export function getLocalStorePaths(root = process.cwd()): LocalStorePaths {
@@ -27,6 +29,8 @@ export function getLocalStorePaths(root = process.cwd()): LocalStorePaths {
     skillRuns: resolve(storeRoot, "skill-runs"),
     routines: resolve(storeRoot, "routines"),
     workItems: resolve(storeRoot, "work-items.json"),
+    incomingSignals: resolve(storeRoot, "incoming-signals.json"),
+    handoffs: resolve(storeRoot, "handoffs"),
   };
 }
 
@@ -38,6 +42,7 @@ export async function initializeLocalStore(root = process.cwd()): Promise<LocalS
     mkdir(paths.repoMemory, { recursive: true }),
     mkdir(paths.skillRuns, { recursive: true }),
     mkdir(paths.routines, { recursive: true }),
+    mkdir(paths.handoffs, { recursive: true }),
   ]);
   return paths;
 }

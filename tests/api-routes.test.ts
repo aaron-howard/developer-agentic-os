@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { GET as getArtifacts, POST as postArtifact } from "../src/app/api/artifacts/route";
+import { GET as getFocusBoard } from "../src/app/api/focus-board/route";
 import { GET as getArtifact } from "../src/app/api/artifacts/[id]/route";
 import { GET as getIntegrations } from "../src/app/api/integrations/route";
 import { GET as getRepoIndex } from "../src/app/api/repo/index/route";
@@ -22,6 +23,7 @@ async function body(response: Response): Promise<Record<string, unknown>> {
 
 test("collection routes return their typed top-level contracts", async () => {
   const artifacts = await getArtifacts(new Request("http://localhost/api/artifacts?limit=1"));
+  const focusBoard = await getFocusBoard(new Request("http://localhost/api/focus-board?limit=1"));
   const repo = await getRepoIndex();
   const skills = await getSkills();
   const skillRuns = await getSkillRuns(new Request("http://localhost/api/skill-runs?limit=1"));
@@ -32,6 +34,7 @@ test("collection routes return their typed top-level contracts", async () => {
   const graphBody = await body(graph);
 
   assert.ok(Array.isArray((await body(artifacts)).artifacts));
+  assert.ok(Array.isArray((await body(focusBoard)).workItems));
   assert.ok(Array.isArray((await body(repo)).files));
   assert.ok(Array.isArray((await body(skills)).skills));
   assert.ok(Array.isArray((await body(skillRuns)).runs));

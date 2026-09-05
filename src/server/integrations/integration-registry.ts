@@ -1,8 +1,10 @@
 import type { IntegrationAdapterStatus } from "@/types/integration";
+import { LocalEmailAdapter } from "../email/email-adapter";
 import { LocalGitAdapter } from "../git/local-git-adapter";
 
 export async function getIntegrationStatuses(root = process.cwd(), env: Record<string, string | undefined> = process.env): Promise<IntegrationAdapterStatus[]> {
   const git = await new LocalGitAdapter(root).getStatus();
+  const email = new LocalEmailAdapter(root, env).getStatus();
   const hasGitHubToken = Boolean(env.GITHUB_TOKEN || env.GH_TOKEN);
 
   return [
@@ -29,7 +31,7 @@ export async function getIntegrationStatuses(root = process.cwd(), env: Record<s
     available("jira", "Jira", "issue-tracker", ["issue state", "delivery context"], "Deferred from the first build."),
     available("linear", "Linear", "issue-tracker", ["issue state", "cycle context"], "Deferred from the first build."),
     available("slack", "Slack", "chat", ["routine notifications"], "Deferred from the first build."),
-    available("email", "Email", "email", ["communication signals"], "Placeholder widget in the first build."),
+    email,
     available("observability", "Observability", "observability", ["release risk signals"], "Deferred from the first build."),
     available("cloudflare", "Cloudflare", "cloud", ["edge sync", "D1 storage", "workflows"], "Deferred from the first build."),
   ];

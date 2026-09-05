@@ -2,7 +2,7 @@ export type WorkItemStatus = "open" | "in_progress" | "blocked" | "completed";
 export type WorkItemPriority = "low" | "normal" | "high" | "urgent";
 
 export type WorkItemContextReference = {
-  kind: "file" | "area" | "artifact" | "skill" | "routine";
+  kind: "file" | "area" | "artifact" | "skill" | "routine" | "incoming_signal";
   ref: string;
   label?: string;
 };

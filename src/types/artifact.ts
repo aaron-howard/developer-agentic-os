@@ -1,12 +1,12 @@
 export type ArtifactContent = string | number | boolean | null | ArtifactContent[] | { [key: string]: ArtifactContent };
 
 export type ContextReference = {
-  kind: "file" | "area" | "repo" | "skill" | "work_item" | "routine";
+  kind: "file" | "area" | "repo" | "repo_context" | "skill" | "work_item" | "routine" | "incoming_signal";
   ref: string;
 };
 
 export type WorkflowReference = {
-  kind: "skill" | "routine" | "work_item";
+  kind: "skill" | "routine" | "work_item" | "incoming_signal";
   ref: string;
   label?: string;
 };

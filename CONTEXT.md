@@ -114,6 +114,18 @@ A command-centre action that restores the approved baseline dimensions for the p
 ### Content-Safe Minimum
 The smallest allowed size for a resizable element before it would hide its title/action row or all meaningful content.
 
+### Phase Three
+The next product milestone after the first-build and Phase Two work. Phase Three focuses on reliable daily use for one developer working across multiple local repositories while remaining local-first.
+
+### Agent Inbox
+A source-neutral Micro App for unprocessed incoming context such as email signals, routine failures, notifications, and manually captured notes. It triages incoming context into dismissal, snoozing, Work Items, Skills, or Artifacts.
+
+### Today / Focus Board
+A Micro App that organizes the active Repository Context's current Work Items, due items, blocked items, recent Artifacts, and recommended next actions into one daily operating view.
+
+### Session Handoff
+A Micro App that captures the current work state, decisions, changes, blockers, and next actions as a durable handoff Artifact for a later session or agent.
+
 ## Clarified Distinctions
 
 ### Skill vs Routine
@@ -164,6 +176,9 @@ A Context Reference is explicitly recorded by a workflow. An inferred relationsh
 ### Routine Status vs UI Label
 Routine Status is the internal state. A UI label may use display language such as `Fired` for `succeeded`.
 
+### Communication Signal vs Work Item
+A Communication Signal is incoming context that may require triage. A Work Item is an intentional actionable commitment created from a signal or directly by the developer. Signals do not become Work Items automatically.
+
 ## Relationship Rules
 
 - The command centre is the front door to the Agentic OS.
@@ -191,6 +206,23 @@ Routine Status is the internal state. A UI label may use display language such a
 - The first-build Second Brain graph contains repo, area, file, artifact, and skill nodes.
 - First-build graph links are contains, references, produced, and used_context.
 - Artifacts connect to files or areas through explicit Context References.
+- Phase Three keeps Email as a communication-signal source for Agent Inbox rather than making Email itself a Work Queue.
+- Phase Three's replacement Micro Apps are Today / Focus Board, Agent Inbox, and Session Handoff; Workspace Switcher and Second Brain remain valuable existing Micro Apps.
+- Agent Inbox is source-neutral and may receive Email, routine failures, repository notifications, or manual notes.
+- Work Queue owns actionable Work Items, while Agent Inbox owns triage of incoming context.
+- Phase Three Agent Inbox begins with Email signals and manual notes behind a generic incoming-signal contract.
+- Triage preserves the incoming signal and creates a separate linked Work Item when action is required.
+- Today / Focus Board shows active Work Items, due items, blocked items, recent Artifacts, and failed workflows; it is not a general project-management suite.
+- Session Handoff is manually created, with a dedicated Skill available to generate a durable handoff Artifact.
+- A Session Handoff includes Repository Context, branch and changed files, Work Items, Artifacts, Skill Runs, decisions, blockers, and next actions.
+- Phase Three is complete when the communication-signal-to-handoff workflow works across multiple repositories with provenance and reset/migration coverage; external email-provider integration remains optional.
+- Phase Three uses a provider-neutral Email adapter with local/demo signals by default and real provider data only when configured.
+- Today / Focus Board exposes applicable actions for Work Items, Skills, Routines, Artifacts, and linked context rather than becoming a second data store.
+- Session Handoff begins as an editable draft and becomes an immutable snapshot Artifact when finalized.
+- Incoming Signals contain source type, title, body or notes, received/created time, optional source identifier, optional Repository Context, triage status, and links to resulting Work Items, Skill Runs, or Artifacts.
+- Phase Three does not send or reply to Email; it supports triage and workflow linking only.
+- Phase Three implementation order is Incoming Signal and Agent Inbox, provider-neutral Email/manual-note adapters, triage into linked Work Items, Today / Focus Board, Session Handoff draft/finalization, then Second Brain and browser integration coverage.
+- The Phase Three release boundary includes Agent Inbox, demo/manual signals, provider-neutral Email, linked Work Items, Today / Focus Board, Session Handoff, provenance links, multi-repository isolation, and reset/migration coverage.
 
 ## Out of Scope
 

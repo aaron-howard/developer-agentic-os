@@ -268,6 +268,20 @@ Placeholder widgets:
 
 ## Validation Strategy
 
+### Phase Three Boundaries
+
+The Second Brain graph is a projection of persisted relationships, not a discovery engine. Incoming Signals, Work Items, Handoff Artifacts, Skills, Routines, and Repository Contexts are connected only by stored repository IDs, context references, workflow provenance, routine execution records, and finalized handoff artifact IDs. Titles, tags, timestamps, file names, and co-location in a Local Store never create graph edges.
+
+Each repository owns its `.developer-agentic-os/` Local Store. A clean first build initializes missing files and directories without requiring a migration command. `resetLocalStore(root)` removes only that repository's store and recreates its empty directory structure; it must not affect another registered repository's signals, work items, artifacts, routines, or handoffs.
+
+Focused Phase Three checks:
+
+```powershell
+npx tsx --test tests/second-brain-graph.test.ts
+```
+
+The complete validation commands remain `npm test`, `npm run typecheck`, `npm run lint`, `npm run build`, and `npm run test:e2e`.
+
 ### Unit Tests
 
 Port the previous Python behavior tests as TypeScript unit tests, focusing on contracts rather than line-by-line implementation.
@@ -343,4 +357,4 @@ Smoke flows:
 
 ## Handoff Verdict
 
-The first build is implemented and validated. The Wayfinder map and implementation issues remain as decision and traceability records; future work should begin with a new issue rather than treating this handoff as an unfinished implementation plan.
+The first build, Phase Two, and Phase Three are implemented and validated. The Wayfinder map and implementation issues remain as decision and traceability records; future work should begin with a new spec and issue set rather than treating this handoff as an unfinished implementation plan.

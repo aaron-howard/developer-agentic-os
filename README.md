@@ -68,6 +68,8 @@ Phase two extends the first build into a multi-repository daily workflow:
 
 Phase-two implementation tickets are tracked under `.scratch/developer-agentic-os-v2/issues/14-19`. The executor remains process-local; hosted scheduling, authentication, shared Workspaces, and cloud synchronization are intentionally deferred.
 
+Phase-three implementation tickets are tracked under `.scratch/developer-agentic-os-v2/issues/20-25`. Phase Three adds Agent Inbox, signal triage, Today / Focus Board, Session Handoff, provider-neutral Email sync, and explicit Second Brain provenance while keeping Email read-only and local-first.
+
 ## Validation
 
 Run the application checks from the repository root:
@@ -80,7 +82,7 @@ npm run test:e2e
 npm run build
 ```
 
-Expected status for a healthy checkout: every command exits with code `0`; the unit and contract suite reports 36 passing tests, and the Playwright suite reports 16 passing desktop/mobile smoke tests. Playwright uses an isolated local dev server on port `3100` and installs Chromium with:
+Expected status for a healthy checkout: every command exits with code `0`; the unit and contract suite reports 50 passing tests, and the Playwright suite reports 24 passing desktop/mobile smoke tests. Playwright uses an isolated local dev server on port `3100` and installs Chromium with:
 
 ```powershell
 npx playwright install chromium
@@ -91,6 +93,7 @@ npx playwright install chromium
 - [Domain context](CONTEXT.md): canonical product terminology and first-build boundaries.
 - [Wayfinder map](.wayfinder/map.md): resolved product and architecture decisions.
 - [Implementation handoff](docs/implementation-plan-and-validation-strategy.md): module boundaries, routes, test strategy, and browser checks.
+- Phase Three graph and Local Store boundaries, focused checks, and full validation commands are documented in the implementation handoff.
 - [Build issue set](.scratch/developer-agentic-os-v2/issues/build-developer-agentic-os-v2.md): original first-build specification.
 - [Static visual reference](index.html): approved command-centre direction.
 

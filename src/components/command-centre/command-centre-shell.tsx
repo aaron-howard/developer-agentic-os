@@ -8,6 +8,10 @@ import type { RoutineDefinition, RoutineExecutorStatus } from "@/types/routine";
 import type { SkillCommand } from "@/types/skill";
 import type { RepositoryContext, RepositorySwitcherEntry } from "@/types/workspace";
 import type { WorkItem, WorkItemPriority, WorkItemStatus } from "@/types/work-item";
+import type { IncomingSignal, IncomingSignalSource, IncomingSignalStatus } from "@/types/incoming-signal";
+import type { SignalTriageAction } from "@/types/signal-triage";
+import type { FocusBoard } from "@/types/focus-board";
+import type { Handoff } from "@/types/handoff";
 import {
   Archive,
   BarChart3,
@@ -20,6 +24,7 @@ import {
   Grip,
   Image,
   Info,
+  Inbox,
   LayoutGrid,
   Mail,
   MailCheck,
@@ -36,14 +41,17 @@ import {
   Timer,
   Zap,
   CheckCircle2,
+  ClipboardPen,
   type LucideIcon,
 } from "lucide-react";
 
 const microApps: Array<{ icon: LucideIcon; title: string; description: string }> = [
   { icon: GitBranch, title: "Workspace Switcher", description: "Change the active repository context" },
+  { icon: CheckCircle2, title: "Today / Focus Board", description: "Daily attention for the selected repository" },
   { icon: Image, title: "Generations", description: "Every image and video generated" },
   { icon: Monitor, title: "Teleprompter", description: "Scripted workspace camera" },
   { icon: Route, title: "Second Brain", description: "Workspace graph and living map" },
+  { icon: ClipboardPen, title: "Session Handoff", description: "Draft and finalize repository context" },
   { icon: PenTool, title: "Excalidraw", description: "Hand-drawn diagrams ready to export" },
 ];
 
@@ -53,6 +61,7 @@ type DashboardData = {
   routines: RoutineDefinition[];
   executor: RoutineExecutorStatus;
   integrations: IntegrationAdapterStatus[];
+  focusBoard: FocusBoard | null;
 };
 
 type WorkspaceData = {
@@ -68,7 +77,7 @@ type LayoutState = {
 
 type ClientGraphNode = {
   id: string;
-  type: "repo" | "area" | "file" | "artifact" | "skill" | "work_item" | "routine";
+  type: "repo" | "repo_context" | "area" | "file" | "artifact" | "skill" | "work_item" | "incoming_signal" | "handoff" | "routine";
   label: string;
   path?: string;
   metadata?: Record<string, string | number | boolean | null>;
@@ -77,7 +86,7 @@ type ClientGraphNode = {
 type ClientGraphLink = {
   source: string;
   target: string;
-  type: "contains" | "references" | "produced" | "used_context" | "triggers";
+  type: "contains" | "references" | "produced" | "used_context" | "triggers" | "scoped_to" | "includes" | "finalized_as";
 };
 
 type ClientGraph = {
@@ -279,9 +288,11 @@ export function CommandCentreShell() {
   const [rightRailOpen, setRightRailOpen] = useState(true);
   const [renderOrbitSize, setRenderOrbitSize] = useState(baselineLayout.orbitSize);
   const [workspaceSwitcherOpen, setWorkspaceSwitcherOpen] = useState(false);
+  const [focusBoardOpen, setFocusBoardOpen] = useState(true);
+  const [handoffOpen, setHandoffOpen] = useState(false);
   const [integrationOpen, setIntegrationOpen] = useState(false);
   const [graph, setGraph] = useState<ClientGraph | null>(null);
-  const [dashboard, setDashboard] = useState<DashboardData>({ artifacts: [], skills: [], routines: [], integrations: [], executor: { running: false, leaseExpiresAt: null, lastTickAt: null, lastRunAt: null, lastError: null } });
+  const [dashboard, setDashboard] = useState<DashboardData>({ artifacts: [], skills: [], routines: [], integrations: [], focusBoard: null, executor: { running: false, leaseExpiresAt: null, lastTickAt: null, lastRunAt: null, lastError: null } });
   const [dashboardLoading, setDashboardLoading] = useState(true);
   const [dashboardError, setDashboardError] = useState<string | null>(null);
   const [actionStatus, setActionStatus] = useState<string | null>(null);
@@ -301,6 +312,26 @@ export function CommandCentreShell() {
   const [workItemPriority, setWorkItemPriority] = useState<WorkItemPriority>("normal");
   const [workItemDueAt, setWorkItemDueAt] = useState("");
   const [workItemReferences, setWorkItemReferences] = useState("");
+  const [signals, setSignals] = useState<IncomingSignal[]>([]);
+  const [signalStatusFilter, setSignalStatusFilter] = useState<IncomingSignalStatus | "all">("all");
+  const [signalSourceFilter, setSignalSourceFilter] = useState<IncomingSignalSource | "all">("all");
+  const [selectedSignal, setSelectedSignal] = useState<IncomingSignal | null>(null);
+  const [signalSource, setSignalSource] = useState<IncomingSignalSource>("manual");
+  const [signalTitle, setSignalTitle] = useState("");
+  const [signalBody, setSignalBody] = useState("");
+  const [triageTargetId, setTriageTargetId] = useState("");
+  const [signalTriageStatus, setSignalTriageStatus] = useState<string | null>(null);
+  const [handoffs, setHandoffs] = useState<Handoff[]>([]);
+  const [selectedHandoff, setSelectedHandoff] = useState<Handoff | null>(null);
+  const [handoffTitle, setHandoffTitle] = useState("");
+  const [handoffDecisions, setHandoffDecisions] = useState("");
+  const [handoffBlockers, setHandoffBlockers] = useState("");
+  const [handoffNextActions, setHandoffNextActions] = useState("");
+  const [handoffStatus, setHandoffStatus] = useState<string | null>(null);
+  const loadHandoffs = useCallback(async (repositoryId: string) => {
+    const result = await fetch(`/api/handoffs?repositoryId=${encodeURIComponent(repositoryId)}`).then((response) => requireOk<{ handoffs: Handoff[] }>(response));
+    setHandoffs(result.handoffs);
+  }, []);
   const activeResizeIds = useRef(new Set<string>());
   const initialResizeSizes = useRef(new Map<string, { width: number; height: number }>());
   const { layout, setPageWidth, setOrbitSize, setWidgetSize, resetLayout } = usePersistedLayout();
@@ -339,9 +370,10 @@ export function CommandCentreShell() {
       fetch("/api/skills").then((response) => requireOk<{ skills: SkillCommand[] }>(response)),
       fetch(`/api/routines${contextQuery}`).then((response) => requireOk<{ routines: RoutineDefinition[]; executor: RoutineExecutorStatus }>(response)),
       fetch(`/api/integrations${contextQuery}`).then((response) => requireOk<{ integrations: IntegrationAdapterStatus[] }>(response)),
+      fetch(`/api/focus-board${contextQuery}`).then((response) => requireOk<FocusBoard>(response)),
     ]);
 
-    const [graphResult, artifactsResult, skillsResult, routinesResult, integrationsResult] = requests;
+    const [graphResult, artifactsResult, skillsResult, routinesResult, integrationsResult, focusBoardResult] = requests;
     if (graphResult.status === "fulfilled") setGraph({ ...graphResult.value, links: graphResult.value.links ?? [] });
     const failures = requests.filter((result) => result.status === "rejected");
     setDashboard({
@@ -350,6 +382,7 @@ export function CommandCentreShell() {
       routines: routinesResult.status === "fulfilled" ? routinesResult.value.routines : [],
       executor: routinesResult.status === "fulfilled" ? routinesResult.value.executor : dashboard.executor,
       integrations: integrationsResult.status === "fulfilled" ? integrationsResult.value.integrations : [],
+      focusBoard: focusBoardResult.status === "fulfilled" ? focusBoardResult.value : null,
     });
     setDashboardError(failures.length ? "Some workspace data could not be loaded." : null);
     setDashboardLoading(false);
@@ -368,6 +401,7 @@ export function CommandCentreShell() {
         setWorkspace({ context: context.context, repositories: repositories.repositories });
         setWorkspaceError(null);
         void loadDashboard(context.context.id);
+        void loadHandoffs(context.context.id).catch(() => setHandoffs([]));
       } catch {
         if (isMounted) setWorkspaceError("Workspace contexts could not be loaded.");
       } finally {
@@ -379,7 +413,63 @@ export function CommandCentreShell() {
     return () => {
       isMounted = false;
     };
-  }, [loadDashboard]);
+  }, [loadDashboard, loadHandoffs]);
+
+  const createHandoff = useCallback(async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!workspace?.context.id) return;
+    setHandoffStatus("Capturing repository context...");
+    const response = await fetch("/api/handoffs", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ repositoryId: workspace.context.id, title: handoffTitle, decisions: handoffDecisions.split("\n"), blockers: handoffBlockers.split("\n"), nextActions: handoffNextActions.split("\n") }) });
+    if (!response.ok) {
+      setHandoffStatus("Draft could not be created.");
+      return;
+    }
+    const handoff = await response.json() as Handoff;
+    setHandoffs((current) => [handoff, ...current]);
+    setSelectedHandoff(handoff);
+    setHandoffTitle(handoff.title);
+    setHandoffDecisions(handoff.decisions.join("\n"));
+    setHandoffBlockers(handoff.blockers.join("\n"));
+    setHandoffNextActions(handoff.nextActions.join("\n"));
+    setHandoffStatus("Draft created.");
+  }, [handoffBlockers, handoffDecisions, handoffNextActions, handoffTitle, workspace?.context.id]);
+
+  const selectHandoff = useCallback((handoff: Handoff) => {
+    setSelectedHandoff(handoff);
+    setHandoffTitle(handoff.title);
+    setHandoffDecisions(handoff.decisions.join("\n"));
+    setHandoffBlockers(handoff.blockers.join("\n"));
+    setHandoffNextActions(handoff.nextActions.join("\n"));
+    setHandoffStatus(null);
+  }, []);
+
+  const saveHandoff = useCallback(async () => {
+    if (!selectedHandoff || selectedHandoff.status === "finalized") return;
+    setHandoffStatus("Saving draft...");
+    const response = await fetch(`/api/handoffs/${selectedHandoff.id}`, { method: "PATCH", headers: { "content-type": "application/json" }, body: JSON.stringify({ repositoryId: workspace?.context.id, title: handoffTitle, decisions: handoffDecisions.split("\n"), blockers: handoffBlockers.split("\n"), nextActions: handoffNextActions.split("\n") }) });
+    if (!response.ok) {
+      setHandoffStatus("Draft could not be saved.");
+      return;
+    }
+    const handoff = await response.json() as Handoff;
+    setHandoffs((current) => current.map((item) => item.id === handoff.id ? handoff : item));
+    setSelectedHandoff(handoff);
+    setHandoffStatus("Draft saved.");
+  }, [handoffBlockers, handoffDecisions, handoffNextActions, handoffTitle, selectedHandoff, workspace?.context.id]);
+
+  const finalizeHandoff = useCallback(async () => {
+    if (!selectedHandoff) return;
+    setHandoffStatus("Finalizing immutable artifact...");
+    const response = await fetch(`/api/handoffs/${selectedHandoff.id}/finalize?repositoryId=${encodeURIComponent(workspace?.context.id ?? "")}`, { method: "POST" });
+    if (!response.ok) {
+      setHandoffStatus("Handoff could not be finalized.");
+      return;
+    }
+    const handoff = await response.json() as Handoff;
+    setHandoffs((current) => current.map((item) => item.id === handoff.id ? handoff : item));
+    setSelectedHandoff(handoff);
+    setHandoffStatus("Finalized Handoff Artifact created.");
+  }, [selectedHandoff, workspace?.context.id]);
 
   const switchRepository = useCallback(async (id: string) => {
     if (!workspace || id === workspace.context.id) return;
@@ -388,11 +478,11 @@ export function CommandCentreShell() {
       const response = await fetch("/api/workspace/context", { method: "PUT", headers: { "content-type": "application/json" }, body: JSON.stringify({ id }) });
       const result = await requireOk<{ context: RepositoryContext }>(response);
       setWorkspace((current) => current ? { ...current, context: result.context } : current);
-      await loadDashboard();
+      await Promise.all([loadDashboard(result.context.id), loadHandoffs(result.context.id)]);
     } catch {
       setWorkspaceError("Repository context could not be switched.");
     }
-  }, [loadDashboard, workspace]);
+  }, [loadDashboard, loadHandoffs, workspace]);
 
   const loadWorkItems = useCallback(async (repositoryId = workItemRepositoryFilter, status = workItemStatusFilter) => {
     const params = new URLSearchParams();
@@ -421,16 +511,60 @@ export function CommandCentreShell() {
     setWorkItemPriority("normal");
     setWorkItemDueAt("");
     setWorkItemReferences("");
-    await loadWorkItems(workItemRepositoryFilter === "active" ? workspace.context.id : workItemRepositoryFilter, workItemStatusFilter);
-  }, [loadWorkItems, workItemDueAt, workItemNotes, workItemPriority, workItemReferences, workItemRepositoryFilter, workItemStatusFilter, workItemTitle, workspace]);
+    await Promise.all([loadWorkItems(workItemRepositoryFilter === "active" ? workspace.context.id : workItemRepositoryFilter, workItemStatusFilter), loadDashboard(workspace.context.id)]);
+  }, [loadDashboard, loadWorkItems, workItemDueAt, workItemNotes, workItemPriority, workItemReferences, workItemRepositoryFilter, workItemStatusFilter, workItemTitle, workspace]);
 
   const updateWorkItemStatus = useCallback(async (item: WorkItem, status: WorkItemStatus) => {
     const response = await fetch(`/api/work-items/${item.id}`, { method: "PATCH", headers: { "content-type": "application/json" }, body: JSON.stringify({ status }) });
     if (!response.ok) return;
     const updated = await response.json() as WorkItem;
     setSelectedWorkItem(updated);
-    await loadWorkItems(workItemRepositoryFilter === "active" ? workspace?.context.id ?? "all" : workItemRepositoryFilter, workItemStatusFilter);
-  }, [loadWorkItems, workItemRepositoryFilter, workItemStatusFilter, workspace?.context.id]);
+    await Promise.all([loadWorkItems(workItemRepositoryFilter === "active" ? workspace?.context.id ?? "all" : workItemRepositoryFilter, workItemStatusFilter), loadDashboard(workspace?.context.id)]);
+  }, [loadDashboard, loadWorkItems, workItemRepositoryFilter, workItemStatusFilter, workspace?.context.id]);
+
+  const loadSignals = useCallback(async (status = signalStatusFilter, source = signalSourceFilter) => {
+    const params = new URLSearchParams();
+    if (status !== "all") params.set("status", status);
+    if (source !== "all") params.set("source", source);
+    const response = await fetch(`/api/incoming-signals?${params.toString()}`);
+    const result = await requireOk<{ signals: IncomingSignal[] }>(response);
+    setSignals(result.signals);
+  }, [signalSourceFilter, signalStatusFilter]);
+
+  useEffect(() => {
+    if (workspace?.context.id) void loadSignals().catch(() => setSignals([]));
+  }, [loadSignals, workspace?.context.id]);
+
+  const createSignal = useCallback(async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!workspace?.context.id || !signalTitle.trim()) return;
+    const response = await fetch("/api/incoming-signals", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ source: signalSource, title: signalTitle, body: signalBody, repositoryId: workspace.context.id }) });
+    if (!response.ok) return;
+    setSignalTitle("");
+    setSignalBody("");
+    await loadSignals(signalStatusFilter, signalSourceFilter);
+  }, [loadSignals, signalBody, signalSource, signalSourceFilter, signalStatusFilter, signalTitle, workspace?.context.id]);
+
+  const updateSignalStatus = useCallback(async (signal: IncomingSignal, status: IncomingSignalStatus) => {
+    const response = await fetch(`/api/incoming-signals/${signal.id}`, { method: "PATCH", headers: { "content-type": "application/json" }, body: JSON.stringify({ status, snoozedUntil: status === "snoozed" ? new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() : null, repositoryId: workspace?.context.id }) });
+    if (!response.ok) return;
+    const updated = await response.json() as IncomingSignal;
+    setSelectedSignal(updated);
+    await loadSignals(signalStatusFilter, signalSourceFilter);
+  }, [loadSignals, signalSourceFilter, signalStatusFilter, workspace?.context.id]);
+
+  const triageSignal = useCallback(async (signal: IncomingSignal, action: SignalTriageAction) => {
+    setSignalTriageStatus("Applying triage action...");
+    const response = await fetch(`/api/incoming-signals/${signal.id}/triage`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ ...action, repositoryId: workspace?.context.id }) });
+    if (!response.ok) {
+      setSignalTriageStatus("Triage action failed.");
+      return;
+    }
+    const result = await response.json() as { signal: IncomingSignal; workItem?: WorkItem; skillRun?: { status: string }; artifact?: ArtifactIndexEntry };
+    setSelectedSignal(result.signal);
+    setSignalTriageStatus(result.workItem ? `Linked to work item: ${result.workItem.title}` : result.skillRun ? `Skill ${result.skillRun.status}.` : result.artifact ? `Artifact created: ${result.artifact.name}` : `${action.action.replaceAll("_", " ")} complete.`);
+    await Promise.all([loadSignals(signalStatusFilter, signalSourceFilter), loadWorkItems(workspace?.context.id ?? "all", workItemStatusFilter), loadDashboard(workspace?.context.id)]);
+  }, [loadDashboard, loadSignals, loadWorkItems, signalSourceFilter, signalStatusFilter, workItemStatusFilter, workspace?.context.id]);
 
   const inspectNode = useCallback((node: ClientGraphNode) => {
     setSelectedNode(node);
@@ -442,13 +576,15 @@ export function CommandCentreShell() {
     setActionStatus("Running skill...");
     const response = await fetch(`/api/skills/${skillId}/run`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ repositoryId: workspace?.context.id }) });
     setActionStatus(response.ok ? "Skill completed and artifact saved." : "Skill failed.");
-  }, [workspace?.context.id]);
+    await loadDashboard(workspace?.context.id);
+  }, [loadDashboard, workspace?.context.id]);
 
   const runRoutine = useCallback(async (routineId: string) => {
     setActionStatus("Running routine...");
     const response = await fetch(`/api/routines/${routineId}/run`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ repositoryId: workspace?.context.id }) });
     setActionStatus(response.ok ? "Routine completed." : "Routine failed.");
-  }, [workspace?.context.id]);
+    await loadDashboard(workspace?.context.id);
+  }, [loadDashboard, workspace?.context.id]);
 
   const controlExecutor = useCallback(async (action: "start" | "stop" | "trigger") => {
     setActionStatus(action === "start" ? "Starting background routines..." : action === "stop" ? "Stopping background routines..." : "Checking due routines...");
@@ -517,7 +653,7 @@ export function CommandCentreShell() {
           />
           <div className="micro-list">
             {microApps.map(({ icon: Icon, title, description }) => (
-              <button className={`micro-app ${title === "Workspace Switcher" && workspaceSwitcherOpen ? "active" : ""}`} key={title} type="button" aria-label={`${title}: ${description}`} aria-expanded={title === "Workspace Switcher" ? workspaceSwitcherOpen : undefined} onClick={title === "Workspace Switcher" ? () => setWorkspaceSwitcherOpen((open) => !open) : undefined}>
+              <button className={`micro-app ${(title === "Workspace Switcher" && workspaceSwitcherOpen) || (title === "Today / Focus Board" && focusBoardOpen) || (title === "Session Handoff" && handoffOpen) ? "active" : ""}`} key={title} type="button" aria-label={`${title}: ${description}`} aria-expanded={title === "Workspace Switcher" ? workspaceSwitcherOpen : title === "Today / Focus Board" ? focusBoardOpen : title === "Session Handoff" ? handoffOpen : undefined} onClick={title === "Workspace Switcher" ? () => setWorkspaceSwitcherOpen((open) => !open) : title === "Today / Focus Board" ? () => setFocusBoardOpen((open) => !open) : title === "Session Handoff" ? () => setHandoffOpen((open) => !open) : undefined}>
                 <div className="app-icon">
                   <Icon size={14} aria-hidden="true" />
                 </div>
@@ -550,6 +686,19 @@ export function CommandCentreShell() {
             ) : null}
             {workspace?.repositories.length === 0 ? <p className="dashboard-placeholder">No registered repositories.</p> : null}
           </div> : null}
+          {handoffOpen ? <section className="workspace-switcher-detail handoff-app" id="session-handoff" aria-label="Session Handoff">
+            <div className="handoff-app-header"><span className="tiny">{workspace?.context.name ?? "selected repository"}</span><strong>Session Handoff</strong></div>
+            <form className="handoff-form" onSubmit={(event) => void createHandoff(event)}>
+              <input aria-label="Handoff title" placeholder="Handoff title" value={handoffTitle} onChange={(event) => setHandoffTitle(event.target.value)} />
+              <textarea aria-label="Handoff decisions" placeholder="Decisions, one per line" value={handoffDecisions} onChange={(event) => setHandoffDecisions(event.target.value)} />
+              <textarea aria-label="Handoff blockers" placeholder="Blockers, one per line" value={handoffBlockers} onChange={(event) => setHandoffBlockers(event.target.value)} />
+              <textarea aria-label="Handoff next actions" placeholder="Next actions, one per line" value={handoffNextActions} onChange={(event) => setHandoffNextActions(event.target.value)} />
+              <button className="outline-button" type="submit"><ClipboardPen size={12} aria-hidden="true" /> Create Draft</button>
+            </form>
+            <div className="handoff-list" aria-label="Handoff drafts">
+              {handoffs.length === 0 ? <p className="dashboard-placeholder">No handoffs for this repository.</p> : handoffs.map((handoff) => <button className="handoff-row" type="button" key={handoff.id} onClick={() => selectHandoff(handoff)}><span><strong>{handoff.title}</strong><small>{handoff.status} / {handoff.snapshot.branch ?? "detached HEAD"}</small></span><span className="tiny">{handoff.snapshot.changedFiles.length} files</span></button>)}
+            </div>
+          </section> : null}
         </section>
 
         <section className="module resizable-widget" data-resizable-id="calendar" ref={resizeRef("calendar")} style={resizableStyle("calendar", layout)} onPointerDown={(event) => markResizeStart("calendar", event.currentTarget)}>
@@ -647,7 +796,7 @@ export function CommandCentreShell() {
         </div>
       </section>
 
-      <aside className="right-rail" aria-label="Email, skills, and routines">
+      <aside className="right-rail" aria-label="Agent Inbox, Email, skills, and routines">
         <section className="module work-queue-module" aria-label="Work Queue">
           <ModuleHeading icon={CheckCircle2} title="Work Queue" action={<span className="tiny">{workItems.length} visible</span>} />
           <form className="work-item-capture" onSubmit={(event) => void createWorkItem(event)}>
@@ -681,6 +830,55 @@ export function CommandCentreShell() {
                 {item.status === "completed" ? <CheckCircle2 size={14} aria-label="Completed" /> : null}
               </button>
             ))}
+          </div>
+        </section>
+        {focusBoardOpen ? <section className="module focus-board-module" aria-label="Today and Focus Board">
+          <ModuleHeading icon={CheckCircle2} title="Today / Focus Board" action={<span className="tiny">{workspace?.context.name ?? "selected repository"}</span>} />
+          {dashboardLoading && !dashboard.focusBoard ? <p className="dashboard-placeholder">Loading today...</p> : null}
+          {!dashboardLoading && !dashboard.focusBoard ? <p className="dashboard-placeholder">Focus Board unavailable.</p> : null}
+          {dashboard.focusBoard ? <>
+            <div className="focus-board-summary" aria-label="Focus Board summary">
+              <span><strong>{dashboard.focusBoard.workItems.length}</strong> active</span>
+              <span><strong>{dashboard.focusBoard.dueWorkItems.length}</strong> due</span>
+              <span><strong>{dashboard.focusBoard.blockedWorkItems.length}</strong> blocked</span>
+              <span><strong>{dashboard.focusBoard.failedSkillRuns.length + dashboard.focusBoard.failedRoutineExecutions.length}</strong> failed</span>
+            </div>
+            <div className="focus-board-section">
+              <span className="tiny">Attention now</span>
+              {dashboard.focusBoard.workItems.length === 0 ? <p className="dashboard-placeholder">No active work items.</p> : dashboard.focusBoard.workItems.map((item) => <div className={`focus-board-row ${item.attention}`} key={item.id}>
+                <button type="button" className="focus-board-record" onClick={() => setSelectedWorkItem(item)}><strong>{item.title}</strong><small>{item.attention.replace("_", " ")} {item.dueAt ? ` / due ${formatFocusDate(item.dueAt)}` : ""}</small></button>
+                <span className="focus-board-priority">{item.priority}</span>
+              </div>)}
+            </div>
+            <div className="focus-board-section">
+              <span className="tiny">Recent artifacts</span>
+              {dashboard.focusBoard.recentArtifacts.length === 0 ? <p className="dashboard-placeholder">No recent artifacts.</p> : dashboard.focusBoard.recentArtifacts.slice(0, 4).map((artifact) => <button className="focus-board-link" type="button" key={artifact.id} onClick={() => inspectNode({ id: `artifact:${artifact.id}`, type: "artifact", label: artifact.name, metadata: { artifactType: artifact.type, createdAt: artifact.createdAt } })}><Archive size={13} aria-hidden="true" /><span>{artifact.name}</span><small>{formatFocusDate(artifact.createdAt)}</small></button>)}
+            </div>
+            <div className="focus-board-section">
+              <span className="tiny">Failed workflows</span>
+              {dashboard.focusBoard.failedSkillRuns.length === 0 && dashboard.focusBoard.failedRoutineExecutions.length === 0 ? <p className="dashboard-placeholder">No failed workflows.</p> : null}
+              {dashboard.focusBoard.failedSkillRuns.map((run) => <div className="focus-board-failure" key={run.id}><span><strong>{dashboard.skills.find((skill) => skill.id === run.skillId)?.command ?? run.skillId}</strong><small>{run.error ?? "Skill failed"}</small></span><button className="icon-button run" type="button" aria-label={`Run ${dashboard.skills.find((skill) => skill.id === run.skillId)?.command ?? run.skillId}`} onClick={() => void runSkill(run.skillId)}><Play size={13} /></button></div>)}
+              {dashboard.focusBoard.failedRoutineExecutions.map((execution) => <div className="focus-board-failure" key={execution.id}><span><strong>{execution.routineName}</strong><small>{execution.error ?? "Routine failed"}</small></span><button className="icon-button run" type="button" aria-label={`Run ${execution.routineName}`} onClick={() => void runRoutine(execution.routineId)}><Play size={13} /></button></div>)}
+            </div>
+          </> : null}
+        </section> : null}
+        <section className="module agent-inbox-module" aria-label="Agent Inbox">
+          <ModuleHeading icon={Inbox} title="Agent Inbox" action={<span className="tiny">{signals.length} visible</span>} />
+          <form className="signal-capture" onSubmit={(event) => void createSignal(event)}>
+            <input aria-label="Signal title" placeholder="Capture an incoming signal" value={signalTitle} onChange={(event) => setSignalTitle(event.target.value)} />
+            <textarea aria-label="Signal body" placeholder="Signal details (optional)" value={signalBody} onChange={(event) => setSignalBody(event.target.value)} />
+            <div className="signal-capture-row">
+              <select aria-label="Signal source" value={signalSource} onChange={(event) => setSignalSource(event.target.value as IncomingSignalSource)}><option value="manual">Manual note</option><option value="email">Demo Email</option></select>
+              <button className="outline-button" type="submit"><Plus size={12} aria-hidden="true" /> Add signal</button>
+            </div>
+          </form>
+          <div className="signal-filters">
+            <select aria-label="Filter signals by source" value={signalSourceFilter} onChange={(event) => setSignalSourceFilter(event.target.value as IncomingSignalSource | "all")}><option value="all">All sources</option><option value="manual">Manual</option><option value="email">Email</option></select>
+            <select aria-label="Filter signals by status" value={signalStatusFilter} onChange={(event) => setSignalStatusFilter(event.target.value as IncomingSignalStatus | "all")}><option value="all">All statuses</option>{(["new", "snoozed", "dismissed", "triaged"] as const).map((status) => <option key={status} value={status}>{status}</option>)}</select>
+          </div>
+          <div className="signal-list" aria-label="Incoming signals">
+            {signals.length === 0 ? <p className="dashboard-placeholder">No signals in this view.</p> : null}
+            {signals.map((signal) => <button className={`signal-row ${signal.status}`} key={signal.id} type="button" onClick={() => setSelectedSignal(signal)}><span><strong>{signal.title}</strong><small>{signal.source} / {signal.status}</small></span><span className="signal-marker" /></button>)}
           </div>
         </section>
         <section className="module resizable-widget" data-resizable-id="email" ref={resizeRef("email")} style={resizableStyle("email", layout)} onPointerDown={(event) => markResizeStart("email", event.currentTarget)}>
@@ -830,6 +1028,43 @@ export function CommandCentreShell() {
           <div className="work-history"><span className="tiny">Completion history</span>{selectedWorkItem.statusHistory.map((change) => <p className="inspector-line" key={`${change.status}-${change.changedAt}`}><code>{change.status}</code> {new Date(change.changedAt).toLocaleString()}</p>)}</div>
         </aside>
       ) : null}
+      {selectedSignal ? (
+        <aside className="inspector-panel" aria-label="Agent Inbox Inspector">
+          <div className="inspector-header"><div><span className="tiny">{selectedSignal.source} / {selectedSignal.status}</span><h3>{selectedSignal.title}</h3></div><button className="icon-button" type="button" aria-label="Close signal inspector" onClick={() => setSelectedSignal(null)}>x</button></div>
+          <p className="inspector-line">Repository Context ID: <code>{selectedSignal.repositoryId}</code></p>
+          <p className="inspector-line">Source ID: <code>{selectedSignal.sourceId ?? "none"}</code></p>
+          <p className="inspector-line">Received: <code>{new Date(selectedSignal.createdAt).toLocaleString()}</code></p>
+          <p className="inspector-line">Body: <code>{selectedSignal.body || "none"}</code></p>
+          <div className="inspector-actions">{(["triaged", "snoozed", "dismissed", "new"] as const).filter((status) => status !== selectedSignal.status).map((status) => <button className="outline-button" key={status} type="button" onClick={() => void updateSignalStatus(selectedSignal, status)}>{status}</button>)}</div>
+          <div className="signal-triage-actions">
+            <span className="tiny">Triage actions</span>
+            <button className="outline-button" type="button" onClick={() => void triageSignal(selectedSignal, { action: "create_work_item" })}>Create Work Item</button>
+            {workItems.length ? <><select aria-label="Existing work item for signal" value={triageTargetId || workItems[0].id} onChange={(event) => setTriageTargetId(event.target.value)}>{workItems.map((item) => <option key={item.id} value={item.id}>{item.title}</option>)}</select><button className="outline-button" type="button" onClick={() => void triageSignal(selectedSignal, { action: "attach_work_item", workItemId: triageTargetId || workItems[0].id })}>Attach Work Item</button></> : null}
+            {dashboard.skills.some((skill) => skill.kind === "built-in" && skill.inputs.length === 0) ? <button className="outline-button" type="button" onClick={() => { const skill = dashboard.skills.find((item) => item.kind === "built-in" && item.inputs.length === 0); if (skill) void triageSignal(selectedSignal, { action: "invoke_skill", skillId: skill.id }); }}>Run Skill</button> : null}
+            <button className="outline-button" type="button" onClick={() => void triageSignal(selectedSignal, { action: "create_artifact", name: selectedSignal.title, type: "signal_triage", content: selectedSignal.body })}>Create Artifact</button>
+            <button className="outline-button" type="button" onClick={() => void triageSignal(selectedSignal, { action: "snooze" })}>Snooze</button>
+            <button className="outline-button" type="button" onClick={() => void triageSignal(selectedSignal, { action: "dismiss" })}>Dismiss</button>
+          </div>
+          {signalTriageStatus ? <p className="inspector-status" role="status">{signalTriageStatus}</p> : null}
+        </aside>
+      ) : null}
+      {selectedHandoff ? (
+        <aside className="inspector-panel" aria-label="Session Handoff Inspector">
+          <div className="inspector-header"><div><span className="tiny">session handoff / {selectedHandoff.status}</span><h3>{selectedHandoff.title}</h3></div><button className="icon-button" type="button" aria-label="Close handoff inspector" onClick={() => setSelectedHandoff(null)}>x</button></div>
+          <p className="inspector-line">Repository: <code>{selectedHandoff.snapshot.repositoryContext.name}</code></p>
+          <p className="inspector-line">Branch: <code>{selectedHandoff.snapshot.branch ?? "detached HEAD"}</code></p>
+          <p className="inspector-line">Changed files: <code>{selectedHandoff.snapshot.changedFiles.length}</code></p>
+          <p className="inspector-line">Captured records: <code>{selectedHandoff.snapshot.workItems.length} work items / {selectedHandoff.snapshot.artifacts.length} artifacts / {selectedHandoff.snapshot.skillRuns.length} skill runs</code></p>
+          {selectedHandoff.status === "draft" ? <div className="handoff-inspector-form">
+            <input aria-label="Edit handoff title" value={handoffTitle} onChange={(event) => setHandoffTitle(event.target.value)} />
+            <textarea aria-label="Edit handoff decisions" value={handoffDecisions} onChange={(event) => setHandoffDecisions(event.target.value)} />
+            <textarea aria-label="Edit handoff blockers" value={handoffBlockers} onChange={(event) => setHandoffBlockers(event.target.value)} />
+            <textarea aria-label="Edit handoff next actions" value={handoffNextActions} onChange={(event) => setHandoffNextActions(event.target.value)} />
+            <div className="inspector-actions"><button className="outline-button" type="button" onClick={() => void saveHandoff()}>Save Draft</button><button className="outline-button" type="button" onClick={() => void finalizeHandoff()}>Finalize Handoff</button></div>
+          </div> : <p className="inspector-status">Immutable Artifact: <code>{selectedHandoff.artifactId}</code></p>}
+          {handoffStatus ? <p className="inspector-status" role="status">{handoffStatus}</p> : null}
+        </aside>
+      ) : null}
     </main>
   );
 }
@@ -853,4 +1088,8 @@ function iconForSkill(id: string): LucideIcon {
 
 function formatRoutineTime(value: string): string {
   return new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }).format(new Date(value));
+}
+
+function formatFocusDate(value: string): string {
+  return new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric" }).format(new Date(value));
 }
