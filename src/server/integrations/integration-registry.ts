@@ -24,9 +24,9 @@ export async function getIntegrationStatuses(root = process.cwd(), env: Record<s
       kind: "scm",
       required: false,
       status: hasGitHubToken ? "connected" : "unconfigured",
-      capabilities: ["PR metadata", "branch metadata"],
-      setup: "Set GITHUB_TOKEN or GH_TOKEN to enable GitHub metadata.",
-      message: hasGitHubToken ? "GitHub token detected." : "GitHub credentials are not configured.",
+      capabilities: ["issues", "pull requests", "Actions", "merge status"],
+      setup: "Set GITHUB_TOKEN or GH_TOKEN and GITHUB_REPOSITORY to enable GitHub operations.",
+      message: hasGitHubToken ? "GitHub credentials detected." : "GitHub credentials are not configured.",
     },
     {
       id: "vercel",

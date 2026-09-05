@@ -4,6 +4,7 @@ import type { CSSProperties } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ArtifactIndexEntry } from "@/types/artifact";
 import type { IntegrationAdapterStatus } from "@/types/integration";
+import type { GitHubOperations } from "@/types/github";
 import type { RoutineDefinition, RoutineExecutorStatus } from "@/types/routine";
 import type { SkillCommand } from "@/types/skill";
 import type { RepositoryContext, RepositorySwitcherEntry } from "@/types/workspace";
@@ -292,6 +293,8 @@ export function CommandCentreShell() {
   const [focusBoardOpen, setFocusBoardOpen] = useState(true);
   const [handoffOpen, setHandoffOpen] = useState(false);
   const [integrationOpen, setIntegrationOpen] = useState(false);
+  const [githubOperations, setGitHubOperations] = useState<GitHubOperations | null>(null);
+  const [githubOperationsLoading, setGitHubOperationsLoading] = useState(false);
   const [graph, setGraph] = useState<ClientGraph | null>(null);
   const [dashboard, setDashboard] = useState<DashboardData>({ artifacts: [], skills: [], routines: [], integrations: [], focusBoard: null, executor: { running: false, leaseExpiresAt: null, lastTickAt: null, lastRunAt: null, lastError: null } });
   const [dashboardLoading, setDashboardLoading] = useState(true);
@@ -371,10 +374,11 @@ export function CommandCentreShell() {
       fetch("/api/skills").then((response) => requireOk<{ skills: SkillCommand[] }>(response)),
       fetch(`/api/routines${contextQuery}`).then((response) => requireOk<{ routines: RoutineDefinition[]; executor: RoutineExecutorStatus }>(response)),
       fetch(`/api/integrations${contextQuery}`).then((response) => requireOk<{ integrations: IntegrationAdapterStatus[] }>(response)),
+      fetch(`/api/integrations/github${contextQuery}`).then((response) => requireOk<GitHubOperations>(response)),
       fetch(`/api/focus-board${contextQuery}`).then((response) => requireOk<FocusBoard>(response)),
     ]);
 
-    const [graphResult, artifactsResult, skillsResult, routinesResult, integrationsResult, focusBoardResult] = requests;
+    const [graphResult, artifactsResult, skillsResult, routinesResult, integrationsResult, githubResult, focusBoardResult] = requests;
     if (graphResult.status === "fulfilled") setGraph({ ...graphResult.value, links: graphResult.value.links ?? [] });
     const failures = requests.filter((result) => result.status === "rejected");
     setDashboard({
@@ -385,9 +389,27 @@ export function CommandCentreShell() {
       integrations: integrationsResult.status === "fulfilled" ? integrationsResult.value.integrations : [],
       focusBoard: focusBoardResult.status === "fulfilled" ? focusBoardResult.value : null,
     });
+    if (githubResult.status === "fulfilled") setGitHubOperations(githubResult.value);
     setDashboardError(failures.length ? "Some workspace data could not be loaded." : null);
     setDashboardLoading(false);
   }, []);
+
+  const loadGitHubOperations = useCallback(async (repositoryId: string) => {
+    setGitHubOperationsLoading(true);
+    try {
+      const result = await fetch(`/api/integrations/github?repositoryId=${encodeURIComponent(repositoryId)}`).then((response) => requireOk<GitHubOperations>(response));
+      setGitHubOperations(result);
+    } catch {
+      setGitHubOperations(null);
+    } finally {
+      setGitHubOperationsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!integrationOpen || !workspace?.context.id || githubOperations) return;
+    void loadGitHubOperations(workspace.context.id);
+  }, [integrationOpen, loadGitHubOperations, workspace?.context.id]);
 
   useEffect(() => {
     let isMounted = true;
@@ -763,7 +785,7 @@ export function CommandCentreShell() {
             <div className="integration-popover" role="status" aria-label="Integration status">
               <div className="integration-popover-heading">
                 <span>Operations health</span>
-                <button type="button" aria-label="Refresh integration status" title="Refresh integration status" onClick={() => void loadDashboard(workspace?.context.id)}><RefreshCw size={13} /></button>
+                <button type="button" aria-label="Refresh integration status" title="Refresh integration status" onClick={() => { void loadDashboard(workspace?.context.id); if (workspace?.context.id) void loadGitHubOperations(workspace.context.id); }}><RefreshCw size={13} /></button>
               </div>
               {dashboardLoading ? <span className="dashboard-placeholder">Loading integrations...</span> : null}
               {dashboard.integrations.map((integration) => (
@@ -775,6 +797,20 @@ export function CommandCentreShell() {
                   <b className={`integration-status ${integration.status}`}>{integration.status}</b>
                 </div>
               ))}
+              <div className="github-operations" aria-label="GitHub operations">
+                <strong>GitHub operations</strong>
+                {githubOperationsLoading ? <span className="dashboard-placeholder">Checking GitHub...</span> : null}
+                {!githubOperationsLoading && githubOperations ? (
+                  <>
+                    <span className={`integration-status ${githubOperations.status}`}>{githubOperations.message}</span>
+                    <span>Issues: {githubOperations.issues.length} | PRs: {githubOperations.pullRequests.length} | Actions: {githubOperations.actions.length}</span>
+                    <span>Merge status: {githubOperations.mergeStatus.state}</span>
+                    {githubOperations.issues.slice(0, 3).map((issue) => <a key={issue.number} href={issue.url} target="_blank" rel="noreferrer">Issue #{issue.number}: {issue.title}</a>)}
+                    {githubOperations.pullRequests.slice(0, 3).map((pullRequest) => <a key={pullRequest.number} href={pullRequest.url} target="_blank" rel="noreferrer">PR #{pullRequest.number}: {pullRequest.title} ({pullRequest.mergeable})</a>)}
+                    {githubOperations.actions.slice(0, 3).map((action) => <a key={action.id} href={action.url} target="_blank" rel="noreferrer">Action: {action.name} ({action.conclusion ?? action.status})</a>)}
+                  </>
+                ) : null}
+              </div>
               {!dashboardLoading && dashboard.integrations.length === 0 ? <span className="dashboard-placeholder">No integration status available.</span> : null}
             </div>
           ) : null}

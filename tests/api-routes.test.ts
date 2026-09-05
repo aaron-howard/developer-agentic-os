@@ -5,6 +5,7 @@ import { GET as getArtifacts, POST as postArtifact } from "../src/app/api/artifa
 import { GET as getFocusBoard } from "../src/app/api/focus-board/route";
 import { GET as getArtifact } from "../src/app/api/artifacts/[id]/route";
 import { GET as getIntegrations } from "../src/app/api/integrations/route";
+import { GET as getGitHubOperations } from "../src/app/api/integrations/github/route";
 import { GET as getRepoIndex } from "../src/app/api/repo/index/route";
 import { POST as refreshRepo } from "../src/app/api/repo/refresh/route";
 import { GET as getRoutineRuns } from "../src/app/api/routine-runs/route";
@@ -92,4 +93,10 @@ test("invalid repository context is rejected before a skill run is created", asy
 test("repository routes reject unregistered roots", async () => {
   const response = await getRepoIndex(new Request("http://localhost/api/repo/index?repositoryRoot=C%3A%5Cdefinitely-unregistered"));
   assert.equal(response.status, 404);
+});
+
+test("github operations route rejects an unknown repository context", async () => {
+  const response = await getGitHubOperations(new Request("http://localhost/api/integrations/github?repositoryId=missing-context"));
+  assert.equal(response.status, 404);
+  assert.match(JSON.stringify(await body(response)), /Repository context not found/);
 });
