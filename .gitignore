@@ -15,6 +15,7 @@ out/
 # build/test artifacts
 coverage/
 tsconfig.tsbuildinfo
+test-results/
 
 # logs
 npm-debug.log*
