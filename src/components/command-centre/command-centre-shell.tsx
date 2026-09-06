@@ -369,6 +369,8 @@ export function CommandCentreShell() {
 
   const loadDashboard = useCallback(async (repositoryId?: string) => {
     setDashboardLoading(true);
+    setGitHubOperations(null);
+    setVercelOperations(null);
     const contextQuery = repositoryId ? `?repositoryId=${encodeURIComponent(repositoryId)}` : "";
     const artifactQuery = repositoryId ? `?repositoryId=${encodeURIComponent(repositoryId)}&limit=6` : "?limit=6";
     const requests = await Promise.allSettled([
@@ -393,8 +395,8 @@ export function CommandCentreShell() {
       integrations: integrationsResult.status === "fulfilled" ? integrationsResult.value.integrations : [],
       focusBoard: focusBoardResult.status === "fulfilled" ? focusBoardResult.value : null,
     });
-    if (githubResult.status === "fulfilled") setGitHubOperations(githubResult.value);
-    if (vercelResult.status === "fulfilled") setVercelOperations(vercelResult.value);
+    setGitHubOperations(githubResult.status === "fulfilled" ? githubResult.value : null);
+    setVercelOperations(vercelResult.status === "fulfilled" ? vercelResult.value : null);
     setDashboardError(failures.length ? "Some workspace data could not be loaded." : null);
     setDashboardLoading(false);
   }, []);

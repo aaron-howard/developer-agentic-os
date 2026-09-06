@@ -1,4 +1,7 @@
 import { expect, test } from "@playwright/test";
+import { mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 
 test.describe("Developer Agentic OS dashboard", () => {
   test("loads with approved branding and no removed references", async ({ page }) => {
@@ -113,6 +116,52 @@ test.describe("Developer Agentic OS dashboard", () => {
     await expect(inspector).toContainText("Linked to work item");
   });
 
+  test("keeps operations, signals, and Work Items isolated across repositories", async ({ page }) => {
+    const firstRoot = await mkdtemp(join(tmpdir(), "developer-agentic-os-e2e-first-"));
+    const secondRoot = await mkdtemp(join(tmpdir(), "developer-agentic-os-e2e-second-"));
+    const repositoryIds: string[] = [];
+    try {
+      await page.goto("/");
+      for (const path of [firstRoot, secondRoot]) {
+        const response = await page.request.post("/api/workspace/repositories", { data: { path } });
+        expect(response.ok()).toBeTruthy();
+        repositoryIds.push((await response.json()).id);
+      }
+      await page.reload();
+      const switcher = page.getByRole("button", { name: "Workspace Switcher: Change the active repository context" });
+      await switcher.click();
+      const firstRepository = page.locator(".repository-option").filter({ hasText: firstRoot.split(/[\\/]/).pop() ?? "" });
+      const secondRepository = page.locator(".repository-option").filter({ hasText: secondRoot.split(/[\\/]/).pop() ?? "" });
+      await expect(firstRepository).toHaveCount(1);
+      await expect(secondRepository).toHaveCount(1);
+      await firstRepository.click();
+      await expect(firstRepository).toHaveAttribute("aria-pressed", "true");
+
+      const firstContext = await (await page.request.get("/api/workspace/context")).json() as { context: { id: string } };
+      const firstTitle = `First repository signal ${Date.now()}`;
+      const firstSignal = await page.request.post("/api/incoming-signals", { data: { source: "integration", provider: "github", sourceId: `github:first:${Date.now()}`, title: firstTitle, body: "First repository failure", repositoryId: firstContext.context.id } });
+      expect(firstSignal.ok()).toBeTruthy();
+      await page.reload();
+      await expect(page.locator(".signal-row").filter({ hasText: firstTitle })).toBeVisible();
+      await page.locator(".signal-row").filter({ hasText: firstTitle }).click();
+      const firstInspector = page.getByRole("complementary", { name: "Agent Inbox Inspector" });
+      await firstInspector.getByRole("button", { name: "Create Work Item" }).click();
+      await expect(firstInspector).toContainText("Linked to work item");
+
+      await switcher.click();
+      await secondRepository.click();
+      await expect(secondRepository).toHaveAttribute("aria-pressed", "true");
+      await expect(page.locator(".signal-row").filter({ hasText: firstTitle })).toHaveCount(0);
+      await expect(page.getByRole("status", { name: "Integration status" })).toHaveCount(0);
+      await page.getByRole("button", { name: "Integration status" }).click();
+      await expect(page.getByRole("status", { name: "Integration status" })).toContainText("Vercel operations");
+    } finally {
+      for (const id of repositoryIds) await page.request.delete(`/api/workspace/repositories/${id}`);
+      await rm(firstRoot, { recursive: true, force: true });
+      await rm(secondRoot, { recursive: true, force: true });
+    }
+  });
+
   test("shows Email adapter status and keeps the Email surface read-only", async ({ page }) => {
     await page.goto("/");
     await page.getByRole("button", { name: "Integration status" }).click();
@@ -130,6 +179,8 @@ test.describe("Developer Agentic OS dashboard", () => {
       integrationRequests += 1;
       await route.continue();
     });
+    await page.route("**/api/integrations/github**", (route) => route.fulfill({ json: { status: "healthy", message: "GitHub operations are available.", issues: [{ number: 1, title: "Fix health", url: "https://github.com/example/1" }], pullRequests: [], actions: [], mergeStatus: { state: "ready", message: "All open pull requests are mergeable." } } }));
+    await page.route("**/api/integrations/vercel**", (route) => route.fulfill({ json: { status: "unhealthy", message: "Vercel deployment failed.", deployments: [{ id: "dpl_1", name: "broken", state: "error", buildLogUrl: "https://vercel.com/deployments/dpl_1", runtimeLogUrl: "https://vercel.com/project/logs" },], failure: { kind: "unavailable", message: "Deployment broken reported an error." } } }));
 
     await page.goto("/");
     await page.getByRole("button", { name: "Integration status" }).click();
@@ -139,9 +190,20 @@ test.describe("Developer Agentic OS dashboard", () => {
     }
     await expect(status).toContainText("GitHub operations");
     await expect(status).toContainText("Vercel operations");
+    await expect(status).toContainText("Issue #1: Fix health");
+    await expect(status).toContainText("Vercel deployment failed.");
 
     await status.getByRole("button", { name: "Refresh integration status" }).click();
     await expect.poll(() => integrationRequests).toBeGreaterThanOrEqual(2);
+  });
+
+  test("shows missing credentials and staged integration states", async ({ page }) => {
+    await page.goto("/");
+    await page.getByRole("button", { name: "Integration status" }).click();
+    const status = page.getByRole("status", { name: "Integration status" });
+    await expect(status).toContainText("unconfigured");
+    await expect(status).toContainText("deferred");
+    await expect(status).toContainText("Set VERCEL_TOKEN");
   });
 
   test("creates, edits, finalizes, and inspects a Session Handoff", async ({ page }) => {
