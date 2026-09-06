@@ -17,7 +17,7 @@ The approved static visual reference remains available at `index.html`, but it i
 
 ## Local Store
 
-The app creates `.developer-agentic-os/` in the workspace on first use. It contains:
+The app creates `.developer-agentic-os/` in each registered Repository Context on first use. It contains:
 
 - `artifacts/`: durable artifact JSON files and an index.
 - `repo-memory/`: refreshable repository snapshots.
@@ -32,7 +32,7 @@ Remove-Item -Recurse -Force .developer-agentic-os
 
 Layout preferences are browser-owned. Use **Reset Layout** in the Layout controls to restore the dashboard baseline, or clear the `developer-agentic-os-layout-v1` local-storage entry in the browser.
 
-## First-Build Boundaries
+## Current Boundaries
 
 Live widgets:
 
@@ -40,7 +40,7 @@ Live widgets:
 - Skills Deck, including built-in skill runs and model-by-effort configuration.
 - Routines, including manual Run Now, pause/resume, and history-backed status.
 - Second Brain graph, including repository, area, file, artifact, and skill nodes.
-- Layout settings and integration status.
+- Layout settings and integration operations status.
 
 Placeholder widgets:
 
@@ -48,11 +48,17 @@ Placeholder widgets:
 - Calendar and agenda data.
 - Email and communication signals.
 
-Integrations:
+Integration Operations:
 
 - Local Git is required and reports repository status.
-- GitHub is optional and becomes connected when `GITHUB_TOKEN` or `GH_TOKEN` is available.
-- Jira, Linear, Slack, email providers, observability services, Cloudflare services, and other external systems are represented as available/deferred setup surfaces.
+- GitHub MVP reports Issues, Pull Requests, Actions, and merge status when `GITHUB_TOKEN` or `GH_TOKEN` and a repository remote are available.
+- Vercel MVP reports deployments and links to build/runtime logs when `VERCEL_TOKEN` or `VERCEL_API_TOKEN` and project configuration are available.
+- Sentry, Cloudflare, CodeRabbit, WorkOS, Clerk, Convex, NeonDB, Upstash, Email, and Slack appear as staged health/setup states without unsupported actions.
+- Unhealthy GitHub and Vercel results can become repository-scoped Agent Inbox signals and linked Work Items.
+- Provider failures are normalized into actionable states such as unconfigured, authentication, rate limit, timeout, unavailable, and unhealthy.
+- Integration data refreshes on dashboard load and through the manual Integration status refresh control.
+
+Credentials are environment-based for local development. Hosted OAuth and encrypted per-user credential storage remain future production boundaries.
 
 Automatic background routine scheduling and persisted user-added Micro Apps are outside the first build.
 
@@ -82,7 +88,7 @@ npm run test:e2e
 npm run build
 ```
 
-Expected status for a healthy checkout: every command exits with code `0`; the unit and contract suite reports 50 passing tests, and the Playwright suite reports 24 passing desktop/mobile smoke tests. Playwright uses an isolated local dev server on port `3100` and installs Chromium with:
+Expected status for a healthy checkout: every command exits with code `0`; the unit and contract suite reports 60 passing tests, and the Playwright suite reports 32 passing desktop/mobile smoke tests. Playwright uses an isolated local dev server on port `3100` and installs Chromium with:
 
 ```powershell
 npx playwright install chromium
@@ -95,6 +101,7 @@ npx playwright install chromium
 - [Implementation handoff](docs/implementation-plan-and-validation-strategy.md): module boundaries, routes, test strategy, and browser checks.
 - Phase Three graph and Local Store boundaries, focused checks, and full validation commands are documented in the implementation handoff.
 - [Build issue set](.scratch/developer-agentic-os-v2/issues/build-developer-agentic-os-v2.md): original first-build specification.
+- [Integration Operations issue](.scratch/developer-agentic-os-v2/issues/26-integration-operations-layer.md): completed GitHub/Vercel operations scope and staged integration roadmap.
 - [Static visual reference](index.html): approved command-centre direction.
 
 ## Visual Direction

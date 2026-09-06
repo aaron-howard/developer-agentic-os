@@ -11,8 +11,8 @@ Build Developer Agentic OS v2 as a product-grade, local-first Next.js App Router
 - Storage: `.developer-agentic-os/` local filesystem store for JSON artifacts, indexes, repo-memory snapshots, skill run records, and routine execution records.
 - Client layout preferences: browser `localStorage` for page width, orbit size, widget dimensions, skill-card dimensions, and reset behavior.
 - Mandatory integration: local git.
-- Optional integration: GitHub PR/branch metadata when `GITHUB_TOKEN` or `GH_TOKEN` exists.
-- Deferred integrations: GitLab, Jira, Linear, Slack, email providers, observability, Cloudflare Workers, Cloudflare Workflows, and D1.
+- Integration Operations: GitHub Issues, Pull Requests, Actions, and merge status; Vercel deployments and build/runtime log links.
+- Staged integrations: Sentry, Cloudflare, CodeRabbit, WorkOS, Clerk, Convex, NeonDB, Upstash, Email, and Slack expose setup or deferred health states without unsupported actions.
 - Built-in skills: `/repo-summary`, `/branch-summary`, `/release-readiness`, `/implementation-checklist`, and `/sprint-digest`.
 - Real first-build routines: `nightly_repo_digest`, `weekly_sprint_digest`, and `release_readiness_scan`.
 - Second Brain graph: repo, area, file, artifact, and skill nodes with contains, references, produced, and used_context links.
@@ -217,20 +217,23 @@ Rules:
 
 ### 8. Implement Integration Adapters
 
-Create the local git and optional GitHub adapter status layer.
+Create the local git, GitHub, and Vercel Integration Operations adapters plus staged provider status entries.
 
 Suggested files:
 
 - `src/server/integrations/integration-registry.ts`
-- `src/server/integrations/local-git.ts`
-- `src/server/integrations/github.ts`
+- `src/server/integrations/github-adapter.ts`
+- `src/server/integrations/vercel-adapter.ts`
+- `src/types/github.ts`
+- `src/types/vercel.ts`
 
 Rules:
 
 - Local git is mandatory.
-- GitHub activates when `GITHUB_TOKEN` or `GH_TOKEN` exists.
-- Missing optional integrations are `available`, not broken.
-- Deferred integrations should expose setup guidance without requiring credentials.
+- GitHub uses `GITHUB_TOKEN` or `GH_TOKEN`, derives the repository from the active context's Git remote, and exposes Issues, Pull Requests, Actions, and merge status.
+- Vercel uses `VERCEL_TOKEN` or `VERCEL_API_TOKEN`, prefers `.vercel/project.json` from the active context, and exposes deployments plus build/runtime log links.
+- Missing credentials and project configuration are `unconfigured`; provider failures are normalized without throwing through the dashboard.
+- Staged integrations expose `deferred`, `available`, or setup states with no unsupported action controls.
 
 ### 9. Implement Route Handlers
 
@@ -249,6 +252,8 @@ Suggested first-build routes:
 - `POST /api/routines/[id]/pause`
 - `POST /api/routines/[id]/resume`
 - `GET /api/integrations`
+- `GET /api/integrations/github`
+- `GET /api/integrations/vercel`
 
 ### 10. Wire Live Widgets
 
@@ -259,6 +264,7 @@ Live first-build widgets:
 - Routines reads routine definitions/history and supports Run Now plus pause/resume.
 - Second Brain reads graph data and opens Inspector Panel on node click.
 - Layout controls persist and reset local preferences.
+- Integration Operations loads provider health on dashboard load, supports manual refresh, and exposes GitHub/Vercel operation summaries.
 
 Placeholder widgets:
 
@@ -296,7 +302,9 @@ Test targets:
 - Skill runner creates artifacts only for durable outputs.
 - Routine registry lists defaults and stores execution history.
 - Routine runner invokes SkillRegistry handlers where applicable.
-- Integration registry reports local git as required and optional integrations as available when credentials are missing.
+- Integration registry reports the full provider catalog with explicit connected, unconfigured, deferred, disabled, and error states.
+- GitHub and Vercel adapters normalize successful operations and authentication, rate-limit, timeout, unavailable, invalid-response, and unhealthy states.
+- Integration failures create deduplicated repository-scoped Incoming Signals; triage can create Work Items with provider-event provenance.
 
 ### Route Handler Tests
 
@@ -311,7 +319,7 @@ Coverage targets:
 - `/api/skills/[id]/run`
 - `/api/routines`
 - `/api/routines/[id]/run`
-- `/api/integrations`
+- `/api/integrations`, `/api/integrations/github`, and `/api/integrations/vercel`
 
 ### Browser Tests
 
@@ -334,8 +342,10 @@ Smoke flows:
 ### Manual QA
 
 - Start from a clean repo with no `.developer-agentic-os/` folder and verify first-run initialization.
-- Run without GitHub credentials and verify GitHub appears as available.
-- Run with GitHub credentials and verify GitHub status becomes connected.
+- Run without GitHub or Vercel credentials and verify both appear as unconfigured with setup guidance.
+- Run with deterministic GitHub/Vercel fixtures and verify operations, healthy/unhealthy states, and manual refresh.
+- Verify Integration Signals are deduplicated, repository-scoped, and triage into linked Work Items.
+- Verify two Repository Contexts cannot see each other's operations, signals, or Work Items.
 - Run in a non-git folder and verify local git reports a clear error state without breaking the dashboard.
 - Delete the Local Store and verify the app recreates required directories/files.
 
@@ -349,12 +359,13 @@ Smoke flows:
 6. Implement Second Brain graph data and inspector interactions.
 7. Implement SkillRegistry and five built-in skills.
 8. Implement routine registry, manual run, pause/resume, and history.
-9. Implement integration registry with local git and optional GitHub status.
-10. Wire live dashboard widgets to route handlers.
-11. Add unit and route handler tests for core contracts.
-12. Add Playwright smoke tests for approved UI flows.
-13. Update README with Next.js setup, run commands, and first-build boundaries.
+9. Implement Integration Operations registry with local git, GitHub, Vercel, and staged provider states.
+10. Add provider failure signals and Work Item provenance.
+11. Wire live dashboard widgets to route handlers.
+12. Add unit and route handler tests for core contracts.
+13. Add Playwright smoke tests for approved UI and cross-repository operations flows.
+14. Update README with Next.js setup, run commands, and current integration boundaries.
 
 ## Handoff Verdict
 
-The first build, Phase Two, and Phase Three are implemented and validated. The Wayfinder map and implementation issues remain as decision and traceability records; future work should begin with a new spec and issue set rather than treating this handoff as an unfinished implementation plan.
+The first build, Phase Two, Phase Three, and the Integration Operations MVP are implemented and validated. The completed Integration Operations issue is 26 with child tickets 27–31. The Wayfinder map and implementation issues remain as decision and traceability records; future work should begin with a new spec and issue set rather than treating this handoff as an unfinished implementation plan.

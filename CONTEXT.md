@@ -97,7 +97,13 @@ A structured record of a routine run. It links to produced artifacts by ID rathe
 The lifecycle state of a routine: `queued`, `next`, `running`, `succeeded`, `failed`, `paused`, or `missed`.
 
 ### Integration Status
-The connection state of an Integration Adapter, such as `connected`, `available`, `disabled`, or `error`.
+The state of an Integration Adapter or its latest health result: `connected`, `healthy`, `unhealthy`, `unconfigured`, `deferred`, `available`, `disabled`, or `error`.
+
+### Integration Operation
+A normalized read or inspection result from a provider adapter, such as GitHub Issues, Pull Requests, Actions, merge status, or Vercel deployments and log links.
+
+### Integration Failure Signal
+An Agent Inbox Incoming Signal created from an unhealthy provider result. It preserves the provider, stable source event identifier, Repository Context, timestamp, and failure details.
 
 ### Live Widget
 A command-centre widget backed by real local state, persisted data, or an implemented workflow.
@@ -198,8 +204,15 @@ A Communication Signal is incoming context that may require triage. A Work Item 
 - First-build routines are manually triggered with schedule-aware display; automatic background execution is deferred.
 - Routines should invoke Skill Registry handlers when their behavior matches a skill.
 - Local git is the only mandatory first-build integration.
-- GitHub is optional and activates when credentials are present.
-- Missing optional integrations should appear as available, not broken.
+- GitHub and Vercel are the first actionable Integration Operations providers. GitHub exposes Issues, Pull Requests, Actions, and merge status; Vercel exposes deployments and build/runtime log links.
+- GitHub uses `GITHUB_TOKEN` or `GH_TOKEN` and derives the repository from the active Repository Context's Git remote when available.
+- Vercel uses `VERCEL_TOKEN` or `VERCEL_API_TOKEN` and prefers `.vercel/project.json` in the active Repository Context for project and team identity.
+- Missing credentials or project configuration appear as `unconfigured`; provider failures are normalized and do not break the command centre.
+- Sentry, Cloudflare, CodeRabbit, WorkOS, Clerk, Convex, NeonDB, Upstash, Email, and Slack appear as staged `deferred` or setup states without unsupported actions.
+- Integration Operations refresh on dashboard load and through the manual Integration status control.
+- Unhealthy GitHub and Vercel results create deduplicated `integration` Incoming Signals. Triage preserves the signal and can create a Work Item with explicit integration-event provenance.
+- Integration requests, provider results, signals, and Work Items remain scoped to the active Repository Context.
+- Provider integrations can be disabled independently through their configuration boundaries.
 - First-build resizing persists locally and includes a Reset Layout action.
 - Mobile resizing is vertical-only.
 - Reordering command-centre widgets is deferred from the first build.
@@ -219,7 +232,8 @@ A Communication Signal is incoming context that may require triage. A Work Item 
 - Phase Three uses a provider-neutral Email adapter with local/demo signals by default and real provider data only when configured.
 - Today / Focus Board exposes applicable actions for Work Items, Skills, Routines, Artifacts, and linked context rather than becoming a second data store.
 - Session Handoff begins as an editable draft and becomes an immutable snapshot Artifact when finalized.
-- Incoming Signals contain source type, title, body or notes, received/created time, optional source identifier, optional Repository Context, triage status, and links to resulting Work Items, Skill Runs, or Artifacts.
+- Incoming Signals contain source type, title, body or notes, received/created time, optional source identifier, optional provider, Repository Context, triage status, and links to resulting Work Items, Skill Runs, or Artifacts.
+- Integration Incoming Signals use `github` or `vercel` provider provenance and stable provider-event source identifiers. Work Items created from them retain both the signal reference and integration-event reference.
 - Phase Three does not send or reply to Email; it supports triage and workflow linking only.
 - Phase Three implementation order is Incoming Signal and Agent Inbox, provider-neutral Email/manual-note adapters, triage into linked Work Items, Today / Focus Board, Session Handoff draft/finalization, then Second Brain and browser integration coverage.
 - The Phase Three release boundary includes Agent Inbox, demo/manual signals, provider-neutral Email, linked Work Items, Today / Focus Board, Session Handoff, provenance links, multi-repository isolation, and reset/migration coverage.
