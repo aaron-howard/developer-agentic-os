@@ -24,14 +24,12 @@ import {
   GitBranch,
   Globe,
   Grip,
-  Image,
   Info,
   Inbox,
   LayoutGrid,
   Mail,
   MailCheck,
   Monitor,
-  PenTool,
   Play,
   Plus,
   Route,
@@ -51,11 +49,8 @@ import {
 const microApps: Array<{ icon: LucideIcon; title: string; description: string }> = [
   { icon: GitBranch, title: "Workspace Switcher", description: "Change the active repository context" },
   { icon: CheckCircle2, title: "Today / Focus Board", description: "Daily attention for the selected repository" },
-  { icon: Image, title: "Generations", description: "Every image and video generated" },
-  { icon: Monitor, title: "Teleprompter", description: "Scripted workspace camera" },
   { icon: Route, title: "Second Brain", description: "Workspace graph and living map" },
   { icon: ClipboardPen, title: "Session Handoff", description: "Draft and finalize repository context" },
-  { icon: PenTool, title: "Excalidraw", description: "Hand-drawn diagrams ready to export" },
 ];
 
 type DashboardData = {

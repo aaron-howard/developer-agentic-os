@@ -96,6 +96,7 @@ npx playwright install chromium
 
 ## Project References
 
+- [Getting started](docs/getting-started.md): install and run the app, and obtain GitHub and Vercel tokens for the Integration Operations panel.
 - [Domain context](CONTEXT.md): canonical product terminology and first-build boundaries.
 - [Wayfinder map](.wayfinder/map.md): resolved product and architecture decisions.
 - [Implementation handoff](docs/implementation-plan-and-validation-strategy.md): module boundaries, routes, test strategy, and browser checks.
