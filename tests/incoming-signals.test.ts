@@ -7,6 +7,7 @@ import test from "node:test";
 import { GET, POST } from "../src/app/api/incoming-signals/route";
 import { PATCH } from "../src/app/api/incoming-signals/[id]/route";
 import { IncomingSignalStore } from "../src/server/incoming-signals/incoming-signal-store";
+import { recordIntegrationFailure } from "../src/server/incoming-signals/integration-failure";
 import { GET as getContext } from "../src/app/api/workspace/context/route";
 
 async function json(response: Response): Promise<Record<string, unknown>> {
@@ -48,4 +49,20 @@ test("signal routes create, filter, transition statuses, and validate ids", asyn
   assert.equal(invalidStatus.status, 400);
   const missing = await PATCH(new Request("http://localhost/api/incoming-signals/missing", { method: "PATCH", body: JSON.stringify({ status: "triaged" }) }), { params: Promise.resolve({ id: "missing" }) });
   assert.equal(missing.status, 404);
+});
+
+test("integration failures create one repository-scoped signal per provider event", async () => {
+  const root = await mkdtemp(join(tmpdir(), "developer-agentic-os-integration-signals-"));
+  try {
+    const input = { provider: "github", sourceId: "github:octo/example:authentication:rejected", title: "GitHub integration unhealthy", body: "GitHub credentials were rejected.", repositoryId: "repo-a" };
+    const [first, second] = await Promise.all([recordIntegrationFailure(root, input), recordIntegrationFailure(root, input)]);
+    assert.equal(first.id, second.id);
+    assert.equal(first.source, "integration");
+    assert.equal(first.provider, "github");
+    assert.equal((await new IncomingSignalStore(root).list({ repositoryId: "repo-a", source: "integration" })).length, 1);
+    await recordIntegrationFailure(root, { ...input, repositoryId: "repo-b" });
+    assert.equal((await new IncomingSignalStore(root).list({ repositoryId: "repo-b", source: "integration" })).length, 1);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
 });

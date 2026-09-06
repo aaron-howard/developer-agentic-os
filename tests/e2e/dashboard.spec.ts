@@ -88,6 +88,31 @@ test.describe("Developer Agentic OS dashboard", () => {
     await expect(inspector).toContainText("Artifact created");
   });
 
+  test("triages an integration failure into a linked Work Item", async ({ page }) => {
+    await page.goto("/");
+    const contextResponse = await page.request.get("/api/workspace/context");
+    const context = await contextResponse.json() as { context: { id: string } };
+    const failureTitle = `Integration failure ${Date.now()}`;
+    const created = await page.request.post("/api/incoming-signals", {
+      data: {
+        source: "integration",
+        provider: "github",
+        sourceId: `github:test/${Date.now()}:authentication`,
+        title: failureTitle,
+        body: "GitHub credentials were rejected.",
+        repositoryId: context.context.id,
+      },
+    });
+    expect(created.ok()).toBeTruthy();
+    await page.reload();
+    const signal = page.getByRole("button", { name: new RegExp(failureTitle) });
+    await expect(signal).toBeVisible();
+    await signal.click();
+    const inspector = page.getByRole("complementary", { name: "Agent Inbox Inspector" });
+    await inspector.getByRole("button", { name: "Create Work Item" }).click();
+    await expect(inspector).toContainText("Linked to work item");
+  });
+
   test("shows Email adapter status and keeps the Email surface read-only", async ({ page }) => {
     await page.goto("/");
     await page.getByRole("button", { name: "Integration status" }).click();

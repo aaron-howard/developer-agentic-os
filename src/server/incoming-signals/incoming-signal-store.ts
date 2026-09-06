@@ -1,11 +1,11 @@
 import { randomUUID } from "node:crypto";
 
-import type { CreateIncomingSignalInput, IncomingSignal, IncomingSignalSource, IncomingSignalStatus, ListIncomingSignalsOptions, UpdateIncomingSignalInput } from "@/types/incoming-signal";
+import type { CreateIncomingSignalInput, IncomingSignal, IncomingSignalProvider, IncomingSignalSource, IncomingSignalStatus, ListIncomingSignalsOptions, UpdateIncomingSignalInput } from "@/types/incoming-signal";
 import { readJsonFile, writeJsonFile } from "../local-store/json-file";
 import { getLocalStorePaths, initializeLocalStore } from "../local-store/paths";
 
 const emptySignals: IncomingSignal[] = [];
-const sources: IncomingSignalSource[] = ["manual", "email"];
+const sources: IncomingSignalSource[] = ["manual", "email", "integration"];
 const statuses: IncomingSignalStatus[] = ["new", "snoozed", "dismissed", "triaged"];
 
 export class IncomingSignalError extends Error {
@@ -32,6 +32,7 @@ export class IncomingSignalStore {
       id: randomUUID(),
       source: input.source,
       sourceId: input.sourceId?.trim() || null,
+      ...(input.provider ? { provider: input.provider } : {}),
       title: input.title.trim(),
       body: input.body?.trim() ?? "",
       repositoryId: input.repositoryId.trim(),
@@ -71,11 +72,16 @@ export class IncomingSignalStore {
 export const incomingSignalStore = new IncomingSignalStore();
 
 function validateCreate(input: CreateIncomingSignalInput): void {
-  if (!input || !sources.includes(input.source)) throw new IncomingSignalError("INVALID_INPUT", "source must be manual or email");
+  if (!input || !sources.includes(input.source)) throw new IncomingSignalError("INVALID_INPUT", "source must be manual, email, or integration");
   if (typeof input.title !== "string" || !input.title.trim()) throw new IncomingSignalError("INVALID_INPUT", "title is required");
   if (input.body !== undefined && typeof input.body !== "string") throw new IncomingSignalError("INVALID_INPUT", "body must be a string");
   if (typeof input.repositoryId !== "string" || !input.repositoryId.trim()) throw new IncomingSignalError("INVALID_INPUT", "repositoryId is required");
   if (input.sourceId !== undefined && input.sourceId !== null && typeof input.sourceId !== "string") throw new IncomingSignalError("INVALID_INPUT", "sourceId must be a string or null");
+  if (input.source === "integration" && !isProvider(input.provider)) throw new IncomingSignalError("INVALID_INPUT", "integration signals require a github or vercel provider");
+}
+
+function isProvider(value: unknown): value is IncomingSignalProvider {
+  return value === "github" || value === "vercel";
 }
 
 function validateUpdate(input: UpdateIncomingSignalInput): void {

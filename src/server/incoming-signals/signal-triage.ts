@@ -19,6 +19,7 @@ export async function triageSignal(root: string, signalId: string, input: Signal
   if (!signal) throw new SignalTriageError("NOT_FOUND", "Incoming signal not found.");
 
   const signalRef = { kind: "incoming_signal" as const, ref: signal.id, label: signal.title };
+  const integrationRef = signal.provider && signal.sourceId ? { kind: "integration_event" as const, ref: signal.sourceId, label: signal.provider } : null;
   if (input.action === "dismiss") return { action: input.action, signal: await signalStore.update(signal.id, { status: "dismissed" }, repositoryId) };
   if (input.action === "snooze") return { action: input.action, signal: await signalStore.update(signal.id, { status: "snoozed", snoozedUntil: input.snoozedUntil ?? new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() }, repositoryId) };
 
@@ -30,7 +31,7 @@ export async function triageSignal(root: string, signalId: string, input: Signal
         notes: input.notes?.trim() || signal.body,
         priority: input.priority,
         repositoryId: signal.repositoryId,
-        contextRefs: [signalRef],
+        contextRefs: [signalRef, ...(integrationRef ? [integrationRef] : [])],
       });
     } catch (error) {
       if (error instanceof WorkItemError) throw new SignalTriageError("INVALID_INPUT", error.message);

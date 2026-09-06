@@ -106,5 +106,5 @@ function validateUpdate(input: UpdateWorkItemInput): void {
 }
 
 function invalidReference(reference: WorkItemContextReference): boolean {
-  return !reference || !["file", "area", "artifact", "skill", "routine", "incoming_signal"].includes(reference.kind) || typeof reference.ref !== "string" || !reference.ref.trim();
+  return !reference || !["file", "area", "artifact", "skill", "routine", "incoming_signal", "integration_event"].includes(reference.kind) || typeof reference.ref !== "string" || !reference.ref.trim();
 }

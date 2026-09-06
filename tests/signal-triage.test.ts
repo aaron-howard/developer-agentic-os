@@ -10,7 +10,7 @@ import { ArtifactStore } from "../src/server/artifacts/artifact-store";
 import { workspaceStore } from "../src/server/workspace/workspace-store";
 
 type TriageResponse = {
-  signal: { status: string };
+  signal: { status: string; sourceId?: string | null };
   workItem?: { id: string; title: string; contextRefs: Array<{ kind: string; ref: string; label?: string }> };
   skillRun?: { status: string; artifactId: string };
   artifact?: { provenance: { workflowRefs: Array<{ kind: string; ref: string }> } };
@@ -30,13 +30,14 @@ test("triage actions create and link workflow records without losing the source 
   try {
     const context = await workspaceStore.registerRepository(root);
     contextId = context.id;
-    const signal = await new IncomingSignalStore(root).create({ source: "manual", title: "Triage me", body: "Signal body", repositoryId: context.id });
+    const signal = await new IncomingSignalStore(root).create({ source: "integration", provider: "github", sourceId: "github:octo/example:authentication", title: "GitHub integration unhealthy", body: "Signal body", repositoryId: context.id });
     const created = await triage(request(root, { action: "create_work_item", title: "Linked item" }), { params: Promise.resolve({ id: signal.id }) });
     assert.equal(created.status, 200);
     const createdBody = await readBody(created);
     assert.ok(createdBody.workItem);
     assert.equal(createdBody.signal.status, "triaged");
     assert.deepEqual(createdBody.workItem.contextRefs[0], { kind: "incoming_signal", ref: signal.id, label: signal.title });
+    assert.deepEqual(createdBody.workItem.contextRefs[1], { kind: "integration_event", ref: signal.sourceId, label: "github" });
 
     const attached = await triage(request(root, { action: "attach_work_item", workItemId: createdBody.workItem.id }), { params: Promise.resolve({ id: signal.id }) });
     const attachedBody = await readBody(attached);
