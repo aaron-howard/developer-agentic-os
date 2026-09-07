@@ -132,6 +132,21 @@ A Micro App that organizes the active Repository Context's current Work Items, d
 ### Session Handoff
 A Micro App that captures the current work state, decisions, changes, blockers, and next actions as a durable handoff Artifact for a later session or agent.
 
+### Operational Event
+An immutable normalized observation from a schedule, repository, or Integration Adapter that may start an automated workflow.
+
+### Operational Incident
+A repository-scoped grouping of related Incoming Signals and Operational Events that gives the developer one actionable operational thread without replacing its source evidence.
+
+### Automation Run
+A durable record of a triggered workflow, including its lifecycle, trigger, actions, approvals, retries, and result.
+
+### Automation Policy
+A repository-scoped rule describing which triggers and workflows are enabled, what approval is required, and how retries or missed work are handled.
+
+### Approval
+An explicit developer decision allowing a proposed Automation Run action to proceed.
+
 ## Clarified Distinctions
 
 ### Skill vs Routine
@@ -184,6 +199,15 @@ Routine Status is the internal state. A UI label may use display language such a
 
 ### Communication Signal vs Work Item
 A Communication Signal is incoming context that may require triage. A Work Item is an intentional actionable commitment created from a signal or directly by the developer. Signals do not become Work Items automatically.
+
+### Incoming Signal vs Operational Incident
+An Incoming Signal preserves one piece of incoming context or provider evidence. An Operational Incident groups related signals for coordinated investigation without deleting or replacing them.
+
+### Operational Event vs Incoming Signal
+An Operational Event is a normalized system observation. An Incoming Signal is the triageable product record created from an event or other incoming context.
+
+### Automation Run vs Routine Execution Record
+An Automation Run records any triggered operational workflow, including event-triggered workflows. A Routine Execution Record records the execution of a Routine and may link to Automation Runs or their outputs.
 
 ## Relationship Rules
 

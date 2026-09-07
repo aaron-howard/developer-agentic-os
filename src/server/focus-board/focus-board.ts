@@ -5,6 +5,7 @@ import { RoutineHistoryStore } from "../routines/routine-history-store";
 import { WorkItemStore } from "../work-items/work-item-store";
 import type { FocusBoard, FocusBoardWorkItem } from "@/types/focus-board";
 import type { WorkItem } from "@/types/work-item";
+import { OperationalStore } from "../operational/operational-store";
 
 type FocusBoardOptions = {
   now?: () => Date;
@@ -15,12 +16,14 @@ type FocusBoardOptions = {
 export async function getFocusBoard(repositoryId: string, repositoryRoot: string, options: FocusBoardOptions = {}): Promise<FocusBoard> {
   const now = options.now ?? (() => new Date());
   const limit = options.limit ?? 12;
-  const [workItems, recentArtifacts, failedSkillRuns, failedRoutineExecutions, routines] = await Promise.all([
+  const [workItems, recentArtifacts, failedSkillRuns, failedRoutineExecutions, routines, operationalIncidents, operationalRuns] = await Promise.all([
     (options.workItems ?? new WorkItemStore(repositoryRoot)).list({ repositoryId }),
     new ArtifactStore(repositoryRoot).listArtifacts({ limit }),
     new SkillRunStore(repositoryRoot).listRuns({ limit }),
     new RoutineHistoryStore(repositoryRoot).listExecutions({ limit }),
     createRoutineRegistry({ root: repositoryRoot }).listRoutines(),
+    new OperationalStore(repositoryRoot).listIncidents({ repositoryId }),
+    new OperationalStore(repositoryRoot).listRuns({ repositoryId }),
   ]);
   const nowValue = now().getTime();
   const withAttention = workItems
@@ -42,6 +45,8 @@ export async function getFocusBoard(repositoryId: string, repositoryRoot: string
     recentArtifacts: recentArtifacts.slice(0, limit),
     failedSkillRuns: failedSkillRuns.filter((run) => run.status === "failed").slice(0, limit),
     failedRoutineExecutions: failedRoutineExecutions.filter((execution) => execution.status === "failed").map((execution) => ({ ...execution, routineName: routineNames.get(execution.routineId) ?? execution.routineId })).slice(0, limit),
+    operationalIncidents: operationalIncidents.filter((incident) => incident.status === "active").slice(0, limit),
+    operationalRuns: operationalRuns.filter((run) => ["queued", "running", "awaiting_approval", "failed", "paused", "retrying", "missed"].includes(run.status)).slice(0, limit),
   };
 }
 

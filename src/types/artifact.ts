@@ -6,7 +6,7 @@ export type ContextReference = {
 };
 
 export type WorkflowReference = {
-  kind: "skill" | "routine" | "work_item" | "incoming_signal";
+  kind: "skill" | "routine" | "work_item" | "incoming_signal" | "policy" | "operational_event" | "operational_incident";
   ref: string;
   label?: string;
 };

@@ -5,7 +5,7 @@ import { readJsonFile, writeJsonFile } from "../local-store/json-file";
 import { getLocalStorePaths, initializeLocalStore } from "../local-store/paths";
 
 const emptySignals: IncomingSignal[] = [];
-const sources: IncomingSignalSource[] = ["manual", "email", "integration"];
+const sources: IncomingSignalSource[] = ["manual", "email", "integration", "operational"];
 const statuses: IncomingSignalStatus[] = ["new", "snoozed", "dismissed", "triaged"];
 
 export class IncomingSignalError extends Error {
@@ -41,6 +41,7 @@ export class IncomingSignalStore {
       status: "new",
       snoozedUntil: null,
       derivedRefs: [],
+      ...(input.provenance ? { provenance: input.provenance } : {}),
     };
     await this.writeSignals([signal, ...(await this.readSignals())]);
     return signal;
@@ -77,11 +78,11 @@ function validateCreate(input: CreateIncomingSignalInput): void {
   if (input.body !== undefined && typeof input.body !== "string") throw new IncomingSignalError("INVALID_INPUT", "body must be a string");
   if (typeof input.repositoryId !== "string" || !input.repositoryId.trim()) throw new IncomingSignalError("INVALID_INPUT", "repositoryId is required");
   if (input.sourceId !== undefined && input.sourceId !== null && typeof input.sourceId !== "string") throw new IncomingSignalError("INVALID_INPUT", "sourceId must be a string or null");
-  if (input.source === "integration" && !isProvider(input.provider)) throw new IncomingSignalError("INVALID_INPUT", "integration signals require a github or vercel provider");
+  if ((input.source === "integration" && !isProvider(input.provider)) || (input.source === "operational" && input.provider !== "local")) throw new IncomingSignalError("INVALID_INPUT", "integration signals require a provider and operational signals require the local provider");
 }
 
 function isProvider(value: unknown): value is IncomingSignalProvider {
-  return value === "github" || value === "vercel";
+  return value === "github" || value === "vercel" || value === "sentry";
 }
 
 function validateUpdate(input: UpdateIncomingSignalInput): void {

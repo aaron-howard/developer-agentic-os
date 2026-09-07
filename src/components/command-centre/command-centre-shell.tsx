@@ -14,6 +14,7 @@ import type { IncomingSignal, IncomingSignalSource, IncomingSignalStatus } from 
 import type { SignalTriageAction } from "@/types/signal-triage";
 import type { FocusBoard } from "@/types/focus-board";
 import type { Handoff } from "@/types/handoff";
+import type { AutomationRun, OperationalAuditRecord, OperationalIncident } from "@/types/operational";
 import {
   Archive,
   BarChart3,
@@ -61,6 +62,12 @@ type DashboardData = {
   integrations: IntegrationAdapterStatus[];
   focusBoard: FocusBoard | null;
 };
+
+function providerActionForRun(run: AutomationRun): "github-rerun" | "vercel-redeploy" | null {
+  if (typeof run.input.actionRunId === "string" && run.input.actionRunId) return "github-rerun";
+  if (typeof run.input.deploymentId === "string" && run.input.deploymentId) return "vercel-redeploy";
+  return null;
+}
 
 type WorkspaceData = {
   context: RepositoryContext;
@@ -300,6 +307,10 @@ export function CommandCentreShell() {
   const [actionStatus, setActionStatus] = useState<string | null>(null);
   const [configuredSkill, setConfiguredSkill] = useState<SkillCommand | null>(null);
   const [selectedNode, setSelectedNode] = useState<ClientGraphNode | null>(null);
+  const [selectedOperationalRun, setSelectedOperationalRun] = useState<AutomationRun | null>(null);
+  const [selectedOperationalIncident, setSelectedOperationalIncident] = useState<(OperationalIncident & { events: import("@/types/operational").OperationalEvent[] }) | null>(null);
+  const [selectedOperationalAudit, setSelectedOperationalAudit] = useState<OperationalAuditRecord | null>(null);
+  const [globalOperationalPaused, setGlobalOperationalPaused] = useState(false);
   const [artifactContent, setArtifactContent] = useState<string | null>(null);
   const [inspectorStatus, setInspectorStatus] = useState<string | null>(null);
   const [workspace, setWorkspace] = useState<WorkspaceData | null>(null);
@@ -377,9 +388,10 @@ export function CommandCentreShell() {
       fetch(`/api/integrations/github${contextQuery}`).then((response) => requireOk<GitHubOperations>(response)),
       fetch(`/api/integrations/vercel${contextQuery}`).then((response) => requireOk<VercelOperations>(response)),
       fetch(`/api/focus-board${contextQuery}`).then((response) => requireOk<FocusBoard>(response)),
+      fetch(`/api/operational${contextQuery}`).then((response) => requireOk<{ globalPaused: boolean }>(response)),
     ]);
 
-    const [graphResult, artifactsResult, skillsResult, routinesResult, integrationsResult, githubResult, vercelResult, focusBoardResult] = requests;
+    const [graphResult, artifactsResult, skillsResult, routinesResult, integrationsResult, githubResult, vercelResult, focusBoardResult, operationalResult] = requests;
     if (graphResult.status === "fulfilled") setGraph({ ...graphResult.value, links: graphResult.value.links ?? [] });
     const failures = requests.filter((result) => result.status === "rejected");
     setDashboard({
@@ -392,6 +404,7 @@ export function CommandCentreShell() {
     });
     setGitHubOperations(githubResult.status === "fulfilled" ? githubResult.value : null);
     setVercelOperations(vercelResult.status === "fulfilled" ? vercelResult.value : null);
+    if (operationalResult.status === "fulfilled") setGlobalOperationalPaused(operationalResult.value.globalPaused);
     setDashboardError(failures.length ? "Some workspace data could not be loaded." : null);
     setDashboardLoading(false);
   }, []);
@@ -633,6 +646,49 @@ export function CommandCentreShell() {
     const response = await fetch("/api/routines/executor", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ action, repositoryId: workspace?.context.id }) });
     setActionStatus(response.ok ? `Background executor ${action === "trigger" ? "checked" : `${action}ed`}.` : "Background executor action failed.");
     if (response.ok) await loadDashboard(workspace?.context.id);
+  }, [loadDashboard, workspace?.context.id]);
+
+  const inspectOperationalRun = useCallback(async (run: AutomationRun) => {
+    setSelectedOperationalRun(run);
+    setSelectedOperationalAudit(null);
+    if (!workspace?.context.id) return;
+    try {
+      const result = await requireOk<{ audits: OperationalAuditRecord[] }>(await fetch(`/api/operational?repositoryId=${encodeURIComponent(workspace.context.id)}`));
+      setSelectedOperationalAudit(result.audits.find((audit) => audit.runId === run.id) ?? null);
+    } catch {
+      setInspectorStatus("Operational audit history could not be loaded.");
+    }
+  }, [workspace?.context.id]);
+
+  const setGlobalOperationalPause = useCallback(async (paused: boolean) => {
+    if (!workspace?.context.id) return;
+    const response = await fetch("/api/operational/pause", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ repositoryId: workspace.context.id, paused }) });
+    if (response.ok) { setGlobalOperationalPaused(paused); setActionStatus(`Operational automation ${paused ? "paused" : "resumed"}.`); await loadDashboard(workspace.context.id); }
+    else setActionStatus("Operational pause control failed.");
+  }, [loadDashboard, workspace?.context.id]);
+
+  const updateOperationalRun = useCallback(async (run: AutomationRun, action: "approve" | "pause" | "resume" | "cancel") => {
+    if (!workspace?.context.id) return;
+    setInspectorStatus(`${action === "approve" ? "Approving" : `${action[0].toUpperCase()}${action.slice(1)}ing`} operational run...`);
+    const response = await fetch(`/api/operational/runs/${run.id}`, { method: "PATCH", headers: { "content-type": "application/json" }, body: JSON.stringify({ action, repositoryId: workspace.context.id, input: run.input, actor: "developer", providerAction: providerActionForRun(run) }) });
+    if (!response.ok) { setInspectorStatus("Operational run update failed."); return; }
+    const updated = await response.json() as AutomationRun;
+    setSelectedOperationalRun(updated);
+    setInspectorStatus(`Operational run ${updated.status.replace("_", " ")}.`);
+    await loadDashboard(workspace.context.id);
+  }, [loadDashboard, workspace?.context.id]);
+
+  const invokeOperationalAction = useCallback(async (run: AutomationRun) => {
+    const providerAction = providerActionForRun(run);
+    if (!workspace?.context.id || !providerAction) return;
+    setInspectorStatus("Invoking approved provider action...");
+    const response = await fetch(`/api/operational/runs/${run.id}/action`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ repositoryId: workspace.context.id, providerAction }) });
+    if (!response.ok) { setInspectorStatus((await response.json() as { error?: string }).error ?? "Provider action failed."); return; }
+    const result = await response.json() as { action: { ok: boolean }; audit: OperationalAuditRecord };
+    setSelectedOperationalAudit(result.audit);
+    setSelectedOperationalRun({ ...run, status: result.action.ok ? "succeeded" : "failed", outputs: [result.audit.id], error: result.action.ok ? null : "Provider action failed." });
+    setInspectorStatus(result.action.ok ? "Provider action completed and was audited." : "Provider action failed and was audited.");
+    await loadDashboard(workspace.context.id);
   }, [loadDashboard, workspace?.context.id]);
 
   const runInspectedSkill = useCallback(async () => {
@@ -921,6 +977,8 @@ export function CommandCentreShell() {
               <span><strong>{dashboard.focusBoard.dueWorkItems.length}</strong> due</span>
               <span><strong>{dashboard.focusBoard.blockedWorkItems.length}</strong> blocked</span>
               <span><strong>{dashboard.focusBoard.failedSkillRuns.length + dashboard.focusBoard.failedRoutineExecutions.length}</strong> failed</span>
+              <span><strong>{dashboard.focusBoard.operationalIncidents.length}</strong> incidents</span>
+              <span><strong>{dashboard.focusBoard.operationalRuns.length}</strong> automation</span>
             </div>
             <div className="focus-board-section">
               <span className="tiny">Attention now</span>
@@ -928,6 +986,12 @@ export function CommandCentreShell() {
                 <button type="button" className="focus-board-record" onClick={() => setSelectedWorkItem(item)}><strong>{item.title}</strong><small>{item.attention.replace("_", " ")} {item.dueAt ? ` / due ${formatFocusDate(item.dueAt)}` : ""}</small></button>
                 <span className="focus-board-priority">{item.priority}</span>
               </div>)}
+            </div>
+            <div className="focus-board-section">
+              <span className="tiny">Operational attention <button className="outline-button" type="button" onClick={() => void setGlobalOperationalPause(!globalOperationalPaused)}>{globalOperationalPaused ? "Resume all" : "Pause all"}</button></span>
+              {dashboard.focusBoard.operationalIncidents.length === 0 && dashboard.focusBoard.operationalRuns.length === 0 ? <p className="dashboard-placeholder">No operational attention.</p> : null}
+              {dashboard.focusBoard.operationalIncidents.map((incident) => <button className="focus-board-failure" key={incident.id} type="button" onClick={() => setSelectedOperationalIncident(incident)}><span><strong>{incident.title}</strong><small>{incident.providers.join(", ")} / {incident.events.length} event(s)</small></span><span className="focus-board-priority">incident</span></button>)}
+              {dashboard.focusBoard.operationalRuns.map((run) => <button className="focus-board-failure" key={run.id} type="button" onClick={() => void inspectOperationalRun(run)}><span><strong>Automation run</strong><small>{run.status.replace("_", " ")}{run.error ? ` / ${run.error}` : ""}</small></span><span className="focus-board-priority">{run.retryCount} retries</span></button>)}
             </div>
             <div className="focus-board-section">
               <span className="tiny">Recent artifacts</span>
@@ -1105,6 +1169,38 @@ export function CommandCentreShell() {
             {(["open", "in_progress", "blocked", "completed"] as const).filter((status) => status !== selectedWorkItem.status).map((status) => <button className="outline-button" key={status} type="button" onClick={() => void updateWorkItemStatus(selectedWorkItem, status)}>{status.replace("_", " ")}</button>)}
           </div>
           <div className="work-history"><span className="tiny">Completion history</span>{selectedWorkItem.statusHistory.map((change) => <p className="inspector-line" key={`${change.status}-${change.changedAt}`}><code>{change.status}</code> {new Date(change.changedAt).toLocaleString()}</p>)}</div>
+        </aside>
+      ) : null}
+      {selectedOperationalRun ? (
+        <aside className="inspector-panel" aria-label="Operational Run Inspector">
+          <div className="inspector-header"><div><span className="tiny">operational run / {selectedOperationalRun.status}</span><h3>Automation run</h3></div><button className="icon-button" type="button" aria-label="Close operational run inspector" onClick={() => setSelectedOperationalRun(null)}>x</button></div>
+          <p className="inspector-line">Run ID: <code>{selectedOperationalRun.id}</code></p>
+          <p className="inspector-line">Policy: <code>{selectedOperationalRun.policyId}</code></p>
+          <p className="inspector-line">Trigger: <code>{selectedOperationalRun.trigger}</code></p>
+          <p className="inspector-line">Input: <code>{JSON.stringify(selectedOperationalRun.input)}</code></p>
+          {selectedOperationalRun.error ? <p className="inspector-line">Error: <code>{selectedOperationalRun.error}</code></p> : null}
+          <div className="inspector-actions">
+            {selectedOperationalRun.status === "awaiting_approval" ? <button className="outline-button" type="button" onClick={() => void updateOperationalRun(selectedOperationalRun, "approve")}>Approve Run</button> : null}
+            {selectedOperationalRun.status === "queued" && providerActionForRun(selectedOperationalRun) ? <button className="outline-button" type="button" onClick={() => void invokeOperationalAction(selectedOperationalRun)}>{providerActionForRun(selectedOperationalRun) === "github-rerun" ? "Rerun GitHub Action" : "Redeploy on Vercel"}</button> : null}
+            {selectedOperationalRun.status === "running" || selectedOperationalRun.status === "queued" ? <button className="outline-button" type="button" onClick={() => void updateOperationalRun(selectedOperationalRun, "pause")}>Pause</button> : null}
+            {selectedOperationalRun.status === "paused" ? <button className="outline-button" type="button" onClick={() => void updateOperationalRun(selectedOperationalRun, "resume")}>Resume</button> : null}
+            {!["succeeded", "failed", "cancelled", "missed", "interrupted"].includes(selectedOperationalRun.status) ? <button className="outline-button" type="button" onClick={() => void updateOperationalRun(selectedOperationalRun, "cancel")}>Cancel</button> : null}
+          </div>
+          {selectedOperationalAudit ? <div className="work-history"><span className="tiny">Audit result</span><p className="inspector-line">Action: <code>{selectedOperationalAudit.action}</code></p><p className="inspector-line">Recorded: <code>{new Date(selectedOperationalAudit.recordedAt).toLocaleString()}</code></p><pre className="inspector-content">{JSON.stringify(selectedOperationalAudit.response, null, 2)}</pre></div> : null}
+          {inspectorStatus ? <p className="inspector-status" role="status">{inspectorStatus}</p> : null}
+        </aside>
+      ) : null}
+      {selectedOperationalIncident ? (
+        <aside className="inspector-panel" aria-label="Operational Incident Inspector">
+          <div className="inspector-header"><div><span className="tiny">operational incident / {selectedOperationalIncident.status}</span><h3>{selectedOperationalIncident.title}</h3></div><button className="icon-button" type="button" aria-label="Close operational incident inspector" onClick={() => setSelectedOperationalIncident(null)}>x</button></div>
+          <p className="inspector-line">Incident ID: <code>{selectedOperationalIncident.id}</code></p>
+          <p className="inspector-line">Repository: <code>{workspace?.repositories.find((repository) => repository.id === selectedOperationalIncident.repositoryId)?.name ?? selectedOperationalIncident.repositoryId}</code></p>
+          <p className="inspector-line">Created: <code>{new Date(selectedOperationalIncident.createdAt).toLocaleString()}</code></p>
+          <p className="inspector-line">Updated: <code>{new Date(selectedOperationalIncident.updatedAt).toLocaleString()}</code></p>
+          <p className="inspector-line">Providers: <code>{selectedOperationalIncident.providers.join(", ")}</code></p>
+          {selectedOperationalIncident.failure ? <div className="work-history"><span className="tiny">Failure details</span><p className="inspector-line"><code>{selectedOperationalIncident.failure.message}</code></p><pre className="inspector-content">{JSON.stringify(selectedOperationalIncident.failure.details ?? {}, null, 2)}</pre></div> : null}
+          <div className="work-history"><span className="tiny">Linked signals ({selectedOperationalIncident.signalIds.length})</span>{signals.filter((signal) => selectedOperationalIncident.signalIds.includes(signal.id)).map((signal) => <p className="inspector-line" key={signal.id}><strong>{signal.title}</strong> <code>{signal.id}</code></p>)}</div>
+          <div className="work-history"><span className="tiny">Evidence</span>{selectedOperationalIncident.events.map((event) => <p className="inspector-line" key={event.id}><strong>{event.title}</strong> <code>{event.provider} / {event.sourceId ?? "no source id"} / {new Date(event.observedAt).toLocaleString()}</code></p>)}</div>
         </aside>
       ) : null}
       {selectedSignal ? (

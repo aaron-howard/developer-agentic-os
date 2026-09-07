@@ -86,6 +86,14 @@ export class GitHubAdapter {
     }
   }
 
+  async rerunFailedAction(runId: string): Promise<{ ok: boolean; status: number; response: Record<string, unknown> }> {
+    if (!this.token) return { ok: false, status: 401, response: { error: "GitHub credentials are not configured." } };
+    const repository = await this.repositoryForContext();
+    if (!repository || !/^\d+$/.test(runId)) return { ok: false, status: 400, response: { error: "A valid repository and action run id are required." } };
+    const response = await this.fetcher(`${this.apiUrl}/repos/${repository}/actions/runs/${runId}/rerun-failed`, { method: "POST", headers: { Accept: "application/vnd.github+json", Authorization: `Bearer ${this.token}`, "X-GitHub-Api-Version": "2022-11-28" } });
+    return { ok: response.ok, status: response.status, response: { provider: "github", runId, status: response.status, body: await responseBody(response) } };
+  }
+
   private async repositoryForContext(): Promise<string | null> {
     if (!this.repositoryRoot) return this.repository;
     try {
@@ -131,6 +139,10 @@ export class GitHubAdapter {
       checkedAt: new Date().toISOString(),
     };
   }
+}
+
+async function responseBody(response: Response): Promise<unknown> {
+  try { return await response.clone().json(); } catch { return await response.clone().text(); }
 }
 
 class GitHubRequestError extends Error {

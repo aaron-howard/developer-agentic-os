@@ -14,6 +14,8 @@ export type LocalStorePaths = {
   workItems: string;
   incomingSignals: string;
   handoffs: string;
+  operational: string;
+  workspaceOperational: string;
 };
 
 export function getLocalStorePaths(root = process.cwd()): LocalStorePaths {
@@ -31,6 +33,8 @@ export function getLocalStorePaths(root = process.cwd()): LocalStorePaths {
     workItems: resolve(storeRoot, "work-items.json"),
     incomingSignals: resolve(storeRoot, "incoming-signals.json"),
     handoffs: resolve(storeRoot, "handoffs"),
+    operational: resolve(storeRoot, "operational.json"),
+    workspaceOperational: resolve(storeRoot, "workspace-operational.json"),
   };
 }
 

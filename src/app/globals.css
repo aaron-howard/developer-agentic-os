@@ -418,6 +418,16 @@ h2 {
   padding: 8px;
 }
 
+button.focus-board-failure {
+  width: 100%;
+  border-top: 0;
+  border-right: 0;
+  border-bottom: 0;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
 .focus-board-row.blocked { border-left-color: var(--orange); }
 .focus-board-row.overdue { border-left-color: #ff9b57; }
 .focus-board-row.due { border-left-color: var(--teal); }

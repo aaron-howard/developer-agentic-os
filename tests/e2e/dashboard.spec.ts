@@ -33,6 +33,36 @@ test.describe("Developer Agentic OS dashboard", () => {
     await expect(board).toBeVisible();
   });
 
+  test("inspects, approves, pauses, resumes, and audits an operational provider action", async ({ page }) => {
+    await page.goto("/");
+    const context = await (await page.request.get("/api/workspace/context")).json() as { context: { id: string } };
+    const policy = await page.request.post("/api/operational/policies", { data: { repositoryId: context.context.id, name: "Browser provider policy", enabled: true, triggers: ["provider"], workflows: ["repo-summary"], requiresApproval: true, maxRetries: 1, catchUpWindowMinutes: 60 } });
+    expect(policy.ok()).toBeTruthy();
+    const policyId = (await policy.json()).id as string;
+    const created = await page.request.post("/api/operational/runs", { data: { repositoryId: context.context.id, policyId, trigger: "provider", input: { actionRunId: "12345" } } });
+    expect(created.ok()).toBeTruthy();
+
+    await page.route("**/api/operational/runs/*/action", async (route) => {
+      await route.fulfill({ json: { action: { ok: true, status: 200, response: { rerun: true } }, audit: { id: "audit-browser", runId: (await created.json()).id, action: "github-rerun", approval: {}, request: { actionRunId: "12345" }, response: { rerun: true }, recordedAt: new Date().toISOString() } } });
+    });
+    await page.reload();
+    const run = page.locator(".focus-board-failure").filter({ hasText: "awaiting approval" });
+    await expect(run).toBeVisible();
+    await run.click();
+    const inspector = page.getByRole("complementary", { name: "Operational Run Inspector" });
+    await expect(inspector).toContainText("awaiting_approval");
+    await inspector.getByRole("button", { name: "Approve Run" }).click();
+    await expect(inspector).toContainText("queued");
+    await inspector.getByRole("button", { name: "Pause" }).click();
+    await expect(inspector).toContainText("paused");
+    await inspector.getByRole("button", { name: "Resume" }).click();
+    await expect(inspector).toContainText("queued");
+    await inspector.getByRole("button", { name: "Rerun GitHub Action" }).click();
+    await expect(inspector).toContainText("Provider action completed and was audited.");
+    await expect(inspector).toContainText("github-rerun");
+    await expect(inspector).toContainText("rerun");
+  });
+
   test("shows the live workspace switcher and keeps the active selection after reload", async ({ page }) => {
     await page.goto("/");
     const switcher = page.getByRole("button", { name: "Workspace Switcher: Change the active repository context" });
@@ -198,6 +228,29 @@ test.describe("Developer Agentic OS dashboard", () => {
   });
 
   test("shows missing credentials and staged integration states", async ({ page }) => {
+    await page.route("**/api/integrations?*", (route) => route.fulfill({ json: {
+      integrations: [
+        { id: "local-git", name: "Local Git", status: "connected", message: "Local git is connected." },
+        { id: "github", name: "GitHub", status: "unconfigured", setup: "Set GITHUB_TOKEN or GH_TOKEN to enable GitHub operations." },
+        { id: "vercel", name: "Vercel", status: "unconfigured", setup: "Set VERCEL_TOKEN or VERCEL_API_TOKEN and VERCEL_PROJECT_ID to enable Vercel operations." },
+        { id: "sentry", name: "Sentry", status: "deferred", setup: "This integration is staged for a later milestone." },
+        { id: "slack", name: "Slack", status: "deferred", setup: "This integration is staged for a later milestone." },
+        { id: "email", name: "Email", status: "available", message: "Email adapter is read-only." },
+      ],
+    } }));
+    await page.route("**/api/integrations/github**", (route) => route.fulfill({ json: {
+      status: "unconfigured",
+      message: "GitHub credentials are not configured.",
+      issues: [],
+      pullRequests: [],
+      actions: [],
+      mergeStatus: { state: "unavailable", message: "GitHub credentials are not configured." },
+    } }));
+    await page.route("**/api/integrations/vercel**", (route) => route.fulfill({ json: {
+      status: "unconfigured",
+      message: "Vercel credentials are not configured.",
+      deployments: [],
+    } }));
     await page.goto("/");
     await page.getByRole("button", { name: "Integration status" }).click();
     const status = page.getByRole("status", { name: "Integration status" });

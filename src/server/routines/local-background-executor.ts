@@ -7,6 +7,7 @@ import { readJsonFile, writeJsonFile } from "../local-store/json-file";
 import { initializeLocalStore } from "../local-store/paths";
 import { WorkspaceStore } from "../workspace/workspace-store";
 import { createRoutineRegistry } from "./routine-registry";
+import { createOperationalExecutor } from "../operational/operational-executor";
 
 export type ExecutorClock = { now(): Date };
 export type RoutineExecutorTrigger = { repositoryId?: string };
@@ -92,6 +93,7 @@ export function createLocalBackgroundExecutor(options: LocalBackgroundExecutorOp
       const contexts = trigger.repositoryId || !isApplicationExecutor ? [requestedContext] : await workspace.listRepositories();
       if (!contexts.some((context) => context.id === requestedContext.id)) contexts.unshift(requestedContext);
       for (const context of contexts) {
+        count += await createOperationalExecutor(context.path).runDueSchedule(context.id);
         const routines = await createRoutineRegistry({ root: context.path }).listRoutines();
         for (const routine of routines) {
           if (routine.executionMode !== "local_background" || routine.status === "paused" || !(await isDue(routine, context.path))) continue;
