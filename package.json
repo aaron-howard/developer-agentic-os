@@ -13,6 +13,7 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.1.0",
     "lucide-react": "latest",
     "next": "latest",
     "react": "latest",

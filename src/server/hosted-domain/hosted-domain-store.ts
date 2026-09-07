@@ -7,6 +7,7 @@ import { withStateLock } from "../local-store/state-lock";
 import { HostedWorkspaceStore } from "../hosted-workspaces/hosted-workspace-store";
 import { LocalHostedObjectStore, type HostedObjectStore } from "./hosted-object-store";
 import { DeterministicLocalStoreExportAdapter, type LocalStoreExportAdapter } from "../local-store/local-store-export";
+import { EncryptedProtectedSecretStore, NeonHostedStateProvider } from "../hosted-persistence/neon-hosted-provider";
 
 export type HostedRecordKind = "repositories" | "workItems" | "incomingSignals" | "incidents" | "automationRuns" | "approvals" | "artifacts" | "skillRuns";
 export type ConnectorCapability = "git.read" | "filesystem.read" | "filesystem.write";
@@ -183,7 +184,15 @@ export class HostedDomainStore {
   private write(state: HostedState): Promise<void> { return this.provider.write(state); }
 }
 
-export const hostedDomainStore = new HostedDomainStore();
+function createHostedDomainStore(): HostedDomainStore {
+  if (process.env.DEV_AGENTIC_OS_DATABASE_URL || process.env.DEV_AGENTIC_OS_DATABASE_URL_UNPOOLED) {
+    const secretStore: ProtectedSecretStore = process.env.DEV_AGENTIC_OS_SECRET_KEY ? new EncryptedProtectedSecretStore() : { put: async () => { throw new HostedDomainError("FORBIDDEN", "Credential mutations require DEV_AGENTIC_OS_SECRET_KEY."); } };
+    return new HostedDomainStore(process.cwd(), undefined, new NeonHostedStateProvider(), undefined, undefined, secretStore);
+  }
+  return new HostedDomainStore();
+}
+
+export const hostedDomainStore = createHostedDomainStore();
 
 function isRecord(value: unknown): value is Record<string, unknown> { return Boolean(value) && typeof value === "object" && !Array.isArray(value); }
 

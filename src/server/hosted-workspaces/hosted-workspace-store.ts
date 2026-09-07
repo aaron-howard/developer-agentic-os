@@ -4,16 +4,19 @@ import { join, resolve } from "node:path";
 import type { HostedAuditEvent, HostedIdentity, HostedWorkspace } from "@/types/hosted-workspace";
 import { readJsonFile, writeJsonFile } from "../local-store/json-file";
 import { withStateLock } from "../local-store/state-lock";
+import { NeonHostedWorkspaceStateProvider } from "../hosted-persistence/neon-hosted-provider";
 
 type HostedUserState = {
   workspaces: HostedWorkspace[];
   activeWorkspaceId: string | null;
 };
 
-type HostedState = {
+export type HostedWorkspaceState = {
   users: Record<string, HostedUserState>;
   audit: HostedAuditEvent[];
 };
+
+export interface HostedWorkspaceStateProvider { read(): Promise<HostedWorkspaceState>; write(state: HostedWorkspaceState): Promise<void>; }
 
 export class HostedWorkspaceError extends Error {
   constructor(readonly code: "INVALID_NAME" | "NOT_FOUND", message: string) {
@@ -26,7 +29,7 @@ export class HostedWorkspaceStore {
   private readonly path: string;
   private readonly root: string;
 
-  constructor(root = process.cwd()) {
+  constructor(root = process.cwd(), private readonly provider?: HostedWorkspaceStateProvider) {
     this.root = resolve(root);
     this.path = join(resolve(root), ".developer-agentic-os", "hosted-workspaces.json");
   }
@@ -97,7 +100,7 @@ export class HostedWorkspaceStore {
     return state.audit.filter((event) => event.userId === userId);
   }
 
-  private user(state: HostedState, userId: string): HostedUserState {
+  private user(state: HostedWorkspaceState, userId: string): HostedUserState {
     return state.users[userId] ?? (state.users[userId] = { workspaces: [], activeWorkspaceId: null });
   }
 
@@ -105,22 +108,24 @@ export class HostedWorkspaceStore {
     return { id: randomUUID(), action, userId, ...(workspaceId ? { workspaceId } : {}), occurredAt: new Date().toISOString() };
   }
 
-  private read(): Promise<HostedState> {
+  private read(): Promise<HostedWorkspaceState> {
+    if (this.provider) return this.provider.read();
     this.assertFixtureOnly();
     return readJsonFile(this.path, { users: {}, audit: [] });
   }
 
-  private write(state: HostedState): Promise<void> {
+  private write(state: HostedWorkspaceState): Promise<void> {
+    if (this.provider) return this.provider.write(state);
     this.assertFixtureOnly();
     return withStateLock(this.root, () => writeJsonFile(this.path, state));
   }
 
-  private async mutate<T>(operation: (state: HostedState) => T | Promise<T>): Promise<T> {
-    this.assertFixtureOnly();
+  private async mutate<T>(operation: (state: HostedWorkspaceState) => T | Promise<T>): Promise<T> {
+    if (!this.provider) this.assertFixtureOnly();
     return withStateLock(this.root, async () => {
-      const state = await readJsonFile(this.path, { users: {}, audit: [] });
+      const state = await this.read();
       const result = await operation(state);
-      await writeJsonFile(this.path, state);
+      await this.write(state);
       return result;
     });
   }
@@ -130,4 +135,11 @@ export class HostedWorkspaceStore {
   }
 }
 
-export const hostedWorkspaceStore = new HostedWorkspaceStore();
+function createHostedWorkspaceStore(): HostedWorkspaceStore {
+  if (process.env.DEV_AGENTIC_OS_DATABASE_URL || process.env.DEV_AGENTIC_OS_DATABASE_URL_UNPOOLED) {
+    return new HostedWorkspaceStore(process.cwd(), new NeonHostedWorkspaceStateProvider());
+  }
+  return new HostedWorkspaceStore();
+}
+
+export const hostedWorkspaceStore = createHostedWorkspaceStore();
