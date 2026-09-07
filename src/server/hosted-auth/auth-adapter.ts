@@ -1,0 +1,57 @@
+import type { HostedIdentity } from "@/types/hosted-workspace";
+
+export class AuthError extends Error {
+  constructor(readonly code: "UNAUTHENTICATED", message = "Authentication is required.") {
+    super(message);
+    this.name = "AuthError";
+  }
+}
+
+export interface AuthAdapter {
+  authenticate(request: Request): Promise<HostedIdentity>;
+}
+
+export interface HostedTokenVerifier {
+  verify(token: string): Promise<HostedIdentity | null>;
+}
+
+export class UnconfiguredHostedTokenVerifier implements HostedTokenVerifier {
+  async verify(token: string): Promise<HostedIdentity | null> {
+    void token;
+    throw new AuthError("UNAUTHENTICATED", "No hosted token verifier is configured for this deployment.");
+  }
+}
+
+export class TokenAuthAdapter implements AuthAdapter {
+  constructor(private readonly verifier: HostedTokenVerifier) {}
+
+  async authenticate(request: Request): Promise<HostedIdentity> {
+    const authorization = request.headers.get("authorization")?.match(/^Bearer\s+(.+)$/i);
+    if (!authorization) throw new AuthError("UNAUTHENTICATED");
+    const identity = await this.verifier.verify(authorization[1]);
+    if (!identity) throw new AuthError("UNAUTHENTICATED");
+    return identity;
+  }
+}
+
+export class DeterministicAuthAdapter implements AuthAdapter {
+  constructor(private readonly fixtureMode = (process.env.NODE_ENV === "test" || process.env.NODE_ENV === "development") && process.env.HOSTED_AUTH_FIXTURE_MODE === "true") {}
+
+  async authenticate(request: Request): Promise<HostedIdentity> {
+    if (!this.fixtureMode) throw new AuthError("UNAUTHENTICATED", "A configured hosted token is required.");
+    const userId = request.headers.get("x-hosted-user-id")?.trim();
+    if (!userId) throw new AuthError("UNAUTHENTICATED");
+    const displayName = request.headers.get("x-hosted-user-name")?.trim() || userId;
+    return { userId, displayName };
+  }
+}
+
+const tokenAuthAdapter = new TokenAuthAdapter(new UnconfiguredHostedTokenVerifier());
+
+export const authAdapter: AuthAdapter = {
+  authenticate(request) {
+    return (process.env.NODE_ENV === "test" || process.env.NODE_ENV === "development") && process.env.HOSTED_AUTH_FIXTURE_MODE === "true"
+      ? new DeterministicAuthAdapter(true).authenticate(request)
+      : tokenAuthAdapter.authenticate(request);
+  },
+};

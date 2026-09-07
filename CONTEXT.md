@@ -147,6 +147,27 @@ A repository-scoped rule describing which triggers and workflows are enabled, wh
 ### Approval
 An explicit developer decision allowing a proposed Automation Run action to proceed.
 
+### Hosted Workspace
+A private hosted space owned by a User that contains Repository Contexts and hosted workflow records.
+
+### Local Connector
+An outbound authenticated local process that exposes explicitly granted Repository Context capabilities to the Hosted Workspace.
+
+### Capability Grant
+An explicit authorization for a Local Connector or Skill to use a specific Repository Context capability.
+
+### Hosted State
+The durable account, Workspace, workflow, approval, and audit records owned by the hosted OS.
+
+### Local-Derived State
+State computed from a local repository or filesystem, whose freshness depends on a Local Connector publication.
+
+### Migration Package
+A reviewable export of local records and relationships that can be selectively imported into a Hosted Workspace.
+
+### Freshness State
+The explicit indication of whether Local-Derived State is current, historical, pending, or unavailable.
+
 ## Clarified Distinctions
 
 ### Skill vs Routine
@@ -208,6 +229,15 @@ An Operational Event is a normalized system observation. An Incoming Signal is t
 
 ### Automation Run vs Routine Execution Record
 An Automation Run records any triggered operational workflow, including event-triggered workflows. A Routine Execution Record records the execution of a Routine and may link to Automation Runs or their outputs.
+
+### Hosted State vs Local-Derived State
+Hosted State owns account, Workspace, approval, and audit records. Local-Derived State describes filesystem or repository facts and may be published to Hosted State but does not become current merely because it exists there.
+
+### Local Connector vs Integration Adapter
+A Local Connector grants scoped access from the hosted OS to local Repository Context capabilities. An Integration Adapter connects the OS to an external provider such as GitHub, Vercel, or Sentry.
+
+### Capability Grant vs Credential
+A Capability Grant authorizes a specific action or data boundary. A Credential proves access to a provider or connector. A grant must not expose or replace the credential.
 
 ## Relationship Rules
 
