@@ -4,11 +4,11 @@
 
 **Blocked by:** 34: Operational Incident Grouping; 36: Local Scheduled Automation; 37: Sentry Event Ingestion
 
-**Status:** ready-for-agent
+**Status:** closed
 
-- [ ] A provider failure can trigger an eligible diagnostic workflow.
-- [ ] The workflow creates or attaches an Incoming Signal and Operational Incident.
-- [ ] Diagnosis invokes a Skill through the existing Skill Registry.
-- [ ] Diagnostic outputs retain event, signal, Incident, and Repository Context provenance.
-- [ ] Diagnostic failure is visible and does not masquerade as successful recovery.
-- [ ] Unit, route, and browser tests demonstrate one complete event-triggered diagnosis path.
+- [x] A provider failure can trigger an eligible diagnostic workflow.
+- [x] The workflow creates or attaches an Incoming Signal and Operational Incident.
+- [x] Diagnosis invokes a Skill through the existing Skill Registry.
+- [x] Diagnostic outputs retain event, signal, Incident, and Repository Context provenance.
+- [x] Diagnostic failure is visible and does not masquerade as successful recovery.
+- [x] Unit, route, and browser tests demonstrate one complete event-triggered diagnosis path.

@@ -25,28 +25,28 @@ bounded retries, restart catch-up, audit history, and cross-repository safety.
 
 ## Acceptance Criteria
 
-- [ ] Scheduled and provider events use one normalized, repository-scoped
+- [x] Scheduled and provider events use one normalized, repository-scoped
   contract with stable deduplication.
-- [ ] Related Incoming Signals group into Operational Incidents without losing
+- [x] Related Incoming Signals group into Operational Incidents without losing
   source events or provenance.
-- [ ] Local automation has explicit enable, pause, resume, cancellation, and
+- [x] Local automation has explicit enable, pause, resume, cancellation, and
   visible lifecycle state.
-- [ ] Repository-local policies control triggers, workflows, approval, retries,
+- [x] Repository-local policies control triggers, workflows, approval, retries,
   catch-up, and enablement without storing credentials.
-- [ ] Sentry provides read-only normalized diagnostics with deterministic
+- [x] Sentry provides read-only normalized diagnostics with deterministic
   success and failure fixtures.
-- [ ] Typed Skills provide diagnostic workflows through the existing registry.
-- [ ] Failed GitHub Actions can be rerun and failed Vercel deployments can be
+- [x] Typed Skills provide diagnostic workflows through the existing registry.
+- [x] Failed GitHub Actions can be rerun and failed Vercel deployments can be
   redeployed only after approval.
-- [ ] Retries, interruptions, missed schedules, restart catch-up, and global
+- [x] Retries, interruptions, missed schedules, restart catch-up, and global
   pause are durable and inspectable.
-- [ ] Consequential actions have immutable provider evidence and complete audit
+- [x] Consequential actions have immutable provider evidence and complete audit
   records.
-- [ ] Work Items, Skill Runs, Artifacts, Inbox Signals, Focus Board entries,
+- [x] Work Items, Skill Runs, Artifacts, Inbox Signals, Focus Board entries,
   and Second Brain links retain explicit provenance.
-- [ ] Two Repository Contexts remain isolated across ingestion, automation,
+- [x] Two Repository Contexts remain isolated across ingestion, automation,
   incidents, actions, reset, and inspection.
-- [ ] Existing Phase Three and Integration Operations browser flows remain
+- [x] Existing Phase Three and Integration Operations browser flows remain
   green.
 
 ## Testing Seam
@@ -58,7 +58,7 @@ behavior rather than internal helper calls or provider SDK details.
 
 ## Status
 
-ready-for-agent
+closed
 
 ## Implementation Follow-up: Gaps 33-42
 

@@ -4,11 +4,11 @@
 
 **Blocked by:** 33: Operational Event Contract
 
-**Status:** ready-for-agent
+**Status:** closed
 
-- [ ] Policies define schedule and provider-event triggers.
-- [ ] Policies select eligible workflows and required approval behavior.
-- [ ] Policies define bounded retry and restart catch-up limits.
-- [ ] Policies can be enabled, disabled, inspected, and validated.
-- [ ] Policy data is scoped to a Repository Context and contains no credentials.
-- [ ] Unit, route, and browser tests cover valid, invalid, disabled, and cross-repository policies.
+- [x] Policies define schedule and provider-event triggers.
+- [x] Policies select eligible workflows and required approval behavior.
+- [x] Policies define bounded retry and restart catch-up limits.
+- [x] Policies can be enabled, disabled, inspected, and validated.
+- [x] Policy data is scoped to a Repository Context and contains no credentials.
+- [x] Unit, route, and browser tests cover valid, invalid, disabled, and cross-repository policies.

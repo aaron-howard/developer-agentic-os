@@ -4,11 +4,11 @@
 
 **Blocked by:** 34: Operational Incident Grouping; 38: Event-Triggered Diagnosis; 39: Approval-Gated Recovery Actions; 40: Retry, Pause, And Restart Recovery
 
-**Status:** ready-for-agent
+**Status:** closed
 
-- [ ] Agent Inbox exposes unresolved operational Signals and their Incident context.
-- [ ] Focus Board exposes active Incidents, pending approvals, and failed or paused Automation Runs for the active Repository Context.
-- [ ] Inspector surfaces expose diagnosis, approval, retry, pause, cancellation, and audit actions where applicable.
-- [ ] Existing Work Item, Skill Run, Artifact, Integration, and Second Brain services remain the source of truth.
-- [ ] User-visible states distinguish awaiting approval, retrying, paused, failed, succeeded, and missed work.
-- [ ] Browser tests cover the complete operational workflow without horizontal overflow or cross-repository leakage.
+- [x] Agent Inbox exposes unresolved operational Signals and their Incident context.
+- [x] Focus Board exposes active Incidents, pending approvals, and failed or paused Automation Runs for the active Repository Context.
+- [x] Inspector surfaces expose diagnosis, approval, retry, pause, cancellation, and audit actions where applicable.
+- [x] Existing Work Item, Skill Run, Artifact, Integration, and Second Brain services remain the source of truth.
+- [x] User-visible states distinguish awaiting approval, retrying, paused, failed, succeeded, and missed work.
+- [x] Browser tests cover the complete operational workflow without horizontal overflow or cross-repository leakage.

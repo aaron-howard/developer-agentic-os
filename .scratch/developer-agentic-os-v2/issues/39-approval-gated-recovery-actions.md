@@ -4,12 +4,12 @@
 
 **Blocked by:** 36: Local Scheduled Automation; 37: Sentry Event Ingestion
 
-**Status:** ready-for-agent
+**Status:** closed
 
-- [ ] Failed GitHub Actions can produce a rerun proposal.
-- [ ] Failed Vercel deployments can produce a redeploy proposal.
-- [ ] Provider actions are opt-in and blocked until the associated Automation Run is approved.
-- [ ] Approval records actor, timestamp, reviewed inputs, and proposed actions.
-- [ ] Material input changes invalidate the prior approval.
-- [ ] Successful and failed provider responses are retained as immutable audit evidence.
-- [ ] Unit, route, and browser tests cover approval enforcement and both provider action outcomes.
+- [x] Failed GitHub Actions can produce a rerun proposal.
+- [x] Failed Vercel deployments can produce a redeploy proposal.
+- [x] Provider actions are opt-in and blocked until the associated Automation Run is approved.
+- [x] Approval records actor, timestamp, reviewed inputs, and proposed actions.
+- [x] Material input changes invalidate the prior approval.
+- [x] Successful and failed provider responses are retained as immutable audit evidence.
+- [x] Unit, route, and browser tests cover approval enforcement and both provider action outcomes.
