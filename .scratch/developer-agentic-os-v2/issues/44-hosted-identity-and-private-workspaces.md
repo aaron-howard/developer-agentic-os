@@ -4,7 +4,7 @@
 
 **Blocked by:** None (can start immediately)
 
-**Status:** ready-for-agent
+**Status:** closed
 
 - [x] Authentication is exposed through a provider-neutral application boundary.
 - [x] Unauthenticated requests are rejected without leaking private data.
@@ -12,6 +12,12 @@
 - [x] Cross-user and cross-Workspace access is rejected.
 - [x] Identity and Workspace actions are recorded for audit.
 - [x] Unit, route, and browser tests cover identity and private Workspace behavior.
+
+## Completion
+
+Implemented with deterministic non-production authentication fixtures and
+provider-neutral token verification boundaries. Production Clerk configuration
+remains part of the open hosted release work.
 
 ## Execution Notes
 

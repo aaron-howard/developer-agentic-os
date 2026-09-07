@@ -4,11 +4,16 @@
 
 **Blocked by:** 47: Local Connector Registration And Revocation
 
-**Status:** ready-for-agent
+**Status:** closed
 
-- [ ] Repository and capability grants are explicit, scoped, inspectable, and revocable.
-- [ ] Git metadata is available by default within a granted Repository Context.
-- [ ] Filesystem access requires an allowlist and per-Skill capability grant.
-- [ ] Requests outside a grant are rejected without leaking data.
-- [ ] Connector requests record Workspace, Repository Context, capability, outcome, and timestamp.
-- [ ] Unit, connector-fixture, route, and browser tests cover least privilege and revocation.
+- [x] Repository and capability grants are explicit, scoped, inspectable, and revocable.
+- [x] Git metadata is available by default within a granted Repository Context.
+- [x] Filesystem access requires an allowlist and per-Skill capability grant.
+- [x] Requests outside a grant are rejected without leaking data.
+- [x] Connector requests record Workspace, Repository Context, capability, outcome, and timestamp.
+- [x] Unit, connector-fixture, route, and browser tests cover least privilege and revocation.
+
+## Completion
+
+Implemented with repository-scoped grants, per-Skill filesystem permissions,
+canonical path containment, individual grant revocation, and request auditing.

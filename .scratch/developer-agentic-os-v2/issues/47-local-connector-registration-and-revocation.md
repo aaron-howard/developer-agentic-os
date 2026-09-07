@@ -4,11 +4,16 @@
 
 **Blocked by:** 44: Hosted Identity And Private Workspaces; 45: Hosted Domain Persistence
 
-**Status:** ready-for-agent
+**Status:** closed
 
-- [ ] A local connector registers through an outbound authenticated flow.
-- [ ] Connector identity, expiry, and connection state are visible without exposing secrets.
-- [ ] A developer can revoke a connector immediately.
-- [ ] Expired and revoked connectors are rejected at the hosted boundary.
-- [ ] Connector registration, use, expiry, and revocation are auditable.
-- [ ] Unit, route, connector-fixture, and browser tests cover lifecycle and isolation.
+- [x] A local connector registers through an outbound authenticated flow.
+- [x] Connector identity, expiry, and connection state are visible without exposing secrets.
+- [x] A developer can revoke a connector immediately.
+- [x] Expired and revoked connectors are rejected at the hosted boundary.
+- [x] Connector registration, use, expiry, and revocation are auditable.
+- [x] Unit, route, connector-fixture, and browser tests cover lifecycle and isolation.
+
+## Completion
+
+Implemented with explicit outbound connector registration, expiry, offline,
+revocation, ownership checks, and audit events.
