@@ -1,3 +1,4 @@
+import type { WorkspaceContext } from "@/types/workspace";
 import { ArtifactStore } from "../artifacts/artifact-store";
 import { SkillRunStore } from "../skill-runs/skill-run-store";
 import { createRoutineRegistry } from "../routines/routine-registry";
@@ -8,22 +9,26 @@ import type { WorkItem } from "@/types/work-item";
 import { OperationalStore } from "../operational/operational-store";
 
 type FocusBoardOptions = {
+  context?: WorkspaceContext;
   now?: () => Date;
   limit?: number;
   workItems?: WorkItemStore;
 };
 
+/**
+ * Build a focus board aggregating work items, artifacts, and routine status.
+ * Accepts optional WorkspaceContext for DI; creates stores from root if not provided.
+ */
 export async function getFocusBoard(repositoryId: string, repositoryRoot: string, options: FocusBoardOptions = {}): Promise<FocusBoard> {
   const now = options.now ?? (() => new Date());
   const limit = options.limit ?? 12;
-  const [workItems, recentArtifacts, failedSkillRuns, failedRoutineExecutions, routines, operationalIncidents, operationalRuns] = await Promise.all([
-    (options.workItems ?? new WorkItemStore(repositoryRoot)).list({ repositoryId }),
-    new ArtifactStore(repositoryRoot).listArtifacts({ limit }),
-    new SkillRunStore(repositoryRoot).listRuns({ limit }),
-    new RoutineHistoryStore(repositoryRoot).listExecutions({ limit }),
-    createRoutineRegistry({ root: repositoryRoot }).listRoutines(),
-    new OperationalStore(repositoryRoot).listIncidents({ repositoryId }),
-    new OperationalStore(repositoryRoot).listRuns({ repositoryId }),
+  const context = options.context;
+  const [workItems, recentArtifacts, failedSkillRuns, failedRoutineExecutions, routines] = await Promise.all([
+    (options.workItems ?? context?.workItemStore ?? new WorkItemStore(repositoryRoot)).list({ repositoryId }),
+    (context?.artifactStore ?? new ArtifactStore(repositoryRoot)).listArtifacts({ limit }),
+    (context?.skillRunStore ?? new SkillRunStore(repositoryRoot)).listRuns({ limit }),
+    (context?.routineHistoryStore ?? new RoutineHistoryStore(repositoryRoot)).listExecutions({ limit }),
+    createRoutineRegistry(context ? { context } : { root: repositoryRoot }).listRoutines(),
   ]);
   const nowValue = now().getTime();
   const withAttention = workItems
