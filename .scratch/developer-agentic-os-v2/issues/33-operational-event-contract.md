@@ -4,11 +4,11 @@
 
 **Blocked by:** None (can start immediately)
 
-**Status:** ready-for-agent
+**Status:** closed
 
-- [ ] Scheduled and provider observations are represented by one normalized Operational Event contract.
-- [ ] Events retain trigger type, source/provider, capability, timestamp, source identifier, and Repository Context.
-- [ ] Repeated delivery is deduplicated without losing the first source evidence.
-- [ ] Events are persisted and listed through a typed API.
-- [ ] A user can inspect the event and its provenance in the command centre.
-- [ ] Unit, route, and browser tests cover success, malformed input, deduplication, and repository isolation.
+- [x] Scheduled and provider observations are represented by one normalized Operational Event contract.
+- [x] Events retain trigger type, source/provider, capability, timestamp, source identifier, and Repository Context.
+- [x] Repeated delivery is deduplicated without losing the first source evidence.
+- [x] Events are persisted and listed through a typed API.
+- [x] A user can inspect the event and its provenance in the command centre.
+- [x] Unit, route, and browser tests cover success, malformed input, deduplication, and repository isolation.

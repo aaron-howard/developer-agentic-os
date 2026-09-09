@@ -23,6 +23,7 @@ export async function getFocusBoard(repositoryId: string, repositoryRoot: string
   const now = options.now ?? (() => new Date());
   const limit = options.limit ?? 12;
 <<<<<<< HEAD
+<<<<<<< HEAD
   const [workItems, recentArtifacts, failedSkillRuns, failedRoutineExecutions, routines, operationalIncidents, operationalRuns] = await Promise.all([
     (options.workItems ?? new WorkItemStore(repositoryRoot)).list({ repositoryId }),
     new ArtifactStore(repositoryRoot).listArtifacts({ limit }),
@@ -32,6 +33,8 @@ export async function getFocusBoard(repositoryId: string, repositoryRoot: string
     new OperationalStore(repositoryRoot).listIncidents({ repositoryId }),
     new OperationalStore(repositoryRoot).listRuns({ repositoryId }),
 =======
+=======
+>>>>>>> f45bcbcedaee97207de03af6f26fcbbce1dcc900
   const context = options.context;
   const [workItems, recentArtifacts, failedSkillRuns, failedRoutineExecutions, routines] = await Promise.all([
     (options.workItems ?? context?.workItemStore ?? new WorkItemStore(repositoryRoot)).list({ repositoryId }),
@@ -39,7 +42,10 @@ export async function getFocusBoard(repositoryId: string, repositoryRoot: string
     (context?.skillRunStore ?? new SkillRunStore(repositoryRoot)).listRuns({ limit }),
     (context?.routineHistoryStore ?? new RoutineHistoryStore(repositoryRoot)).listExecutions({ limit }),
     createRoutineRegistry(context ? { context } : { root: repositoryRoot }).listRoutines(),
+<<<<<<< HEAD
 >>>>>>> 09891135c56f447877955a758fbec292b0a127c8
+=======
+>>>>>>> f45bcbcedaee97207de03af6f26fcbbce1dcc900
   ]);
   const nowValue = now().getTime();
   const withAttention = workItems

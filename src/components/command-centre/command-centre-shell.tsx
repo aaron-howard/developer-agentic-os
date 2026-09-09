@@ -14,6 +14,7 @@ import type { IncomingSignal, IncomingSignalSource, IncomingSignalStatus } from 
 import type { SignalTriageAction } from "@/types/signal-triage";
 import type { FocusBoard } from "@/types/focus-board";
 import type { Handoff } from "@/types/handoff";
+import { AuthControls } from "./auth-controls";
 import type { AutomationRun, OperationalAuditRecord, OperationalIncident } from "@/types/operational";
 import {
   Archive,
@@ -849,6 +850,7 @@ export function CommandCentreShell() {
           </div>
           <p className="subtitle">Jay E | Developer Workspace</p>
           <nav className="toolbar" aria-label="Workspace controls">
+            <AuthControls />
             <button type="button" aria-label="Search"><Search size={16} /></button>
             <button type="button" aria-label="Apps"><LayoutGrid size={16} /></button>
             <button type="button" aria-label="Integration status" onClick={() => setIntegrationOpen((open) => !open)}><Info size={16} /></button>
@@ -991,7 +993,7 @@ export function CommandCentreShell() {
               <span className="tiny">Operational attention <button className="outline-button" type="button" onClick={() => void setGlobalOperationalPause(!globalOperationalPaused)}>{globalOperationalPaused ? "Resume all" : "Pause all"}</button></span>
               {dashboard.focusBoard.operationalIncidents.length === 0 && dashboard.focusBoard.operationalRuns.length === 0 ? <p className="dashboard-placeholder">No operational attention.</p> : null}
               {dashboard.focusBoard.operationalIncidents.map((incident) => <button className="focus-board-failure" key={incident.id} type="button" onClick={() => setSelectedOperationalIncident(incident)}><span><strong>{incident.title}</strong><small>{incident.providers.join(", ")} / {incident.events.length} event(s)</small></span><span className="focus-board-priority">incident</span></button>)}
-              {dashboard.focusBoard.operationalRuns.map((run) => <button className="focus-board-failure" key={run.id} type="button" onClick={() => void inspectOperationalRun(run)}><span><strong>Automation run</strong><small>{run.status.replace("_", " ")}{run.error ? ` / ${run.error}` : ""}</small></span><span className="focus-board-priority">{run.retryCount} retries</span></button>)}
+              {dashboard.focusBoard.operationalRuns.map((run) => <button className="focus-board-failure" data-run-id={run.id} key={run.id} type="button" onClick={() => void inspectOperationalRun(run)}><span><strong>Automation run</strong><small>{run.status.replace("_", " ")}{run.error ? ` / ${run.error}` : ""}</small></span><span className="focus-board-priority">{run.retryCount} retries</span></button>)}
             </div>
             <div className="focus-board-section">
               <span className="tiny">Recent artifacts</span>

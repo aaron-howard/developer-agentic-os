@@ -4,6 +4,78 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 test.describe("Developer Agentic OS dashboard", () => {
+  test("hosted domain browser contract supports migration review, scoped connector use, and backup", async ({ page }) => {
+    const userId = `browser-hosted-${Date.now()}`;
+    const headers = { "x-hosted-user-id": userId };
+    const workspaceResponse = await page.request.post("/api/hosted/workspaces", { headers, data: { name: "Browser workspace" } });
+    expect(workspaceResponse.status()).toBe(201);
+    const createdWorkspace = (await workspaceResponse.json()).workspace as { id: string };
+    const secondWorkspaceResponse = await page.request.post("/api/hosted/workspaces", { headers, data: { name: "Browser second workspace" } });
+    expect(secondWorkspaceResponse.status()).toBe(201);
+    const secondWorkspace = (await secondWorkspaceResponse.json()).workspace as { id: string };
+    const repositoryResponse = await page.request.post("/api/hosted/domain", { headers, data: { action: "register-repository", workspaceId: createdWorkspace.id, localPath: "D:/repos/browser" } });
+    expect(repositoryResponse.status()).toBe(201);
+    const repository = (await repositoryResponse.json()).repository as { id: string };
+    const secondRepositoryResponse = await page.request.post("/api/hosted/domain", { headers, data: { action: "register-repository", workspaceId: secondWorkspace.id, localPath: "D:/repos/browser-second" } });
+    expect(secondRepositoryResponse.status()).toBe(201);
+    const secondRepository = (await secondRepositoryResponse.json()).repository as { id: string };
+    const isolated = await page.request.get(`/api/hosted/domain?workspaceId=${createdWorkspace.id}&view=repositories`, { headers });
+    expect((await isolated.json()).repositories.map((item: { id: string }) => item.id)).toEqual([repository.id]);
+    const secondScoped = await page.request.get(`/api/hosted/domain?workspaceId=${secondWorkspace.id}&view=repositories`, { headers });
+    expect((await secondScoped.json()).repositories.map((item: { id: string }) => item.id)).toEqual([secondRepository.id]);
+    const connectorResponse = await page.request.post("/api/hosted/domain", { headers, data: { action: "register-connector", workspaceId: createdWorkspace.id } });
+    const connector = (await connectorResponse.json()).connector as { id: string };
+    await page.request.post("/api/hosted/domain", { headers, data: { action: "grant-repository", workspaceId: createdWorkspace.id, connectorId: connector.id, repositoryId: repository.id } });
+    const offline = await page.request.post("/api/hosted/domain", { headers, data: { action: "set-connector-offline", workspaceId: createdWorkspace.id, connectorId: connector.id } });
+    expect(offline.ok()).toBeTruthy();
+    const pending = await page.request.post("/api/hosted/domain", { headers, data: { action: "queue-local-work", workspaceId: createdWorkspace.id, repositoryId: repository.id, description: "Browser offline work" } });
+    expect(pending.status()).toBe(202);
+    const reconnected = await page.request.post("/api/hosted/domain", { headers, data: { action: "reconnect-connector", workspaceId: createdWorkspace.id, connectorId: connector.id } });
+    expect(reconnected.ok()).toBeTruthy();
+    const resumed = await page.request.post("/api/hosted/domain", { headers, data: { action: "resume-local-work", workspaceId: createdWorkspace.id, connectorId: connector.id } });
+    expect((await resumed.json()).resumed).toBe(1);
+    for (const view of ["connector-status", "repository-grants", "capability-grants"]) {
+      const response = await page.request.get(`/api/hosted/domain?workspaceId=${createdWorkspace.id}&view=${view}`, { headers });
+      expect(response.ok()).toBeTruthy();
+    }
+    const skill = await page.request.post("/api/hosted/domain", { headers, data: { action: "run-read-only-skill", workspaceId: createdWorkspace.id, connectorId: connector.id, repositoryId: repository.id, skillId: "repo-summary" } });
+    expect(skill.ok()).toBeTruthy();
+    expect((await skill.json()).run.skillId).toBe("repo-summary");
+    const revoked = await page.request.post("/api/hosted/domain", { headers, data: { action: "revoke-connector", workspaceId: createdWorkspace.id, connectorId: connector.id } });
+    expect(revoked.ok()).toBeTruthy();
+    const denied = await page.request.post("/api/hosted/domain", { headers, data: { action: "connector-request", workspaceId: createdWorkspace.id, connectorId: connector.id, repositoryId: repository.id, capability: "git.read" } });
+    expect(denied.status()).toBe(403);
+    const backup = await page.request.get(`/api/hosted/domain?workspaceId=${createdWorkspace.id}&view=backup`, { headers });
+    expect(backup.ok()).toBeTruthy();
+    expect((await backup.json()).backup.version).toBe(1);
+    await page.request.post("/api/hosted/domain", { headers, data: { action: "hosted-safe-work", workspaceId: createdWorkspace.id, description: "Hosted release import fixture" } });
+    const migration = await page.request.get(`/api/hosted/domain?workspaceId=${createdWorkspace.id}&view=migration`, { headers });
+    const migrationPackage = (await migration.json()).package;
+    expect(migrationPackage.warnings).toContain("Some records have missing repository provenance.");
+    const selectedImport = await page.request.post("/api/hosted/domain", { headers, data: { action: "import-migration", workspaceId: secondWorkspace.id, package: migrationPackage, selectedKinds: ["automationRuns"], selectedRepositoryIds: [repository.id] } });
+    expect(selectedImport.ok()).toBeTruthy();
+    expect((await selectedImport.json()).result.imported).toBeGreaterThan(0);
+    const audit = await page.request.get("/api/hosted/audit", { headers });
+    expect(audit.ok()).toBeTruthy();
+    expect((await audit.json()).events.some((event: { action: string }) => event.action === "migration.imported")).toBeTruthy();
+  });
+
+  test("hosted API keeps authenticated workspaces private in a browser session", async ({ page }) => {
+    const anonymous = await page.request.get("/api/hosted/workspaces");
+    expect(anonymous.status()).toBe(401);
+
+    const aliceHeaders = { "x-hosted-user-id": `browser-alice-${Date.now()}` };
+    const alice = await page.request.post("/api/hosted/workspaces", { headers: aliceHeaders, data: { name: "Browser private workspace" } });
+    expect(alice.status()).toBe(201);
+    const workspace = (await alice.json()).workspace as { id: string };
+
+    const bobHeaders = { "x-hosted-user-id": `browser-bob-${Date.now()}` };
+    const bob = await page.request.get("/api/hosted/workspaces", { headers: bobHeaders });
+    expect((await bob.json()).workspaces).toEqual([]);
+    const crossUser = await page.request.post(`/api/hosted/workspaces/${workspace.id}/select`, { headers: bobHeaders });
+    expect(crossUser.status()).toBe(404);
+  });
+
   test("loads with approved branding and no removed references", async ({ page }) => {
     await page.goto("/");
     await expect(page.getByRole("heading", { name: /Developer Agentic OS/ })).toBeVisible();
@@ -41,12 +113,13 @@ test.describe("Developer Agentic OS dashboard", () => {
     const policyId = (await policy.json()).id as string;
     const created = await page.request.post("/api/operational/runs", { data: { repositoryId: context.context.id, policyId, trigger: "provider", input: { actionRunId: "12345" } } });
     expect(created.ok()).toBeTruthy();
+    const createdRun = await created.json() as { id: string };
 
     await page.route("**/api/operational/runs/*/action", async (route) => {
-      await route.fulfill({ json: { action: { ok: true, status: 200, response: { rerun: true } }, audit: { id: "audit-browser", runId: (await created.json()).id, action: "github-rerun", approval: {}, request: { actionRunId: "12345" }, response: { rerun: true }, recordedAt: new Date().toISOString() } } });
+      await route.fulfill({ json: { action: { ok: true, status: 200, response: { rerun: true } }, audit: { id: "audit-browser", runId: createdRun.id, action: "github-rerun", approval: {}, request: { actionRunId: "12345" }, response: { rerun: true }, recordedAt: new Date().toISOString() } } });
     });
     await page.reload();
-    const run = page.locator(".focus-board-failure").filter({ hasText: "awaiting approval" });
+    const run = page.locator(`.focus-board-failure[data-run-id="${createdRun.id}"]`);
     await expect(run).toBeVisible();
     await run.click();
     const inspector = page.getByRole("complementary", { name: "Operational Run Inspector" });
