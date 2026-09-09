@@ -1,7 +1,20 @@
 import type { IntegrationAdapterStatus } from "@/types/integration";
 import { LocalEmailAdapter } from "../email/email-adapter";
 import { LocalGitAdapter } from "../git/local-git-adapter";
+import { createDeferredIntegration } from "./integration-definitions";
 
+/**
+ * Get integration statuses for the current environment.
+ * Returns both connected/unconfigured adapters and deferred integrations.
+ * 
+ * Architecture:
+ * - Adapter statuses: Determined by checking environment variables and adapter availability
+ * - Deferred integrations: Pulled from integration-definitions.ts (pure data)
+ * 
+ * Refactoring note: This registry is kept simple since it's primarily a catalog function.
+ * Unlike skills/routines which have complex orchestration, integrations are mostly static
+ * definitions with minimal dynamic status checking.
+ */
 export async function getIntegrationStatuses(root = process.cwd(), env: Record<string, string | undefined> = process.env): Promise<IntegrationAdapterStatus[]> {
   const git = await new LocalGitAdapter(root).getStatus();
   const email = new LocalEmailAdapter(root, env).getStatus();
@@ -48,33 +61,15 @@ export async function getIntegrationStatuses(root = process.cwd(), env: Record<s
       setup: "Set VERCEL_TOKEN or VERCEL_API_TOKEN and VERCEL_PROJECT_ID to enable Vercel operations.",
       message: hasVercelToken && hasVercelProject ? "Vercel credentials detected." : "Vercel credentials or project configuration are missing.",
     },
-    deferred("sentry", "Sentry", "observability", ["events and outages", "breached metrics", "warnings", "traces", "errors"]),
-    deferred("cloudflare", "Cloudflare", "cloud", ["domains", "workers"]),
-    deferred("coderabbit", "CodeRabbit", "observability", ["code review insights"]),
-    deferred("workos", "WorkOS", "identity", ["identity health"]),
-    deferred("clerk", "Clerk", "identity", ["authentication health"]),
-    deferred("convex", "Convex", "database", ["health"]),
-    deferred("neondb", "NeonDB", "database", ["health"]),
-    deferred("upstash", "Upstash", "database", ["health"]),
+    createDeferredIntegration("sentry", "Sentry", "observability", ["events and outages", "breached metrics", "warnings", "traces", "errors"]),
+    createDeferredIntegration("cloudflare", "Cloudflare", "cloud", ["domains", "workers"]),
+    createDeferredIntegration("coderabbit", "CodeRabbit", "observability", ["code review insights"]),
+    createDeferredIntegration("workos", "WorkOS", "identity", ["identity health"]),
+    createDeferredIntegration("clerk", "Clerk", "identity", ["authentication health"]),
+    createDeferredIntegration("convex", "Convex", "database", ["health"]),
+    createDeferredIntegration("neondb", "NeonDB", "database", ["health"]),
+    createDeferredIntegration("upstash", "Upstash", "database", ["health"]),
     email,
-    deferred("slack", "Slack", "chat", ["routine notifications"]),
+    createDeferredIntegration("slack", "Slack", "chat", ["routine notifications"]),
   ];
-}
-
-function deferred(
-  id: string,
-  name: string,
-  kind: IntegrationAdapterStatus["kind"],
-  capabilities: string[],
-): IntegrationAdapterStatus {
-  return {
-    id,
-    name,
-    kind,
-    required: false,
-    status: "deferred",
-    capabilities,
-    setup: "This integration is staged for a later milestone.",
-    message: "Health monitoring is staged for a later milestone.",
-  };
 }
