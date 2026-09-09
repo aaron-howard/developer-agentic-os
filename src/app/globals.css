@@ -818,6 +818,26 @@ h1 span {
   padding: 0;
 }
 
+.auth-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.auth-button {
+  border: 1px solid var(--line) !important;
+  color: var(--text) !important;
+  padding: 5px 8px !important;
+  font: inherit;
+  font-size: 0.62rem;
+  text-transform: uppercase;
+}
+
+.auth-button.primary {
+  border-color: var(--orange) !important;
+  color: var(--orange) !important;
+}
+
 .dashboard-banner {
   margin: 10px auto 0;
   color: var(--muted);

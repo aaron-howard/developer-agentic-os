@@ -1,4 +1,5 @@
 import type { HostedIdentity } from "@/types/hosted-workspace";
+import { auth } from "@clerk/nextjs/server";
 
 export class AuthError extends Error {
   constructor(readonly code: "UNAUTHENTICATED", message = "Authentication is required.") {
@@ -46,12 +47,24 @@ export class DeterministicAuthAdapter implements AuthAdapter {
   }
 }
 
+export class ClerkAuthAdapter implements AuthAdapter {
+  async authenticate(request: Request): Promise<HostedIdentity> {
+    void request;
+    const identity = await auth();
+    if (!identity.userId) throw new AuthError("UNAUTHENTICATED");
+    return { userId: identity.userId, displayName: identity.userId };
+  }
+}
+
 const tokenAuthAdapter = new TokenAuthAdapter(new UnconfiguredHostedTokenVerifier());
+const clerkAuthAdapter = new ClerkAuthAdapter();
 
 export const authAdapter: AuthAdapter = {
   authenticate(request) {
     return (process.env.NODE_ENV === "test" || process.env.NODE_ENV === "development") && process.env.HOSTED_AUTH_FIXTURE_MODE === "true"
       ? new DeterministicAuthAdapter(true).authenticate(request)
-      : tokenAuthAdapter.authenticate(request);
+      : process.env.CLERK_SECRET_KEY
+        ? clerkAuthAdapter.authenticate(request)
+        : tokenAuthAdapter.authenticate(request);
   },
 };

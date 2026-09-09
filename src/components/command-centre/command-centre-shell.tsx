@@ -14,6 +14,7 @@ import type { IncomingSignal, IncomingSignalSource, IncomingSignalStatus } from 
 import type { SignalTriageAction } from "@/types/signal-triage";
 import type { FocusBoard } from "@/types/focus-board";
 import type { Handoff } from "@/types/handoff";
+import { AuthControls } from "./auth-controls";
 import type { AutomationRun, OperationalAuditRecord, OperationalIncident } from "@/types/operational";
 import {
   Archive,
@@ -849,6 +850,7 @@ export function CommandCentreShell() {
           </div>
           <p className="subtitle">Jay E | Developer Workspace</p>
           <nav className="toolbar" aria-label="Workspace controls">
+            <AuthControls />
             <button type="button" aria-label="Search"><Search size={16} /></button>
             <button type="button" aria-label="Apps"><LayoutGrid size={16} /></button>
             <button type="button" aria-label="Integration status" onClick={() => setIntegrationOpen((open) => !open)}><Info size={16} /></button>
