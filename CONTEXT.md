@@ -132,6 +132,24 @@ A Micro App that organizes the active Repository Context's current Work Items, d
 ### Session Handoff
 A Micro App that captures the current work state, decisions, changes, blockers, and next actions as a durable handoff Artifact for a later session or agent.
 
+### Organization (Tenant)
+A multi-tenant unit representing a company or team. Each organization is a Clerk org that owns repositories, Vercel projects, and workspace data. Organizations are isolated by `tenant_id` in Neon and are the unit of SaaS multi-tenancy. Synonymous with "tenant" in database context.
+
+### Developer (User)
+A person who signs into the app via Clerk. A developer may be a member of multiple organizations and sees separate dashboards for each. Developers authenticate once and can switch org context.
+
+### Developer-Org Membership
+The relationship granting a developer access to an organization's dashboard, repositories, and workspace. Created via Clerk org invite (email link + accept flow). Developer must also be a member of the organization's GitHub org to access its repositories and pull GitHub data.
+
+### GitHub Org
+A GitHub organization that owns repositories. Distinct from the app organization (Clerk org) but typically mapped 1:1. Developers must be members of both the Clerk org and the GitHub org to access the app and see its repos.
+
+### Vercel Project
+A Vercel deployment project associated with an organization. Each organization has one Vercel project (mapped 1:1). All repositories in that organization deploy to this project.
+
+### Tenant ID
+A UUID that uniquely identifies an organization (Clerk org) in Neon. Used for row-level isolation of all user-facing data: artifacts, work items, incoming signals, routines, etc. Every query must filter by `tenant_id` to ensure multi-tenant isolation.
+
 ## Clarified Distinctions
 
 ### Skill vs Routine
@@ -185,6 +203,12 @@ Routine Status is the internal state. A UI label may use display language such a
 ### Communication Signal vs Work Item
 A Communication Signal is incoming context that may require triage. A Work Item is an intentional actionable commitment created from a signal or directly by the developer. Signals do not become Work Items automatically.
 
+### Organization vs GitHub Org
+An Organization (Clerk org) is the app tenant and unit of SaaS multi-tenancy. A GitHub Org is the external GitHub organization that owns repositories. They are separate identity systems but typically map 1:1 by name. A developer must join both to access the app and its data.
+
+### Tenant vs Organization
+Tenant is the database/architectural term for an isolated multi-tenant unit identified by `tenant_id`. Organization is the business term for the same concept. Both refer to the Clerk org and the row in the `organizations` Neon table.
+
 ## Relationship Rules
 
 - The command centre is the front door to the Agentic OS.
@@ -237,6 +261,19 @@ A Communication Signal is incoming context that may require triage. A Work Item 
 - Phase Three does not send or reply to Email; it supports triage and workflow linking only.
 - Phase Three implementation order is Incoming Signal and Agent Inbox, provider-neutral Email/manual-note adapters, triage into linked Work Items, Today / Focus Board, Session Handoff draft/finalization, then Second Brain and browser integration coverage.
 - The Phase Three release boundary includes Agent Inbox, demo/manual signals, provider-neutral Email, linked Work Items, Today / Focus Board, Session Handoff, provenance links, multi-repository isolation, and reset/migration coverage.
+
+## Multi-Tenancy Rules (Phase Two+)
+
+- The application is multi-tenant SaaS hosted on Vercel + Neon.
+- Each organization is a Clerk org mapped 1:1 to a Neon `tenant_id`.
+- Every table in Neon has a `tenant_id` column for row-level isolation (no table-per-tenant).
+- All API queries must filter by the authenticated user's org's `tenant_id`.
+- Developers join organizations via Clerk org invite (email link); app access is separate from GitHub membership.
+- Developers must be members of both the Clerk org and the GitHub org to see and work with its repositories.
+- Each organization has one Vercel project; all repos in that org deploy to it.
+- GitHub data (issues, PRs, actions) is cached in Neon but GitHub remains the source of truth.
+- Vercel webhooks (deployment events) are routed to the correct org by looking up the Vercel project ID in the `vercel_projects` table.
+- Cross-org data access is not allowed; each org sees only its own artifacts, work items, routines, and connected integrations.
 
 ## Out of Scope
 
