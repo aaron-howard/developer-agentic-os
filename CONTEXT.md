@@ -292,6 +292,19 @@ A Capability Grant authorizes a specific action or data boundary. A Credential p
 - Phase Three implementation order is Incoming Signal and Agent Inbox, provider-neutral Email/manual-note adapters, triage into linked Work Items, Today / Focus Board, Session Handoff draft/finalization, then Second Brain and browser integration coverage.
 - The Phase Three release boundary includes Agent Inbox, demo/manual signals, provider-neutral Email, linked Work Items, Today / Focus Board, Session Handoff, provenance links, multi-repository isolation, and reset/migration coverage.
 
+## Multi-Tenancy Rules (Phase Two+)
+
+- The application is multi-tenant SaaS hosted on Vercel + Neon.
+- Each organization is a Clerk org mapped 1:1 to a Neon `tenant_id`.
+- Every table in Neon has a `tenant_id` column for row-level isolation (no table-per-tenant).
+- All API queries must filter by the authenticated user's org's `tenant_id`.
+- Developers join organizations via Clerk org invite (email link); app access is separate from GitHub membership.
+- Developers must be members of both the Clerk org and the GitHub org to see and work with its repositories.
+- Each organization has one Vercel project; all repos in that org deploy to it.
+- GitHub data (issues, PRs, actions) is cached in Neon but GitHub remains the source of truth.
+- Vercel webhooks (deployment events) are routed to the correct org by looking up the Vercel project ID in the `vercel_projects` table.
+- Cross-org data access is not allowed; each org sees only its own artifacts, work items, routines, and connected integrations.
+
 ## Out of Scope
 
 The v2 dashboard does not include a YouTube or audience-metrics widget.
