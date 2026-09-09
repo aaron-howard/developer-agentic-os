@@ -1,0 +1,27 @@
+import { NextResponse } from "next/server";
+
+import { AuthError, authAdapter } from "@/server/hosted-auth/auth-adapter";
+import { hostedWorkspaceStore } from "@/server/hosted-workspaces/hosted-workspace-store";
+
+export async function hostedIdentity(request: Request) {
+  try {
+    const identity = await authAdapter.authenticate(request);
+    await hostedWorkspaceStore.recordIdentity(identity);
+    return identity;
+  } catch (error) {
+    if (error instanceof AuthError) return NextResponse.json({ error: error.message }, { status: 401 });
+    throw error;
+  }
+}
+
+export function hostedError(error: unknown) {
+  if (error instanceof Error && error.name === "HostedDomainError") {
+    const statusByCode = { FORBIDDEN: 403, NOT_FOUND: 404, INVALID: 400, STALE: 409 } as const;
+    return NextResponse.json({ error: error.message }, { status: statusByCode[(error as unknown as { code: keyof typeof statusByCode }).code] ?? 400 });
+  }
+  if (error instanceof Error && error.name === "HostedWorkspaceError") {
+    const code = (error as unknown as { code: "INVALID_NAME" | "NOT_FOUND" }).code;
+    return NextResponse.json({ error: error.message }, { status: code === "NOT_FOUND" ? 404 : 400 });
+  }
+  throw error;
+}

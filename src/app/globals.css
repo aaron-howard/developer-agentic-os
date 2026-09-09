@@ -418,6 +418,16 @@ h2 {
   padding: 8px;
 }
 
+button.focus-board-failure {
+  width: 100%;
+  border-top: 0;
+  border-right: 0;
+  border-bottom: 0;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
 .focus-board-row.blocked { border-left-color: var(--orange); }
 .focus-board-row.overdue { border-left-color: #ff9b57; }
 .focus-board-row.due { border-left-color: var(--teal); }
@@ -806,6 +816,26 @@ h1 span {
   border: 0;
   color: inherit;
   padding: 0;
+}
+
+.auth-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.auth-button {
+  border: 1px solid var(--line) !important;
+  color: var(--text) !important;
+  padding: 5px 8px !important;
+  font: inherit;
+  font-size: 0.62rem;
+  text-transform: uppercase;
+}
+
+.auth-button.primary {
+  border-color: var(--orange) !important;
+  color: var(--orange) !important;
 }
 
 .dashboard-banner {

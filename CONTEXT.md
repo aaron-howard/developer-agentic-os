@@ -132,23 +132,41 @@ A Micro App that organizes the active Repository Context's current Work Items, d
 ### Session Handoff
 A Micro App that captures the current work state, decisions, changes, blockers, and next actions as a durable handoff Artifact for a later session or agent.
 
-### Organization (Tenant)
-A multi-tenant unit representing a company or team. Each organization is a Clerk org that owns repositories, Vercel projects, and workspace data. Organizations are isolated by `tenant_id` in Neon and are the unit of SaaS multi-tenancy. Synonymous with "tenant" in database context.
+### Operational Event
+An immutable normalized observation from a schedule, repository, or Integration Adapter that may start an automated workflow.
 
-### Developer (User)
-A person who signs into the app via Clerk. A developer may be a member of multiple organizations and sees separate dashboards for each. Developers authenticate once and can switch org context.
+### Operational Incident
+A repository-scoped grouping of related Incoming Signals and Operational Events that gives the developer one actionable operational thread without replacing its source evidence.
 
-### Developer-Org Membership
-The relationship granting a developer access to an organization's dashboard, repositories, and workspace. Created via Clerk org invite (email link + accept flow). Developer must also be a member of the organization's GitHub org to access its repositories and pull GitHub data.
+### Automation Run
+A durable record of a triggered workflow, including its lifecycle, trigger, actions, approvals, retries, and result.
 
-### GitHub Org
-A GitHub organization that owns repositories. Distinct from the app organization (Clerk org) but typically mapped 1:1. Developers must be members of both the Clerk org and the GitHub org to access the app and see its repos.
+### Automation Policy
+A repository-scoped rule describing which triggers and workflows are enabled, what approval is required, and how retries or missed work are handled.
 
-### Vercel Project
-A Vercel deployment project associated with an organization. Each organization has one Vercel project (mapped 1:1). All repositories in that organization deploy to this project.
+### Approval
+An explicit developer decision allowing a proposed Automation Run action to proceed.
 
-### Tenant ID
-A UUID that uniquely identifies an organization (Clerk org) in Neon. Used for row-level isolation of all user-facing data: artifacts, work items, incoming signals, routines, etc. Every query must filter by `tenant_id` to ensure multi-tenant isolation.
+### Hosted Workspace
+A private hosted space owned by a User that contains Repository Contexts and hosted workflow records.
+
+### Local Connector
+An outbound authenticated local process that exposes explicitly granted Repository Context capabilities to the Hosted Workspace.
+
+### Capability Grant
+An explicit authorization for a Local Connector or Skill to use a specific Repository Context capability.
+
+### Hosted State
+The durable account, Workspace, workflow, approval, and audit records owned by the hosted OS.
+
+### Local-Derived State
+State computed from a local repository or filesystem, whose freshness depends on a Local Connector publication.
+
+### Migration Package
+A reviewable export of local records and relationships that can be selectively imported into a Hosted Workspace.
+
+### Freshness State
+The explicit indication of whether Local-Derived State is current, historical, pending, or unavailable.
 
 ## Clarified Distinctions
 
@@ -203,11 +221,23 @@ Routine Status is the internal state. A UI label may use display language such a
 ### Communication Signal vs Work Item
 A Communication Signal is incoming context that may require triage. A Work Item is an intentional actionable commitment created from a signal or directly by the developer. Signals do not become Work Items automatically.
 
-### Organization vs GitHub Org
-An Organization (Clerk org) is the app tenant and unit of SaaS multi-tenancy. A GitHub Org is the external GitHub organization that owns repositories. They are separate identity systems but typically map 1:1 by name. A developer must join both to access the app and its data.
+### Incoming Signal vs Operational Incident
+An Incoming Signal preserves one piece of incoming context or provider evidence. An Operational Incident groups related signals for coordinated investigation without deleting or replacing them.
 
-### Tenant vs Organization
-Tenant is the database/architectural term for an isolated multi-tenant unit identified by `tenant_id`. Organization is the business term for the same concept. Both refer to the Clerk org and the row in the `organizations` Neon table.
+### Operational Event vs Incoming Signal
+An Operational Event is a normalized system observation. An Incoming Signal is the triageable product record created from an event or other incoming context.
+
+### Automation Run vs Routine Execution Record
+An Automation Run records any triggered operational workflow, including event-triggered workflows. A Routine Execution Record records the execution of a Routine and may link to Automation Runs or their outputs.
+
+### Hosted State vs Local-Derived State
+Hosted State owns account, Workspace, approval, and audit records. Local-Derived State describes filesystem or repository facts and may be published to Hosted State but does not become current merely because it exists there.
+
+### Local Connector vs Integration Adapter
+A Local Connector grants scoped access from the hosted OS to local Repository Context capabilities. An Integration Adapter connects the OS to an external provider such as GitHub, Vercel, or Sentry.
+
+### Capability Grant vs Credential
+A Capability Grant authorizes a specific action or data boundary. A Credential proves access to a provider or connector. A grant must not expose or replace the credential.
 
 ## Relationship Rules
 

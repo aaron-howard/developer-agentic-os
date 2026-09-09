@@ -1,7 +1,8 @@
-export type IncomingSignalSource = "manual" | "email" | "integration";
-export type IncomingSignalProvider = "github" | "vercel";
+export type IncomingSignalSource = "manual" | "email" | "integration" | "operational";
+export type IncomingSignalProvider = "github" | "vercel" | "sentry" | "local";
 export type IncomingSignalStatus = "new" | "snoozed" | "dismissed" | "triaged";
 export type IncomingSignalDerivedReference = { kind: "work_item" | "skill_run" | "artifact"; ref: string };
+export type IncomingSignalProvenance = { eventId?: string; incidentId?: string; runId?: string; policyId?: string };
 
 export type IncomingSignal = {
   id: string;
@@ -16,6 +17,7 @@ export type IncomingSignal = {
   status: IncomingSignalStatus;
   snoozedUntil: string | null;
   derivedRefs: IncomingSignalDerivedReference[];
+  provenance?: IncomingSignalProvenance;
 };
 
 export type CreateIncomingSignalInput = {
@@ -25,6 +27,7 @@ export type CreateIncomingSignalInput = {
   title: string;
   body?: string;
   repositoryId: string;
+  provenance?: IncomingSignalProvenance;
 };
 
 export type ListIncomingSignalsOptions = {

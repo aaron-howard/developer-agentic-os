@@ -50,6 +50,16 @@ export class VercelAdapter {
     }
   }
 
+  async redeploy(deploymentId: string, expectedProjectId?: string): Promise<{ ok: boolean; status: number; response: Record<string, unknown> }> {
+    if (!this.token) return { ok: false, status: 401, response: { error: "Vercel credentials are not configured." } };
+    if (!deploymentId.trim()) return { ok: false, status: 400, response: { error: "A deployment id is required." } };
+    if (!expectedProjectId?.trim()) return { ok: false, status: 400, response: { error: "An expected Vercel project id is required." } };
+    const project = await this.projectForContext();
+    if (!project.id || expectedProjectId !== project.id) return { ok: false, status: 409, response: { error: "Deployment is outside the expected Vercel project." } };
+    const response = await this.fetcher(`${this.apiUrl}/v13/deployments/${encodeURIComponent(deploymentId)}/redeploy`, { method: "POST", headers: { Authorization: `Bearer ${this.token}`, Accept: "application/json" } });
+    return { ok: response.ok, status: response.status, response: { provider: "vercel", deploymentId, projectId: expectedProjectId, status: response.status, body: await responseBody(response) } };
+  }
+
   private async projectForContext(): Promise<{ id: string | null; teamId: string | undefined }> {
     if (!this.repositoryRoot) return { id: this.projectId, teamId: this.teamId };
     try {
@@ -84,6 +94,10 @@ export class VercelAdapter {
   private empty(status: VercelOperations["status"], message: string): VercelOperations {
     return { status, projectId: this.projectId, message, deployments: [], failure: null, checkedAt: new Date().toISOString() };
   }
+}
+
+async function responseBody(response: Response): Promise<unknown> {
+  try { return await response.clone().json(); } catch { return await response.clone().text(); }
 }
 
 class VercelRequestError extends Error {

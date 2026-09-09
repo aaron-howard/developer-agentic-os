@@ -10,6 +10,7 @@ import { RoutineHistoryStore } from "../src/server/routines/routine-history-stor
 import { SkillRunStore } from "../src/server/skill-runs/skill-run-store";
 import { WorkItemStore } from "../src/server/work-items/work-item-store";
 import { createSkillRegistry } from "../src/server/skills/skill-registry";
+import { OperationalStore } from "../src/server/operational/operational-store";
 
 test("focus board aggregates one repository without duplicating or leaking records", async () => {
   const root = await mkdtemp(join(tmpdir(), "developer-agentic-os-focus-board-"));
@@ -30,6 +31,9 @@ test("focus board aggregates one repository without duplicating or leaking recor
     await skillRuns.updateRun({ ...failedSkill, status: "failed", error: "test failure", completedAt: now.toISOString() });
     const execution = await routineHistory.createExecution("stale_branch_check", { startedAt: now.toISOString() });
     await routineHistory.completeExecution(execution, { status: "failed", error: "routine failure", completedAt: now.toISOString() });
+    const operational = new OperationalStore(root);
+    const queued = await operational.createRun({ repositoryId, policyId: "policy", trigger: "provider", input: {}, status: "queued", steps: [], outputs: [], error: null });
+    const running = await operational.createRun({ repositoryId, policyId: "policy", trigger: "provider", input: {}, status: "running", steps: [], outputs: [], error: null });
 
     const board = await getFocusBoard(repositoryId, root, { now: () => now, workItems });
 
@@ -39,6 +43,7 @@ test("focus board aggregates one repository without duplicating or leaking recor
     assert.deepEqual(board.recentArtifacts.map((item) => item.id), [artifact.id]);
     assert.deepEqual(board.failedSkillRuns.map((run) => run.id), [failedSkill.id]);
     assert.equal(board.failedRoutineExecutions[0]?.routineName, "Stale Branch Check");
+    assert.deepEqual(board.operationalRuns.map((run) => run.id), [running.id, queued.id]);
     assert.equal(JSON.stringify(board).includes("Other repository"), false);
   } finally {
     await rm(root, { recursive: true, force: true });
