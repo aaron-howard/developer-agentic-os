@@ -1,6 +1,7 @@
 import type { EmailAdapter, EmailProviderMessage } from "@/types/email";
 import type { IntegrationAdapterStatus } from "@/types/integration";
 import type { IncomingSignal } from "@/types/incoming-signal";
+import type { WorkspaceContext } from "@/types/workspace";
 import { IncomingSignalStore } from "../incoming-signals/incoming-signal-store";
 
 const demoMessages: EmailProviderMessage[] = [
@@ -25,8 +26,12 @@ export class LocalEmailAdapter implements EmailAdapter {
     return this.status.status === "disabled" ? [] : this.configuredMessages ?? demoMessages;
   }
 
-  async sync(repositoryId: string): Promise<{ integration: IntegrationAdapterStatus; signals: IncomingSignal[] }> {
-    const store = new IncomingSignalStore(this.root);
+  /**
+   * Sync email messages to incoming signals.
+   * Accepts optional WorkspaceContext for DI; creates store from root if not provided.
+   */
+  async sync(repositoryId: string, context?: WorkspaceContext): Promise<{ integration: IntegrationAdapterStatus; signals: IncomingSignal[] }> {
+    const store = context?.incomingSignalStore ?? new IncomingSignalStore(this.root);
     const existing = await store.list({ repositoryId, source: "email" });
     const existingIds = new Set(existing.map((signal) => signal.sourceId));
     const messages = await this.listMessages();
