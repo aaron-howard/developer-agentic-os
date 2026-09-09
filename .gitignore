@@ -23,6 +23,7 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 .vercel
+.vscode/
 
 # graft's local graph cache — regenerable, not committed (run `graft build`).
 /graft/
