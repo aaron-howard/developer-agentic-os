@@ -1,4 +1,4 @@
 # src/app/api/handoffs/route.ts
 
-- GET · function · L7-L15 — async function GET(request: Request)
-- POST · function · L17-L27 — async function POST(request: Request)
+- GET · function · L8-L17 — async function GET(request: Request)
+- POST · function · L19-L30 — async function POST(request: Request)

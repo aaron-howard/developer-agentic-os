@@ -1,7 +1,3 @@
 # src/server/second-brain/second-brain-graph.ts
 
-- buildSecondBrainGraph · function · L14-L99 — async function buildSecondBrainGraph(root = process.cwd()): Promise<SecondBrainGraph>
-- addArtifact · function · L101-L113 — function addArtifact(nodes: Map<string, GraphNode>, links: GraphLink[], artifact: ArtifactIndexEntry): void
-- addContextReferenceLinks · function · L115-L120 — function addContextReferenceLinks(references: Array<{ kind: string; ref: string }>, source: string, nodes: Map<string, GraphNode>, links: GraphLink[], type: GraphLink["type"] = "references"): void
-- uniqueLinks · function · L122-L124 — function uniqueLinks(links: GraphLink[]): GraphLink[]
-- addNode · function · L126-L128 — function addNode(nodes: Map<string, GraphNode>, node: GraphNode): void
+- buildSecondBrainGraph · function · L21-L157 — async function buildSecondBrainGraph(contextOrRoot?: WorkspaceContext | string): Promise<SecondBrainGraph>

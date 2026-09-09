@@ -1,6 +1,6 @@
 # src/app/api/incoming-signals/route.ts
 
-- GET · function · L8-L17 — async function GET(request: Request)
-- POST · function · L19-L30 — async function POST(request: Request)
-- asSource · function · L32-L34 — function asSource(value: string | null): IncomingSignalSource | undefined
-- asStatus · function · L36-L38 — function asStatus(value: string | null): IncomingSignalStatus | undefined
+- GET · function · L9-L19 — async function GET(request: Request)
+- POST · function · L21-L33 — async function POST(request: Request)
+- asSource · function · L35-L37 — function asSource(value: string | null): IncomingSignalSource | undefined
+- asStatus · function · L39-L41 — function asStatus(value: string | null): IncomingSignalStatus | undefined
