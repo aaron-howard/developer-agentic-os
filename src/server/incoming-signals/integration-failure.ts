@@ -22,7 +22,7 @@ export async function recordIntegrationFailure(
   try {
     const store = context?.incomingSignalStore ?? new IncomingSignalStore(root);
     const existing = (await store.list({ repositoryId: input.repositoryId, source: "integration" })).find((signal) => signal.sourceId === input.sourceId);
-    return existing ?? await store.create({ source: "integration", provider: input.provider as "github" | "vercel", sourceId: input.sourceId, title: input.title, body: input.body, repositoryId: input.repositoryId });
+    return existing ?? await store.create({ source: "integration", provider: input.provider as "github" | "vercel" | "sentry", sourceId: input.sourceId, title: input.title, body: input.body, repositoryId: input.repositoryId });
   } finally {
     release();
     if (writeLocks.get(root) === queued) writeLocks.delete(root);

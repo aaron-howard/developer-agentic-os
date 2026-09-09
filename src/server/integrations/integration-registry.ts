@@ -21,6 +21,8 @@ export async function getIntegrationStatuses(root = process.cwd(), env: Record<s
   const hasGitHubToken = Boolean(env.GITHUB_TOKEN || env.GH_TOKEN);
   const hasVercelToken = Boolean(env.VERCEL_TOKEN || env.VERCEL_API_TOKEN);
   const hasVercelProject = Boolean(env.VERCEL_PROJECT_ID);
+  const sentryObservations = await new SentryAdapter(env, fetch as (input: string, init?: RequestInit) => Promise<Response>, root).getObservations();
+  const sentryObservation = sentryObservations[0];
 
   return [
     {

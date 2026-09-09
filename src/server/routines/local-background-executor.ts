@@ -8,6 +8,7 @@ import { initializeLocalStore } from "../local-store/paths";
 import { createWorkspaceContext } from "../workspace/workspace-context";
 import { WorkspaceStore } from "../workspace/workspace-store";
 import { createRoutineRegistry } from "./routine-registry";
+import { createOperationalExecutor } from "../operational/operational-executor";
 
 export type ExecutorClock = { now(): Date };
 export type RoutineExecutorTrigger = { repositoryId?: string };

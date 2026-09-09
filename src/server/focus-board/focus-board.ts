@@ -6,6 +6,7 @@ import { RoutineHistoryStore } from "../routines/routine-history-store";
 import { WorkItemStore } from "../work-items/work-item-store";
 import type { FocusBoard, FocusBoardWorkItem } from "@/types/focus-board";
 import type { WorkItem } from "@/types/work-item";
+import { OperationalStore } from "../operational/operational-store";
 
 type FocusBoardOptions = {
   context?: WorkspaceContext;
@@ -49,6 +50,8 @@ export async function getFocusBoard(repositoryId: string, repositoryRoot: string
     recentArtifacts: recentArtifacts.slice(0, limit),
     failedSkillRuns: failedSkillRuns.filter((run) => run.status === "failed").slice(0, limit),
     failedRoutineExecutions: failedRoutineExecutions.filter((execution) => execution.status === "failed").map((execution) => ({ ...execution, routineName: routineNames.get(execution.routineId) ?? execution.routineId })).slice(0, limit),
+    operationalIncidents: operationalIncidents.filter((incident) => incident.status === "active").slice(0, limit),
+    operationalRuns: operationalRuns.filter((run) => ["queued", "running", "awaiting_approval", "failed", "paused", "retrying", "missed"].includes(run.status)).slice(0, limit),
   };
 }
 
