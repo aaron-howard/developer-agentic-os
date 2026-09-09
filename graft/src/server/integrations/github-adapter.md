@@ -1,0 +1,24 @@
+# src/server/integrations/github-adapter.ts
+
+- GitHubFetch · type · L15-L15 — type GitHubFetch = (input: string, init?: RequestInit) => Promise<Response>;
+- GitHubApiIssue · type · L17-L26 — type GitHubApiIssue = { number?: unknown; title?: unknown; state?: unknown; html_url?: unknown; updated_at?: unknown; pull_request?: unknown; draft?: unknown; mergeable?: unknown; };
+- GitHubApiActionRun · type · L28-L35 — type GitHubApiActionRun = { id?: unknown; name?: unknown; status?: unknown; conclusion?: unknown; html_url?: unknown; created_at?: unknown; };
+- GitHubAdapter · class · L37-L142 — class GitHubAdapter
+- constructor · method · L43-L52 — constructor( private readonly env: Record<string, string | undefined> = process.env, fetcher: GitHubFetch = fetch as GitHubFetch, private readonly repositoryRoot?: string, )
+- getOperations · method · L54-L87 — async getOperations(): Promise<GitHubOperations>
+- rerunFailedAction · method · L89-L95 — async rerunFailedAction(runId: string): Promise<{ ok: boolean; status: number; response: Record<string, unknown> }>
+- repositoryForContext · method · L97-L105 — private async repositoryForContext(): Promise<string | null>
+- request · method · L107-L127 — private async request<T>(path: string): Promise<T>
+- empty · method · L129-L141 — private empty(status: GitHubOperations["status"], message: string): GitHubOperations
+- responseBody · function · L144-L146 — async function responseBody(response: Response): Promise<unknown>
+- GitHubRequestError · class · L148-L152 — class GitHubRequestError extends Error
+- constructor · method · L149-L151 — constructor(readonly failure: GitHubFailure)
+- failureForResponse · function · L154-L159 — function failureForResponse(response: Response): GitHubFailure
+- normalizeRepository · function · L161-L165 — function normalizeRepository(value: string | undefined): string | null
+- joinRepositoryParts · function · L167-L169 — function joinRepositoryParts(owner: string | undefined, repo: string | undefined): string | undefined
+- toIssue · function · L171-L179 — function toIssue(issue: GitHubApiIssue): GitHubIssue
+- toPullRequest · function · L181-L187 — function toPullRequest(pullRequest: GitHubApiIssue): GitHubPullRequest
+- toAction · function · L189-L198 — function toAction(action: GitHubApiActionRun): GitHubActionRun
+- mergeStatusFor · function · L200-L204 — function mergeStatusFor(pullRequests: GitHubPullRequest[]): GitHubMergeStatus
+- numberValue · function · L206-L208 — function numberValue(value: unknown): number
+- stringValue · function · L210-L212 — function stringValue(value: unknown, fallback: string): string

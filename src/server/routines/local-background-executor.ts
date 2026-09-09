@@ -5,6 +5,7 @@ import type { RepositoryContext } from "@/types/workspace";
 import type { RoutineDefinition, RoutineExecutorStatus } from "@/types/routine";
 import { readJsonFile, writeJsonFile } from "../local-store/json-file";
 import { initializeLocalStore } from "../local-store/paths";
+import { createWorkspaceContext } from "../workspace/workspace-context";
 import { WorkspaceStore } from "../workspace/workspace-store";
 import { createRoutineRegistry } from "./routine-registry";
 import { createOperationalExecutor } from "../operational/operational-executor";
@@ -93,12 +94,19 @@ export function createLocalBackgroundExecutor(options: LocalBackgroundExecutorOp
       const contexts = trigger.repositoryId || !isApplicationExecutor ? [requestedContext] : await workspace.listRepositories();
       if (!contexts.some((context) => context.id === requestedContext.id)) contexts.unshift(requestedContext);
       for (const context of contexts) {
+<<<<<<< HEAD
         count += await createOperationalExecutor(context.path).runDueSchedule(context.id);
         const routines = await createRoutineRegistry({ root: context.path }).listRoutines();
+=======
+        // Create WorkspaceContext once per repository to avoid N² store instantiations
+        const workspaceContext = await createWorkspaceContext(context.path);
+        const routines = await createRoutineRegistry({ context: workspaceContext }).listRoutines();
+>>>>>>> 09891135c56f447877955a758fbec292b0a127c8
         for (const routine of routines) {
-          if (routine.executionMode !== "local_background" || routine.status === "paused" || !(await isDue(routine, context.path))) continue;
+          if (routine.executionMode !== "local_background" || routine.status === "paused" || !(await isDue(routine, workspaceContext))) continue;
           const target = routine.repositoryId ? await resolveContext(routine.repositoryId) : context;
-          const registry = createRoutineRegistry({ root: target.path, now: clock.now.bind(clock) });
+          const targetContext = target.id === context.id ? workspaceContext : await createWorkspaceContext(target.path);
+          const registry = createRoutineRegistry({ context: targetContext, now: clock.now.bind(clock) });
           const result = await registry.runRoutine(routine.id, { source: "local_background" });
           count += 1;
           if (result.status === "failed") error = result.error ?? `Routine ${routine.id} failed.`;
@@ -115,8 +123,8 @@ export function createLocalBackgroundExecutor(options: LocalBackgroundExecutorOp
     }
   }
 
-  async function isDue(routine: RoutineDefinition, contextRoot: string): Promise<boolean> {
-    const executions = await createRoutineRegistry({ root: contextRoot }).listExecutions({ routineId: routine.id, limit: 20 });
+  async function isDue(routine: RoutineDefinition, workspaceContext: Awaited<ReturnType<typeof createWorkspaceContext>>): Promise<boolean> {
+    const executions = await createRoutineRegistry({ context: workspaceContext }).listExecutions({ routineId: routine.id, limit: 20 });
     const latest = executions[0];
     if (!latest) return true;
     const now = clock.now();

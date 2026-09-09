@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import { resolve } from "node:path";
 
 import type { CreateHandoffInput, Handoff, HandoffSnapshot, UpdateHandoffInput } from "@/types/handoff";
-import type { RepositoryContext } from "@/types/workspace";
+import type { RepositoryContext, WorkspaceContext } from "@/types/workspace";
 import { ArtifactStore } from "../artifacts/artifact-store";
 import { refreshRepoMemorySnapshot } from "../repo-memory/repo-memory";
 import { SkillRunStore } from "../skill-runs/skill-run-store";
@@ -20,8 +20,12 @@ export class HandoffError extends Error {
   }
 }
 
+/**
+ * HandoffStore with optional dependency injection.
+ * Accepts WorkspaceContext for DI; creates stores from root if not provided.
+ */
 export class HandoffStore {
-  constructor(private readonly root = process.cwd()) {}
+  constructor(private readonly root = process.cwd(), private readonly context?: WorkspaceContext) {}
 
   async list(repositoryId?: string): Promise<Handoff[]> {
     const index = await this.readIndex();
@@ -37,14 +41,14 @@ export class HandoffStore {
   async create(context: RepositoryContext, input: CreateHandoffInput = {}): Promise<Handoff> {
     validateInput(input);
     const repoMemory = await refreshRepoMemorySnapshot(context.path);
-    const artifactStore = new ArtifactStore(context.path);
+    const artifactStore = this.context?.artifactStore ?? new ArtifactStore(context.path);
     const snapshot: HandoffSnapshot = {
       repositoryContext: context,
       branch: repoMemory.git.currentBranch,
       changedFiles: [...repoMemory.git.changedFiles],
-      workItems: await new WorkItemStore(context.path).list({ repositoryId: context.id }),
+      workItems: await (this.context?.workItemStore ?? new WorkItemStore(context.path)).list({ repositoryId: context.id }),
       artifacts: await artifactStore.listArtifacts({ limit: 100 }),
-      skillRuns: await new SkillRunStore(context.path).listRuns({ limit: 100 }),
+      skillRuns: await (this.context?.skillRunStore ?? new SkillRunStore(context.path)).listRuns({ limit: 100 }),
       repoMemory,
     };
     const now = new Date().toISOString();
@@ -86,7 +90,7 @@ export class HandoffStore {
     if (current.status === "finalized") return current;
     const finalizedAt = new Date().toISOString();
     const finalized: Handoff = { ...current, status: "finalized", finalizedAt, updatedAt: finalizedAt };
-    const artifact = await new ArtifactStore(current.snapshot.repositoryContext.path).createArtifact({
+    const artifact = await (this.context?.artifactStore ?? new ArtifactStore(current.snapshot.repositoryContext.path)).createArtifact({
       name: current.title,
       type: "session_handoff",
       content: finalized,

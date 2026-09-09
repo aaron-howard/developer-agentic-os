@@ -1,0 +1,14 @@
+{
+  "version": "0.16.0",
+  "hosts": [
+    "agents",
+    "copilot"
+  ],
+  "opts": {
+    "global": true,
+    "mcp": true,
+    "hooks": true,
+    "statusline": true
+  },
+  "at": "2026-09-09T23:23:36.670Z"
+}

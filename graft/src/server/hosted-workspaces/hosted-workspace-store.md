@@ -1,0 +1,25 @@
+# src/server/hosted-workspaces/hosted-workspace-store.ts
+
+- HostedUserState · type · L9-L12 — type HostedUserState = { workspaces: HostedWorkspace[]; activeWorkspaceId: string | null; };
+- HostedWorkspaceState · type · L14-L17 — type HostedWorkspaceState = { users: Record<string, HostedUserState>; audit: HostedAuditEvent[]; };
+- HostedWorkspaceStateProvider · interface · L19-L19 — interface HostedWorkspaceStateProvider
+- HostedWorkspaceError · class · L21-L26 — class HostedWorkspaceError extends Error
+- constructor · method · L22-L25 — constructor(readonly code: "INVALID_NAME" | "NOT_FOUND", message: string)
+- HostedWorkspaceStore · class · L28-L136 — class HostedWorkspaceStore
+- constructor · method · L32-L35 — constructor(root = process.cwd(), private readonly provider?: HostedWorkspaceStateProvider)
+- list · method · L37-L40 — async list(userId: string): Promise<HostedWorkspace[]>
+- create · method · L42-L53 — async create(userId: string, name: string): Promise<HostedWorkspace>
+- select · method · L55-L63 — async select(userId: string, workspaceId: string): Promise<HostedWorkspace>
+- active · method · L65-L69 — async active(userId: string): Promise<HostedWorkspace | null>
+- owns · method · L71-L74 — async owns(userId: string, workspaceId: string): Promise<boolean>
+- owner · method · L76-L82 — async owner(workspaceId: string): Promise<string>
+- recordIdentity · method · L84-L89 — async recordIdentity(identity: HostedIdentity): Promise<void>
+- recordList · method · L91-L96 — async recordList(userId: string): Promise<void>
+- audit · method · L98-L101 — async audit(userId: string): Promise<HostedAuditEvent[]>
+- user · method · L103-L105 — private user(state: HostedWorkspaceState, userId: string): HostedUserState
+- event · method · L107-L109 — private event(action: HostedAuditEvent["action"], userId: string, workspaceId?: string): HostedAuditEvent
+- read · method · L111-L115 — private read(): Promise<HostedWorkspaceState>
+- write · method · L117-L121 — private write(state: HostedWorkspaceState): Promise<void>
+- mutate · method · L123-L131 — private async mutate<T>(operation: (state: HostedWorkspaceState) => T | Promise<T>): Promise<T>
+- assertFixtureOnly · method · L133-L135 — private assertFixtureOnly(): void
+- createHostedWorkspaceStore · function · L138-L143 — function createHostedWorkspaceStore(): HostedWorkspaceStore
