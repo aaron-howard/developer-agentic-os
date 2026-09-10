@@ -150,6 +150,18 @@ An explicit developer decision allowing a proposed Automation Run action to proc
 ### Hosted Workspace
 A private hosted space owned by a User that contains Repository Contexts and hosted workflow records.
 
+### Workspace Member
+A User invited to access a Hosted Workspace under a workspace-scoped Role.
+
+### Workspace Role
+A workspace-scoped access level assigned to a Workspace Member: owner, admin, or member.
+
+### Sync Conflict
+A divergence between local and Hosted State that cannot be safely resolved without preserving both versions and deciding which result becomes authoritative.
+
+### Legacy Migration
+The one-time transfer of records from the legacy `.memory` directory into the Hosted Workspace while preserving source provenance and isolating invalid inputs.
+
 ### Local Connector
 An outbound authenticated local process that exposes explicitly granted Repository Context capabilities to the Hosted Workspace.
 
@@ -235,6 +247,18 @@ Hosted State owns account, Workspace, approval, and audit records. Local-Derived
 
 ### Local Connector vs Integration Adapter
 A Local Connector grants scoped access from the hosted OS to local Repository Context capabilities. An Integration Adapter connects the OS to an external provider such as GitHub, Vercel, or Sentry.
+
+### Workspace Role vs Ownership
+A Workspace Role grants ordinary workspace access. Ownership is a separate authority: only the owner may approve ownership transfer, destructive deletion, or full export.
+
+### Automatic Merge vs Sync Conflict
+Automatic merging is permitted only when the domain rule preserves meaning and provenance. A Sync Conflict is required when a change is consequential, destructive, or cannot be resolved without human judgment.
+
+### Merged Audit View vs Rewritten Audit History
+A merged audit view may present local and hosted events together, but each event retains its source, actor, original timestamp, ingestion timestamp, and ordering rationale. Audit history is never rewritten into an unattributed sequence.
+
+### Automatic Migration vs Silent Migration
+Automatic migration runs once without repeated manual orchestration, but it still provides a preflight summary, preserves provenance, remains idempotent, and quarantines malformed or unknown inputs.
 
 ### Capability Grant vs Credential
 A Capability Grant authorizes a specific action or data boundary. A Credential proves access to a provider or connector. A grant must not expose or replace the credential.
