@@ -4,6 +4,7 @@ import test from "node:test";
 import { EncryptedProtectedSecretStore, hostedDatabaseUrl } from "../src/server/hosted-persistence/neon-hosted-provider";
 import type { HostedState, HostedStateProvider } from "../src/server/hosted-domain/hosted-domain-store";
 import { HostedDomainStore } from "../src/server/hosted-domain/hosted-domain-store";
+import { RejectingHostedObjectStore } from "../src/server/hosted-domain/hosted-object-store";
 import type { HostedWorkspaceState, HostedWorkspaceStateProvider } from "../src/server/hosted-workspaces/hosted-workspace-store";
 import { HostedWorkspaceStore } from "../src/server/hosted-workspaces/hosted-workspace-store";
 
@@ -177,4 +178,16 @@ test("production database configuration is explicit and credential encryption fa
     if (previousStandardUnpooled === undefined) delete environment.DATABASE_URL_UNPOOLED; else environment.DATABASE_URL_UNPOOLED = previousStandardUnpooled;
     if (previousKey === undefined) delete environment.DEV_AGENTIC_OS_SECRET_KEY; else environment.DEV_AGENTIC_OS_SECRET_KEY = previousKey;
   }
+});
+
+test("production object storage rejects artifact bodies until durable storage is configured", async () => {
+  const workspaceProvider = new MemoryWorkspaceProvider(emptyWorkspaceState());
+  const workspaceStore = new HostedWorkspaceStore(process.cwd(), workspaceProvider);
+  const workspace = await workspaceStore.create("alice", "Production-shaped workspace");
+  const domainStore = new HostedDomainStore(process.cwd(), workspaceStore, new MemoryDomainProvider(emptyDomainState()), new RejectingHostedObjectStore());
+
+  await assert.rejects(
+    () => domainStore.putRecord("alice", workspace.id, "artifacts", { name: "report", content: { value: 1 } }),
+    /durable hosted object store/i,
+  );
 });

@@ -1,13 +1,15 @@
 import { NextResponse } from "next/server";
 
 import { AuthError, authAdapter } from "@/server/hosted-auth/auth-adapter";
-import { hostedWorkspaceStore } from "@/server/hosted-workspaces/hosted-workspace-store";
+import { hostedDomainStoreForTenant } from "@/server/hosted-domain/hosted-domain-store";
+import { hostedWorkspaceStoreForTenant } from "@/server/hosted-workspaces/hosted-workspace-store";
 
 export async function hostedIdentity(request: Request) {
   try {
     const identity = await authAdapter.authenticate(request);
-    await hostedWorkspaceStore.recordIdentity(identity);
-    return identity;
+    const workspaceStore = hostedWorkspaceStoreForTenant(identity.tenantId);
+    await workspaceStore.recordIdentity(identity);
+    return { ...identity, workspaceStore, domainStore: hostedDomainStoreForTenant(identity.tenantId) };
   } catch (error) {
     if (error instanceof AuthError) return NextResponse.json({ error: error.message }, { status: 401 });
     throw error;

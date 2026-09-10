@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 
 import { hostedError, hostedIdentity } from "@/app/api/hosted/_shared";
-import { hostedDomainStore } from "@/server/hosted-domain/hosted-domain-store";
 import type { HostedRecordKind } from "@/server/hosted-domain/hosted-domain-store";
 
 const capabilities = ["git.read", "filesystem.read", "filesystem.write"] as const;
@@ -15,6 +14,7 @@ type HostedDomainBody = {
 export async function GET(request: Request) {
   const identity = await hostedIdentity(request);
   if (identity instanceof NextResponse) return identity;
+  const hostedDomainStore = identity.domainStore;
   const url = new URL(request.url);
   const workspaceId = url.searchParams.get("workspaceId");
   if (!workspaceId) return NextResponse.json({ error: "workspaceId is required." }, { status: 400 });
@@ -41,6 +41,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   const identity = await hostedIdentity(request);
   if (identity instanceof NextResponse) return identity;
+  const hostedDomainStore = identity.domainStore;
   try {
     let body: HostedDomainBody;
     try { body = await request.json() as HostedDomainBody; } catch { return NextResponse.json({ error: "Request body must be valid JSON." }, { status: 400 }); }

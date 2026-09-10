@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { join, resolve } from "node:path";
 
 import type { HostedAuditEvent, HostedIdentity, HostedWorkspace } from "@/types/hosted-workspace";
@@ -154,11 +154,20 @@ export class HostedWorkspaceStore {
   }
 }
 
-function createHostedWorkspaceStore(): HostedWorkspaceStore {
+const tenantWorkspaceStores = new Map<string, HostedWorkspaceStore>();
+
+export function hostedWorkspaceStoreForTenant(tenantId: string): HostedWorkspaceStore {
+  const existing = tenantWorkspaceStores.get(tenantId);
+  if (existing) return existing;
+  const tenantRoot = join(process.cwd(), ".developer-agentic-os", "tenants", createHash("sha256").update(tenantId).digest("hex"));
   if (isHostedNeonConfigured() && !isHostedJsonFixtureMode()) {
-    return new HostedWorkspaceStore(process.cwd(), new NeonHostedWorkspaceStateProvider());
+    const store = new HostedWorkspaceStore(process.cwd(), new NeonHostedWorkspaceStateProvider(tenantId));
+    tenantWorkspaceStores.set(tenantId, store);
+    return store;
   }
-  return new HostedWorkspaceStore();
+  const store = new HostedWorkspaceStore(tenantRoot);
+  tenantWorkspaceStores.set(tenantId, store);
+  return store;
 }
 
-export const hostedWorkspaceStore = createHostedWorkspaceStore();
+export const hostedWorkspaceStore = hostedWorkspaceStoreForTenant("legacy");

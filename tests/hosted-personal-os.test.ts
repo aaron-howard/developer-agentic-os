@@ -8,7 +8,7 @@ process.env.HOSTED_AUTH_FIXTURE_MODE = "true";
 process.env.HOSTED_JSON_FIXTURE_MODE = "true";
 (process.env as Record<string, string | undefined>).NODE_ENV = "test";
 
-import { HostedDomainStore } from "../src/server/hosted-domain/hosted-domain-store";
+import { HostedDomainStore, hostedDomainStoreForTenant } from "../src/server/hosted-domain/hosted-domain-store";
 import { AuthError, DeterministicAuthAdapter, TokenAuthAdapter, UnconfiguredHostedTokenVerifier } from "../src/server/hosted-auth/auth-adapter";
 import { DeterministicJsonHostedStateProvider } from "../src/server/hosted-domain/hosted-domain-store";
 import { LocalHostedObjectStore } from "../src/server/hosted-domain/hosted-object-store";
@@ -369,7 +369,7 @@ test("hosted API offline, reconnect, and resume actions preserve pending work", 
   const connectorResponse = await postHostedDomain(new Request("http://localhost/api/hosted/domain", { method: "POST", headers, body: JSON.stringify({ action: "register-connector", workspaceId }) }));
   const connectorId = ((await connectorResponse.json()).connector as { id: string }).id;
   assert.equal((await postHostedDomain(new Request("http://localhost/api/hosted/domain", { method: "POST", headers, body: JSON.stringify({ action: "grant-repository", workspaceId, connectorId, repositoryId }) }))).status, 200);
-  const store = new HostedDomainStore();
+  const store = hostedDomainStoreForTenant(`personal:${headers["x-hosted-user-id"]}`);
   await store.setConnectorOffline(headers["x-hosted-user-id"], workspaceId, connectorId);
   const queued = await postHostedDomain(new Request("http://localhost/api/hosted/domain", { method: "POST", headers, body: JSON.stringify({ action: "queue-local-work", workspaceId, repositoryId, description: "offline work" }) }));
   assert.equal(queued.status, 202);

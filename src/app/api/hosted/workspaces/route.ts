@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 
 import { hostedIdentity, hostedError } from "@/app/api/hosted/_shared";
-import { hostedWorkspaceStore } from "@/server/hosted-workspaces/hosted-workspace-store";
 
 export async function GET(request: Request) {
   const identity = await hostedIdentity(request);
   if (identity instanceof NextResponse) return identity;
+  const hostedWorkspaceStore = identity.workspaceStore;
   try {
     await hostedWorkspaceStore.ensureDefault(identity.userId);
     const workspaces = await hostedWorkspaceStore.list(identity.userId);
@@ -19,6 +19,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   const identity = await hostedIdentity(request);
   if (identity instanceof NextResponse) return identity;
+  const hostedWorkspaceStore = identity.workspaceStore;
   try {
     let body: { name?: unknown } | null;
     try { body = await request.json() as { name?: unknown } | null; } catch { return NextResponse.json({ error: "Request body must be valid JSON." }, { status: 400 }); }

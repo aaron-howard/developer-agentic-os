@@ -4,10 +4,10 @@ import { isAbsolute, join, relative, resolve } from "node:path";
 
 import { readJsonFile, writeJsonFile } from "../local-store/json-file";
 import { withStateLock } from "../local-store/state-lock";
-import { HostedWorkspaceStore } from "../hosted-workspaces/hosted-workspace-store";
-import { LocalHostedObjectStore, type HostedObjectStore } from "./hosted-object-store";
+import { HostedWorkspaceStore, hostedWorkspaceStoreForTenant } from "../hosted-workspaces/hosted-workspace-store";
+import { LocalHostedObjectStore, RejectingHostedObjectStore, type HostedObjectStore } from "./hosted-object-store";
 import { DeterministicLocalStoreExportAdapter, type LocalStoreExportAdapter } from "../local-store/local-store-export";
-import { EncryptedProtectedSecretStore, isHostedJsonFixtureMode, isHostedNeonConfigured, NeonHostedStateProvider, NeonHostedWorkspaceStateProvider } from "../hosted-persistence/neon-hosted-provider";
+import { EncryptedProtectedSecretStore, isHostedJsonFixtureMode, isHostedNeonConfigured, NeonHostedStateProvider } from "../hosted-persistence/neon-hosted-provider";
 
 export type HostedRecordKind = "repositories" | "workItems" | "incomingSignals" | "incidents" | "automationRuns" | "approvals" | "artifacts" | "skillRuns";
 export type ConnectorCapability = "git.read" | "filesystem.read" | "filesystem.write";
@@ -243,16 +243,25 @@ export class HostedDomainStore {
   private write(state: HostedState): Promise<void> { return this.provider.write(state); }
 }
 
-function createHostedDomainStore(): HostedDomainStore {
+const tenantDomainStores = new Map<string, HostedDomainStore>();
+
+export function hostedDomainStoreForTenant(tenantId: string): HostedDomainStore {
+  const existing = tenantDomainStores.get(tenantId);
+  if (existing) return existing;
+  const workspaceStore = hostedWorkspaceStoreForTenant(tenantId);
   if (isHostedNeonConfigured() && !isHostedJsonFixtureMode()) {
     const secretStore: ProtectedSecretStore = process.env.DEV_AGENTIC_OS_SECRET_KEY ? new EncryptedProtectedSecretStore() : { put: async () => { throw new HostedDomainError("FORBIDDEN", "Credential mutations require DEV_AGENTIC_OS_SECRET_KEY."); } };
-    const workspaceStore = new HostedWorkspaceStore(process.cwd(), new NeonHostedWorkspaceStateProvider());
-    return new HostedDomainStore(process.cwd(), workspaceStore, new NeonHostedStateProvider(), undefined, undefined, secretStore);
+    const store = new HostedDomainStore(process.cwd(), workspaceStore, new NeonHostedStateProvider(tenantId), new RejectingHostedObjectStore(), undefined, secretStore);
+    tenantDomainStores.set(tenantId, store);
+    return store;
   }
-  return new HostedDomainStore();
+  const tenantRoot = join(process.cwd(), ".developer-agentic-os", "tenants", createHash("sha256").update(tenantId).digest("hex"));
+  const store = new HostedDomainStore(tenantRoot, workspaceStore);
+  tenantDomainStores.set(tenantId, store);
+  return store;
 }
 
-export const hostedDomainStore = createHostedDomainStore();
+export const hostedDomainStore = hostedDomainStoreForTenant("legacy");
 
 function isRecord(value: unknown): value is Record<string, unknown> { return Boolean(value) && typeof value === "object" && !Array.isArray(value); }
 

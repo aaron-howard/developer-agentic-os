@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { BriefcaseBusiness, CheckCircle2, ClipboardList, Layers3, Plus, RefreshCw, Sparkles, Workflow } from "lucide-react";
 
 import type { SkillCommand } from "@/types/skill";
@@ -50,6 +50,7 @@ export function HostedCommandCentre({ fixtureMode = false }: { fixtureMode?: boo
   const [activeWorkspace, setActiveWorkspace] = useState<HostedWorkspace | null>(null);
   const [records, setRecords] = useState<HostedRecords>({});
   const [skills, setSkills] = useState<SkillCommand[]>([]);
+  const [skillsError, setSkillsError] = useState<string | null>(null);
   const [title, setTitle] = useState("");
   const [notes, setNotes] = useState("");
   const [priority, setPriority] = useState<WorkItemPriority>("normal");
@@ -57,36 +58,53 @@ export function HostedCommandCentre({ fixtureMode = false }: { fixtureMode?: boo
   const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [capturingWorkItem, setCapturingWorkItem] = useState(false);
+  const [creatingWorkspace, setCreatingWorkspace] = useState(false);
+  const capturingWorkItemRef = useRef(false);
+  const creatingWorkspaceRef = useRef(false);
+  const selectionSequence = useRef(0);
+  const selectionQueue = useRef<Promise<void>>(Promise.resolve());
 
-  const loadRecords = useCallback(async (workspaceId: string) => {
+  const fetchRecords = useCallback(async (workspaceId: string) => {
     const result = await fetch(`/api/hosted/domain?workspaceId=${encodeURIComponent(workspaceId)}&view=records`).then((response) => responseJson<{ records: HostedRecords }>(response));
-    setRecords(result.records);
+    return result.records;
   }, []);
 
+  const refreshRecords = useCallback(async (workspaceId: string) => {
+    setRecords(await fetchRecords(workspaceId));
+  }, [fetchRecords]);
+
   const load = useCallback(async () => {
+    const requestSequence = ++selectionSequence.current;
     setLoading(true);
     setError(null);
+    setSkillsError(null);
+    void fetch("/api/skills")
+      .then((response) => responseJson<{ skills: SkillCommand[] }>(response))
+      .then((result) => setSkills(result.skills))
+      .catch(() => { setSkills([]); setSkillsError("Skills could not be loaded."); });
     try {
-      const [workspaceResult, skillResult] = await Promise.all([
-        fetch("/api/hosted/workspaces").then((response) => responseJson<{ workspaces: HostedWorkspace[]; activeWorkspace: HostedWorkspace }>(response)),
-        fetch("/api/skills").then((response) => responseJson<{ skills: SkillCommand[] }>(response)),
-      ]);
+      const workspaceResult = await fetch("/api/hosted/workspaces").then((response) => responseJson<{ workspaces: HostedWorkspace[]; activeWorkspace: HostedWorkspace }>(response));
+      const nextRecords = await fetchRecords(workspaceResult.activeWorkspace.id);
+      if (requestSequence !== selectionSequence.current) return;
       setWorkspaces(workspaceResult.workspaces);
       setActiveWorkspace(workspaceResult.activeWorkspace);
-      setSkills(skillResult.skills);
-      await loadRecords(workspaceResult.activeWorkspace.id);
+      setRecords(nextRecords);
     } catch (loadError) {
+      if (requestSequence !== selectionSequence.current) return;
       setError(loadError instanceof Error ? loadError.message : "Hosted workspace could not be loaded.");
     } finally {
-      setLoading(false);
+      if (requestSequence === selectionSequence.current) setLoading(false);
     }
-  }, [loadRecords]);
+  }, [fetchRecords]);
 
   useEffect(() => { void load(); }, [load]);
 
   const captureWorkItem = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!activeWorkspace || !title.trim()) return;
+    if (capturingWorkItemRef.current || !activeWorkspace || !title.trim()) return;
+    capturingWorkItemRef.current = true;
+    setCapturingWorkItem(true);
     setStatus("Capturing work item...");
     try {
       await fetch("/api/hosted/domain", {
@@ -97,28 +115,41 @@ export function HostedCommandCentre({ fixtureMode = false }: { fixtureMode?: boo
       setTitle("");
       setNotes("");
       setPriority("normal");
-      await loadRecords(activeWorkspace.id);
+      await refreshRecords(activeWorkspace.id);
       setStatus("Work item captured.");
     } catch (captureError) {
       setStatus(captureError instanceof Error ? captureError.message : "Work item could not be captured.");
+    } finally {
+      capturingWorkItemRef.current = false;
+      setCapturingWorkItem(false);
     }
   };
 
   const selectWorkspace = async (workspace: HostedWorkspace) => {
+    const requestSequence = ++selectionSequence.current;
     setStatus(`Opening ${workspace.name}...`);
-    try {
-      await fetch(`/api/hosted/workspaces/${workspace.id}/select`, { method: "POST" }).then((response) => responseJson(response));
-      setActiveWorkspace(workspace);
-      await loadRecords(workspace.id);
-      setStatus(`${workspace.name} is active.`);
-    } catch (selectError) {
-      setStatus(selectError instanceof Error ? selectError.message : "Workspace could not be selected.");
-    }
+    const operation = selectionQueue.current.then(async () => {
+      try {
+        await fetch(`/api/hosted/workspaces/${workspace.id}/select`, { method: "POST" }).then((response) => responseJson(response));
+        const nextRecords = await fetchRecords(workspace.id);
+        if (requestSequence !== selectionSequence.current) return;
+        setActiveWorkspace(workspace);
+        setRecords(nextRecords);
+        setStatus(`${workspace.name} is active.`);
+      } catch (selectError) {
+        if (requestSequence !== selectionSequence.current) return;
+        setStatus(selectError instanceof Error ? selectError.message : "Workspace could not be selected.");
+      }
+    });
+    selectionQueue.current = operation.catch(() => undefined);
+    await operation;
   };
 
   const createWorkspace = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!workspaceName.trim()) return;
+    if (creatingWorkspaceRef.current || !workspaceName.trim()) return;
+    creatingWorkspaceRef.current = true;
+    setCreatingWorkspace(true);
     try {
       const result = await fetch("/api/hosted/workspaces", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ name: workspaceName }) }).then((response) => responseJson<{ workspace: HostedWorkspace }>(response));
       setWorkspaces((current) => [...current, result.workspace]);
@@ -126,6 +157,9 @@ export function HostedCommandCentre({ fixtureMode = false }: { fixtureMode?: boo
       await selectWorkspace(result.workspace);
     } catch (createError) {
       setStatus(createError instanceof Error ? createError.message : "Workspace could not be created.");
+    } finally {
+      creatingWorkspaceRef.current = false;
+      setCreatingWorkspace(false);
     }
   };
 
@@ -134,7 +168,7 @@ export function HostedCommandCentre({ fixtureMode = false }: { fixtureMode?: boo
     setStatus(`Running ${routine.name}...`);
     try {
       await fetch("/api/hosted/domain", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ action: "hosted-safe-work", workspaceId: activeWorkspace.id, description: routine.description }) }).then((response) => responseJson(response));
-      await loadRecords(activeWorkspace.id);
+      await refreshRecords(activeWorkspace.id);
       setStatus(`${routine.name} completed.`);
     } catch (routineError) {
       setStatus(routineError instanceof Error ? routineError.message : "Routine failed.");
@@ -162,7 +196,7 @@ export function HostedCommandCentre({ fixtureMode = false }: { fixtureMode?: boo
 
       <nav className="hosted-nav" aria-label="Micro applications">
         {views.map(({ id, label, icon: Icon }) => (
-          <button className={view === id ? "active" : ""} key={id} type="button" onClick={() => setView(id)}>
+          <button aria-pressed={view === id} className={view === id ? "active" : ""} key={id} type="button" onClick={() => setView(id)}>
             <Icon size={16} aria-hidden="true" /> {label}
           </button>
         ))}
@@ -198,7 +232,7 @@ export function HostedCommandCentre({ fixtureMode = false }: { fixtureMode?: boo
                 <label>Title<input required value={title} onChange={(event) => setTitle(event.target.value)} /></label>
                 <label>Notes<textarea value={notes} onChange={(event) => setNotes(event.target.value)} /></label>
                 <label>Priority<select value={priority} onChange={(event) => setPriority(event.target.value as WorkItemPriority)}><option value="low">Low</option><option value="normal">Normal</option><option value="high">High</option><option value="urgent">Urgent</option></select></label>
-                <button className="hosted-primary" type="submit"><Plus size={15} aria-hidden="true" /> Capture work item</button>
+                <button className="hosted-primary" type="submit" disabled={capturingWorkItem}><Plus size={15} aria-hidden="true" /> {capturingWorkItem ? "Capturing..." : "Capture work item"}</button>
               </form>
             </section>
           ) : null}
@@ -208,7 +242,7 @@ export function HostedCommandCentre({ fixtureMode = false }: { fixtureMode?: boo
               <ViewHeading title="Skills" detail={`${skills.length} available`} />
               <div className="hosted-list hosted-skill-grid">
                 {skills.map((skill) => <article className="hosted-row" key={skill.id}><div><strong>{skill.label}</strong><p>{skill.description}</p></div><span className={`hosted-tag ${skill.status}`}>{skill.status}</span></article>)}
-                {!skills.length ? <EmptyState text="No skills are registered in this deployment." /> : null}
+                {!skills.length ? <EmptyState text={skillsError ?? "No skills are registered in this deployment."} /> : null}
               </div>
             </section>
           ) : null}
@@ -233,7 +267,7 @@ export function HostedCommandCentre({ fixtureMode = false }: { fixtureMode?: boo
               <form className="hosted-capture" onSubmit={(event) => void createWorkspace(event)}>
                 <h2>New workspace</h2>
                 <label>Name<input required value={workspaceName} onChange={(event) => setWorkspaceName(event.target.value)} /></label>
-                <button className="hosted-primary" type="submit"><Plus size={15} aria-hidden="true" /> Create workspace</button>
+                <button className="hosted-primary" type="submit" disabled={creatingWorkspace}><Plus size={15} aria-hidden="true" /> {creatingWorkspace ? "Creating..." : "Create workspace"}</button>
               </form>
             </section>
           ) : null}
