@@ -838,6 +838,14 @@ h1 span {
   color: var(--orange) !important;
 }
 
+.auth-github-status {
+  border: 1px solid var(--line);
+  color: var(--muted);
+  padding: 5px 8px;
+  font-size: 0.62rem;
+  text-transform: uppercase;
+}
+
 .dashboard-banner {
   margin: 10px auto 0;
   color: var(--muted);
