@@ -140,6 +140,25 @@ test("hosted domain route exposes reviewable migration and backup views without 
   assert.equal((await response.json()).package.version, 1);
 });
 
+test("hosted work-item capture persists through the hosted domain route", async () => {
+  const headers = { "x-hosted-user-id": `route-work-item-${Date.now()}` };
+  const workspaceResponse = await createHostedWorkspace(new Request("http://localhost/api/hosted/workspaces", { method: "POST", headers, body: JSON.stringify({ name: "Work queue" }) }));
+  const workspaceId = ((await workspaceResponse.json()).workspace as { id: string }).id;
+
+  const captureResponse = await postHostedDomain(new Request("http://localhost/api/hosted/domain", {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ action: "create-work-item", workspaceId, title: "Ship hosted command centre", priority: "high" }),
+  }));
+  assert.equal(captureResponse.status, 201);
+
+  const recordsResponse = await getHostedDomain(new Request(`http://localhost/api/hosted/domain?workspaceId=${workspaceId}&view=records`, { headers }));
+  const records = (await recordsResponse.json()).records as { workItems: Array<{ title: string; status: string; priority: string }> };
+  assert.deepEqual(records.workItems.map(({ title, status, priority }) => ({ title, status, priority })), [
+    { title: "Ship hosted command centre", status: "open", priority: "high" },
+  ]);
+});
+
 test("filesystem grants require Skill identity and allowlisted paths, with individual revocation", async () => {
   await withStore(async (store) => {
     const workspaceId = (await store.createWorkspace("alice", "Workspace")).id;

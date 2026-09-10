@@ -88,7 +88,11 @@ test("hosted routes require identity and isolate workspace selection", async () 
   const aliceList = await listWorkspaces(request("route-alice"));
   assert.equal((await body(aliceList)).workspaces instanceof Array, true);
   const bobList = await listWorkspaces(request("route-bob"));
-  assert.deepEqual((await body(bobList)).workspaces, []);
+  const bobWorkspaces = (await body(bobList)).workspaces as Array<{ id: string; ownerId: string; name: string }>;
+  assert.equal(bobWorkspaces.length, 1);
+  assert.equal(bobWorkspaces[0].ownerId, "route-bob");
+  assert.equal(bobWorkspaces[0].name, "Personal");
+  assert.notEqual(bobWorkspaces[0].id, workspace.id);
 
   const crossUser = await selectWorkspace(request("route-bob", { method: "POST" }), { params: Promise.resolve({ id: workspace.id }) });
   assert.equal(crossUser.status, 404);
@@ -96,4 +100,25 @@ test("hosted routes require identity and isolate workspace selection", async () 
 
   const session = await getSession(request("route-alice"));
   assert.deepEqual(await body(session), { identity: { userId: "route-alice", displayName: "route-alice" } });
+});
+
+test("first hosted workspace request provisions one active personal workspace", async () => {
+  const userId = `first-login-${Date.now()}`;
+
+  const firstResponse = await listWorkspaces(request(userId));
+  assert.equal(firstResponse.status, 200);
+  const firstBody = await body(firstResponse) as {
+    workspaces: Array<{ id: string; name: string }>;
+    activeWorkspace: { id: string; name: string };
+  };
+  assert.equal(firstBody.workspaces.length, 1);
+  assert.equal(firstBody.workspaces[0].name, "Personal");
+  assert.equal(firstBody.activeWorkspace.id, firstBody.workspaces[0].id);
+
+  const secondBody = await body(await listWorkspaces(request(userId))) as {
+    workspaces: Array<{ id: string }>;
+    activeWorkspace: { id: string };
+  };
+  assert.equal(secondBody.workspaces.length, 1);
+  assert.equal(secondBody.activeWorkspace.id, firstBody.activeWorkspace.id);
 });

@@ -7,6 +7,7 @@ export async function GET(request: Request) {
   const identity = await hostedIdentity(request);
   if (identity instanceof NextResponse) return identity;
   try {
+    await hostedWorkspaceStore.ensureDefault(identity.userId);
     const workspaces = await hostedWorkspaceStore.list(identity.userId);
     await hostedWorkspaceStore.recordList(identity.userId);
     return NextResponse.json({ workspaces, activeWorkspace: await hostedWorkspaceStore.active(identity.userId) });

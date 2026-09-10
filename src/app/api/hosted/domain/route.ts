@@ -9,7 +9,7 @@ const recordKinds = ["repositories", "workItems", "incomingSignals", "incidents"
 const views = ["backup", "migration", "credentials", "connector-status", "repository-grants", "capability-grants", "repositories", "records", "snapshots", "connectors", "audit"] as const;
 
 type HostedDomainBody = {
-  action?: unknown; workspaceId?: unknown; connectorId?: unknown; credentialId?: unknown; repositoryId?: unknown; capability?: unknown; skillId?: unknown; allowedPaths?: unknown; localPath?: unknown; data?: unknown; package?: unknown; selectedKinds?: unknown; selectedRepositoryIds?: unknown; description?: unknown; provider?: unknown; scopes?: unknown; secret?: unknown; expiresAt?: unknown; identity?: unknown; grantId?: unknown; requestedPath?: unknown; approval?: unknown; providerAction?: unknown;
+  action?: unknown; workspaceId?: unknown; connectorId?: unknown; credentialId?: unknown; repositoryId?: unknown; capability?: unknown; skillId?: unknown; allowedPaths?: unknown; localPath?: unknown; data?: unknown; package?: unknown; selectedKinds?: unknown; selectedRepositoryIds?: unknown; description?: unknown; title?: unknown; notes?: unknown; priority?: unknown; dueAt?: unknown; provider?: unknown; scopes?: unknown; secret?: unknown; expiresAt?: unknown; identity?: unknown; grantId?: unknown; requestedPath?: unknown; approval?: unknown; providerAction?: unknown;
 };
 
 export async function GET(request: Request) {
@@ -64,6 +64,19 @@ export async function POST(request: Request) {
       case "run-read-only-skill": return NextResponse.json({ run: await hostedDomainStore.runReadOnlySkill(identity.userId, body.workspaceId as string, body.connectorId as string, body.repositoryId as string, body.skillId as string) });
       case "queue-local-work": return NextResponse.json({ work: await hostedDomainStore.queueLocalWork(identity.userId, body.workspaceId as string, body.repositoryId as string, body.description as string) }, { status: 202 });
       case "hosted-safe-work": return NextResponse.json({ work: await hostedDomainStore.hostedSafeWork(identity.userId, body.workspaceId as string, body.description as string) });
+      case "create-work-item": {
+        const now = new Date().toISOString();
+        const workItem = await hostedDomainStore.putRecord(identity.userId, body.workspaceId as string, "workItems", {
+          title: (body.title as string).trim(),
+          notes: typeof body.notes === "string" ? body.notes.trim() : "",
+          status: "open",
+          priority: body.priority ?? "normal",
+          dueAt: body.dueAt ?? null,
+          createdAt: now,
+          updatedAt: now,
+        });
+        return NextResponse.json({ workItem }, { status: 201 });
+      }
       case "save-credential": return NextResponse.json({ credential: await hostedDomainStore.saveCredential(identity.userId, body.workspaceId as string, { provider: body.provider as string, scopes: body.scopes as string[], secret: body.secret as string, expiresAt: body.expiresAt as string | null | undefined, identity: body.identity as string | null | undefined }) }, { status: 201 });
       case "revoke-credential": await hostedDomainStore.revokeCredential(identity.userId, body.workspaceId as string, body.credentialId as string); return NextResponse.json({ ok: true });
       case "import-migration": return NextResponse.json({ result: await hostedDomainStore.importMigration(identity.userId, body.workspaceId as string, body.package as Parameters<typeof hostedDomainStore.importMigration>[2], body.selectedKinds as HostedRecordKind[] | undefined, body.selectedRepositoryIds as string[] | undefined) });
@@ -79,7 +92,7 @@ function isStringArray(value: unknown, allowEmpty = false): value is string[] { 
 function requiredString(body: HostedDomainBody, key: keyof HostedDomainBody): boolean { return typeof body[key] === "string" && Boolean((body[key] as string).trim()); }
 function validateBody(body: HostedDomainBody): string | null {
   const action = body.action as string;
-  if (!(["register-repository", "register-connector", "grant-repository", "revoke-repository", "grant-capability", "revoke-capability", "revoke-connector", "set-connector-offline", "reconnect-connector", "resume-local-work", "connector-request", "publish-snapshot", "authorize-provider-mutation", "run-read-only-skill", "queue-local-work", "hosted-safe-work", "save-credential", "revoke-credential", "import-migration"] as const).includes(action as never)) return "Unknown hosted domain action.";
+  if (!(["register-repository", "register-connector", "grant-repository", "revoke-repository", "grant-capability", "revoke-capability", "revoke-connector", "set-connector-offline", "reconnect-connector", "resume-local-work", "connector-request", "publish-snapshot", "authorize-provider-mutation", "run-read-only-skill", "queue-local-work", "hosted-safe-work", "create-work-item", "save-credential", "revoke-credential", "import-migration"] as const).includes(action as never)) return "Unknown hosted domain action.";
   const required = ["grant-repository", "revoke-repository", "grant-capability", "revoke-capability", "revoke-connector", "set-connector-offline", "reconnect-connector", "resume-local-work", "connector-request", "publish-snapshot", "authorize-provider-mutation", "run-read-only-skill", "queue-local-work", "hosted-safe-work", "save-credential", "revoke-credential", "import-migration"];
   if (action === "register-repository" && !requiredString(body, "localPath")) return "localPath is required.";
   if (required.includes(action) && (!requiredString(body, "connectorId") && !["save-credential", "revoke-credential", "import-migration", "hosted-safe-work", "queue-local-work"].includes(action))) return "connectorId is required.";
@@ -88,6 +101,10 @@ function validateBody(body: HostedDomainBody): string | null {
   if (action === "grant-capability" && body.capability !== "git.read" && (!requiredString(body, "skillId") || !isStringArray(body.allowedPaths))) return "Filesystem grants require skillId and allowedPaths.";
   if (action === "publish-snapshot" && !isRecord(body.data)) return "data must be an object.";
   if (["queue-local-work", "hosted-safe-work"].includes(action) && !requiredString(body, "description")) return "description is required.";
+  if (action === "create-work-item" && !requiredString(body, "title")) return "title is required.";
+  if (action === "create-work-item" && body.notes !== undefined && typeof body.notes !== "string") return "notes must be a string.";
+  if (action === "create-work-item" && body.priority !== undefined && !["low", "normal", "high", "urgent"].includes(body.priority as string)) return "priority is invalid.";
+  if (action === "create-work-item" && body.dueAt !== undefined && body.dueAt !== null && (typeof body.dueAt !== "string" || Number.isNaN(Date.parse(body.dueAt)))) return "dueAt must be a valid date or null.";
   if (["run-read-only-skill", "grant-capability", "connector-request"].includes(action) && !requiredString(body, "skillId") && action === "run-read-only-skill") return "skillId is required.";
   if (["authorize-provider-mutation"].includes(action) && body.approval !== undefined && !isRecord(body.approval)) return "approval is invalid.";
   if (action === "authorize-provider-mutation" && !requiredString(body, "providerAction")) return "providerAction is required.";
