@@ -1,5 +1,6 @@
 export type HostedIdentity = {
   userId: string;
+  tenantId: string;
   displayName: string;
 };
 

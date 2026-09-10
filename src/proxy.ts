@@ -1,6 +1,9 @@
 import { clerkMiddleware } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
 
-export default clerkMiddleware();
+const fixtureMode = process.env.NODE_ENV !== "production" && process.env.HOSTED_AUTH_FIXTURE_MODE === "true";
+
+export default fixtureMode ? () => NextResponse.next() : clerkMiddleware();
 
 export const config = {
   matcher: [

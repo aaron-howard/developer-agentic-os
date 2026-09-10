@@ -8,6 +8,7 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const fixtureMode = process.env.NODE_ENV !== "production" && process.env.VERCEL === "1" && process.env.HOSTED_AUTH_FIXTURE_MODE === "true";
   return (
     <html lang="en">
       <head>
@@ -16,9 +17,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
       </head>
       <body>
-        <ClerkProvider>
-          {children}
-        </ClerkProvider>
+        {fixtureMode ? children : <ClerkProvider>{children}</ClerkProvider>}
       </body>
     </html>
   );

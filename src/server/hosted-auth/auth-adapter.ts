@@ -42,8 +42,9 @@ export class DeterministicAuthAdapter implements AuthAdapter {
     if (!this.fixtureMode) throw new AuthError("UNAUTHENTICATED", "A configured hosted token is required.");
     const userId = request.headers.get("x-hosted-user-id")?.trim();
     if (!userId) throw new AuthError("UNAUTHENTICATED");
+    const tenantId = request.headers.get("x-hosted-tenant-id")?.trim() || `personal:${userId}`;
     const displayName = request.headers.get("x-hosted-user-name")?.trim() || userId;
-    return { userId, displayName };
+    return { userId, tenantId, displayName };
   }
 }
 
@@ -52,7 +53,8 @@ export class ClerkAuthAdapter implements AuthAdapter {
     void request;
     const identity = await auth();
     if (!identity.userId) throw new AuthError("UNAUTHENTICATED");
-    return { userId: identity.userId, displayName: identity.userId };
+    if (!identity.orgId) throw new AuthError("UNAUTHENTICATED", "Select an organization before opening the hosted application.");
+    return { userId: identity.userId, tenantId: identity.orgId, displayName: identity.userId };
   }
 }
 

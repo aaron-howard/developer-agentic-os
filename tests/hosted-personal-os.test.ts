@@ -8,7 +8,7 @@ process.env.HOSTED_AUTH_FIXTURE_MODE = "true";
 process.env.HOSTED_JSON_FIXTURE_MODE = "true";
 (process.env as Record<string, string | undefined>).NODE_ENV = "test";
 
-import { HostedDomainStore } from "../src/server/hosted-domain/hosted-domain-store";
+import { HostedDomainStore, hostedDomainStoreForTenant } from "../src/server/hosted-domain/hosted-domain-store";
 import { AuthError, DeterministicAuthAdapter, TokenAuthAdapter, UnconfiguredHostedTokenVerifier } from "../src/server/hosted-auth/auth-adapter";
 import { DeterministicJsonHostedStateProvider } from "../src/server/hosted-domain/hosted-domain-store";
 import { LocalHostedObjectStore } from "../src/server/hosted-domain/hosted-object-store";
@@ -138,6 +138,25 @@ test("hosted domain route exposes reviewable migration and backup views without 
   const response = await getHostedDomain(new Request(`http://localhost/api/hosted/domain?workspaceId=${workspaceId}&view=migration`, { headers }));
   assert.equal(response.status, 200);
   assert.equal((await response.json()).package.version, 1);
+});
+
+test("hosted work-item capture persists through the hosted domain route", async () => {
+  const headers = { "x-hosted-user-id": `route-work-item-${Date.now()}` };
+  const workspaceResponse = await createHostedWorkspace(new Request("http://localhost/api/hosted/workspaces", { method: "POST", headers, body: JSON.stringify({ name: "Work queue" }) }));
+  const workspaceId = ((await workspaceResponse.json()).workspace as { id: string }).id;
+
+  const captureResponse = await postHostedDomain(new Request("http://localhost/api/hosted/domain", {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ action: "create-work-item", workspaceId, title: "Ship hosted command centre", priority: "high" }),
+  }));
+  assert.equal(captureResponse.status, 201);
+
+  const recordsResponse = await getHostedDomain(new Request(`http://localhost/api/hosted/domain?workspaceId=${workspaceId}&view=records`, { headers }));
+  const records = (await recordsResponse.json()).records as { workItems: Array<{ title: string; status: string; priority: string }> };
+  assert.deepEqual(records.workItems.map(({ title, status, priority }) => ({ title, status, priority })), [
+    { title: "Ship hosted command centre", status: "open", priority: "high" },
+  ]);
 });
 
 test("filesystem grants require Skill identity and allowlisted paths, with individual revocation", async () => {
@@ -350,7 +369,7 @@ test("hosted API offline, reconnect, and resume actions preserve pending work", 
   const connectorResponse = await postHostedDomain(new Request("http://localhost/api/hosted/domain", { method: "POST", headers, body: JSON.stringify({ action: "register-connector", workspaceId }) }));
   const connectorId = ((await connectorResponse.json()).connector as { id: string }).id;
   assert.equal((await postHostedDomain(new Request("http://localhost/api/hosted/domain", { method: "POST", headers, body: JSON.stringify({ action: "grant-repository", workspaceId, connectorId, repositoryId }) }))).status, 200);
-  const store = new HostedDomainStore();
+  const store = hostedDomainStoreForTenant(`personal:${headers["x-hosted-user-id"]}`);
   await store.setConnectorOffline(headers["x-hosted-user-id"], workspaceId, connectorId);
   const queued = await postHostedDomain(new Request("http://localhost/api/hosted/domain", { method: "POST", headers, body: JSON.stringify({ action: "queue-local-work", workspaceId, repositoryId, description: "offline work" }) }));
   assert.equal(queued.status, 202);

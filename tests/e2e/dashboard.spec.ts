@@ -71,7 +71,10 @@ test.describe("Developer Agentic OS dashboard", () => {
 
     const bobHeaders = { "x-hosted-user-id": `browser-bob-${Date.now()}` };
     const bob = await page.request.get("/api/hosted/workspaces", { headers: bobHeaders });
-    expect((await bob.json()).workspaces).toEqual([]);
+    const bobWorkspaces = (await bob.json()).workspaces as Array<{ id: string; name: string }>;
+    expect(bobWorkspaces).toHaveLength(1);
+    expect(bobWorkspaces[0].name).toBe("Personal");
+    expect(bobWorkspaces[0].id).not.toBe(workspace.id);
     const crossUser = await page.request.post(`/api/hosted/workspaces/${workspace.id}/select`, { headers: bobHeaders });
     expect(crossUser.status()).toBe(404);
   });

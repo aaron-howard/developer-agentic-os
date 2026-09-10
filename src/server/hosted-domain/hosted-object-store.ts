@@ -7,6 +7,16 @@ export interface HostedObjectStore {
   get(reference: string): Promise<Uint8Array>;
 }
 
+export class RejectingHostedObjectStore implements HostedObjectStore {
+  async put(): Promise<never> {
+    throw new Error("Artifact bodies require a durable hosted object store in production.");
+  }
+
+  async get(): Promise<never> {
+    throw new Error("Artifact bodies require a durable hosted object store in production.");
+  }
+}
+
 export class LocalHostedObjectStore implements HostedObjectStore {
   constructor(private readonly root = join(resolve(process.cwd()), ".developer-agentic-os", "hosted-objects")) {}
 
