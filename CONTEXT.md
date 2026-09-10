@@ -157,10 +157,10 @@ A User invited to access a Hosted Workspace under a workspace-scoped Workspace R
 A workspace-scoped access level assigned to a Workspace Member: owner, admin, or member.
 
 ### Sync Conflict
-A divergence between Local-Derived State and Hosted State that cannot be safely resolved without preserving both versions and deciding which result becomes authoritative.
+A required, human-reviewable record for a consequential or destructive divergence between Local-Derived State and Hosted State, or for any divergence a domain merge rule cannot safely resolve. It preserves both versions and defers the authoritative result to review.
 
 ### Legacy Migration
-The one-time transfer of records from the legacy `.memory` directory into the Hosted Workspace while preserving source provenance and isolating invalid inputs.
+The transfer of records from the legacy `.memory` directory into the Hosted Workspace. It is intended as a one-time operation but is safely retryable after interruption: an idempotency marker prevents re-importing already migrated records, while preserving source provenance and isolating invalid inputs.
 
 ### Local Connector
 An outbound authenticated local process that exposes explicitly granted Repository Context capabilities to the Hosted Workspace.
@@ -252,13 +252,13 @@ A Local Connector grants scoped access from the hosted OS to local Repository Co
 A Workspace Role grants ordinary workspace access. Ownership is a separate authority: only the owner may approve ownership transfer, destructive deletion, or full export.
 
 ### Automatic Merge vs Sync Conflict
-Automatic merging is permitted only when the domain rule preserves meaning and provenance. A Sync Conflict is required when a change is consequential, destructive, or cannot be resolved without human judgment.
+Automatic merging is permitted only for additive, non-consequential changes where the domain rule preserves meaning and provenance. Any consequential or destructive change always requires a Sync Conflict and human review, even when a domain rule could technically combine the values.
 
 ### Merged Audit View vs Rewritten Audit History
 A merged audit view may present local and hosted events together, but each event retains its source, actor, original timestamp, ingestion timestamp, and ordering rationale. Audit history is never rewritten into an unattributed sequence.
 
 ### Automatic Migration vs Silent Migration
-Automatic migration runs once without repeated manual orchestration, but it still provides a preflight summary, preserves provenance, remains idempotent, and quarantines malformed or unknown inputs.
+Automatic migration is intended as a one-time operation, triggered without repeated manual orchestration. It remains safely retryable after interruption through an idempotency marker that prevents re-importing already migrated records, and it still provides a preflight summary, preserves provenance, and quarantines malformed or unknown inputs.
 
 ### Capability Grant vs Credential
 A Capability Grant authorizes a specific action or data boundary. A Credential proves access to a provider or connector. A grant must not expose or replace the credential.
