@@ -151,13 +151,13 @@ An explicit developer decision allowing a proposed Automation Run action to proc
 A private hosted space owned by a User that contains Repository Contexts and hosted workflow records.
 
 ### Workspace Member
-A User invited to access a Hosted Workspace under a workspace-scoped Role.
+A User invited to access a Hosted Workspace under a workspace-scoped Workspace Role.
 
 ### Workspace Role
 A workspace-scoped access level assigned to a Workspace Member: owner, admin, or member.
 
 ### Sync Conflict
-A divergence between local and Hosted State that cannot be safely resolved without preserving both versions and deciding which result becomes authoritative.
+A divergence between Local-Derived State and Hosted State that cannot be safely resolved without preserving both versions and deciding which result becomes authoritative.
 
 ### Legacy Migration
 The one-time transfer of records from the legacy `.memory` directory into the Hosted Workspace while preserving source provenance and isolating invalid inputs.
