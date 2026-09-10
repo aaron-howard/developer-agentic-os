@@ -1,8 +1,8 @@
 {
   "meta": {
     "version": 1,
-    "nodeCount": 812,
-    "edgeCount": 2293,
+    "nodeCount": 893,
+    "edgeCount": 2467,
     "languages": [
       "javascript",
       "tsx",
@@ -43,8 +43,8 @@
       "signature": null,
       "exported": true,
       "origin": "ast",
-      "body_hash": "b8b3a344484b959af5e4e3fc1a1609dac3cb9ece0cdeb6c145be29bc4c491000",
-      "chars": 303,
+      "body_hash": "1b59d4c6b83807db275d43f3cf2cc8e9323f465fab764eea091cc5becd5bad37",
+      "chars": 295,
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -75,6 +75,175 @@
       "origin": "ast",
       "body_hash": "88f786094a178b916e5065138ab195dac42bcafe0ead67dfed4b17e804f8c836",
       "chars": 802,
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "scripts/migrate-to-neon.ts",
+      "name": "migrate-to-neon.ts",
+      "kind": "file",
+      "path": "scripts/migrate-to-neon.ts",
+      "span": "L1-L343",
+      "signature": null,
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "c09f92a5fa82808143f26c6503ba5eec8d2da94f8e4eaab451c5a696f576fbb4",
+      "chars": 11119,
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "scripts/migrate-to-neon.ts#createOrGetTenant",
+      "name": "createOrGetTenant",
+      "kind": "function",
+      "path": "scripts/migrate-to-neon.ts",
+      "span": "L57-L80",
+      "signature": "async function createOrGetTenant(client: PoolClient): Promise<string>",
+      "exported": false,
+      "origin": "ast",
+      "body_hash": "ef3f292bd220b8ff032f3dc2daf0164a7aefd79336743d9f6e5ba797f8379f02",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "scripts/migrate-to-neon.ts#getClient",
+      "name": "getClient",
+      "kind": "function",
+      "path": "scripts/migrate-to-neon.ts",
+      "span": "L41-L43",
+      "signature": "async function getClient(): Promise<PoolClient>",
+      "exported": false,
+      "origin": "ast",
+      "body_hash": "0bd1c41c66f9982e7e0da78e14efe3dcb439b8d12f513f95cf9adebc363a3c2d",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "scripts/migrate-to-neon.ts#loadExistingState",
+      "name": "loadExistingState",
+      "kind": "function",
+      "path": "scripts/migrate-to-neon.ts",
+      "span": "L257-L297",
+      "signature": "async function loadExistingState(): Promise<MigrationState>",
+      "exported": false,
+      "origin": "ast",
+      "body_hash": "66111c8223fcc62461398bbb4204bc350bf36026608255b4c77afcecca6decd7",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "scripts/migrate-to-neon.ts#main",
+      "name": "main",
+      "kind": "function",
+      "path": "scripts/migrate-to-neon.ts",
+      "span": "L299-L340",
+      "signature": "async function main()",
+      "exported": false,
+      "origin": "ast",
+      "body_hash": "6a9f982719ce985b7be6b0b012f7fae623eae9009fbc868f2df16e3b067df7c7",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "scripts/migrate-to-neon.ts#migrateArtifacts",
+      "name": "migrateArtifacts",
+      "kind": "function",
+      "path": "scripts/migrate-to-neon.ts",
+      "span": "L82-L115",
+      "signature": "async function migrateArtifacts(client: PoolClient, tenantId: string, data: unknown[]): Promise<void>",
+      "exported": false,
+      "origin": "ast",
+      "body_hash": "a4188e7a3c4f6211d9bfada8ba963c8b75907a004a1484834e230daf4646d7e1",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "scripts/migrate-to-neon.ts#migrateRepos",
+      "name": "migrateRepos",
+      "kind": "function",
+      "path": "scripts/migrate-to-neon.ts",
+      "span": "L222-L255",
+      "signature": "async function migrateRepos(client: PoolClient, tenantId: string, data: unknown[]): Promise<void>",
+      "exported": false,
+      "origin": "ast",
+      "body_hash": "2bc900cbebc9e37d3d595e9b649a0f9a22bf4b6783bbe398bab329327de9c123",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "scripts/migrate-to-neon.ts#migrateRoutines",
+      "name": "migrateRoutines",
+      "kind": "function",
+      "path": "scripts/migrate-to-neon.ts",
+      "span": "L188-L220",
+      "signature": "async function migrateRoutines(client: PoolClient, tenantId: string, data: unknown[]): Promise<void>",
+      "exported": false,
+      "origin": "ast",
+      "body_hash": "bc96010bae9b7c7b8cdded477c53196064cd1a6247335f91a89b8977a188c89d",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "scripts/migrate-to-neon.ts#migrateSkills",
+      "name": "migrateSkills",
+      "kind": "function",
+      "path": "scripts/migrate-to-neon.ts",
+      "span": "L152-L186",
+      "signature": "async function migrateSkills(client: PoolClient, tenantId: string, data: unknown[]): Promise<void>",
+      "exported": false,
+      "origin": "ast",
+      "body_hash": "dfbc2266aee8d388d8b88c49ad5a9a2257731cc8832f8c8be3200b2729cb0548",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "scripts/migrate-to-neon.ts#migrateWorkItems",
+      "name": "migrateWorkItems",
+      "kind": "function",
+      "path": "scripts/migrate-to-neon.ts",
+      "span": "L117-L150",
+      "signature": "async function migrateWorkItems(client: PoolClient, tenantId: string, data: unknown[]): Promise<void>",
+      "exported": false,
+      "origin": "ast",
+      "body_hash": "bb420cd749576ac6e11b79447811780516ea91c0c35a0c4ae73516bb7be410a0",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "scripts/migrate-to-neon.ts#MigrationState",
+      "name": "MigrationState",
+      "kind": "interface",
+      "path": "scripts/migrate-to-neon.ts",
+      "span": "L30-L37",
+      "signature": "interface MigrationState",
+      "exported": false,
+      "origin": "ast",
+      "body_hash": "5e52f6cb91ab97cd039f86a1e85b831514a930ea526f404c0a818c28ad5f8798",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "scripts/migrate-to-neon.ts#readJsonFile",
+      "name": "readJsonFile",
+      "kind": "function",
+      "path": "scripts/migrate-to-neon.ts",
+      "span": "L45-L55",
+      "signature": "async function readJsonFile(path: string): Promise<unknown>",
+      "exported": false,
+      "origin": "ast",
+      "body_hash": "d20170a322cd578abd0b0aa23d4f038a09c33deaa805159f565f3e73f8125f51",
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -430,12 +599,12 @@
       "name": "route.ts",
       "kind": "file",
       "path": "src/app/api/hosted/domain/route.ts",
-      "span": "L1-L107",
+      "span": "L1-L124",
       "signature": null,
       "exported": true,
       "origin": "ast",
-      "body_hash": "df9a6d2fd0ba53aab049e8673ceefbc1ad0e4aee4073f55c719af0deb6d1d316",
-      "chars": 15940,
+      "body_hash": "f67b01d29adce29ac233053e6b5d8109d929f89e27e1f8c13bcbb1b27105246e",
+      "chars": 17231,
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -460,10 +629,10 @@
       "kind": "type",
       "path": "src/app/api/hosted/domain/route.ts",
       "span": "L11-L13",
-      "signature": "type HostedDomainBody = { action?: unknown; workspaceId?: unknown; connectorId?: unknown; credentialId?: unknown; repositoryId?: unknown; capability?: unknown; skillId?: unknown; allowedPaths?: unknown; localPath?: unknown; data?: unknown; package?: unknown; selectedKinds?: unknown; selectedRepositoryIds?: unknown; description?: unknown; provider?: unknown; scopes?: unknown; secret?: unknown; expiresAt?: unknown; identity?: unknown; grantId?: unknown; requestedPath?: unknown; approval?: unknown; providerAction?: unknown; };",
+      "signature": "type HostedDomainBody = { action?: unknown; workspaceId?: unknown; connectorId?: unknown; credentialId?: unknown; repositoryId?: unknown; capability?: unknown; skillId?: unknown; allowedPaths?: unknown; localPath?: unknown; data?: unknown; package?: unknown; selectedKinds?: unknown; selectedRepositoryIds?: unknown; description?: unknown; title?: unknown; notes?: unknown; priority?: unknown; dueAt?: unknown; provider?: unknown; scopes?: unknown; secret?: unknown; expiresAt?: unknown; identity?: unknown; grantId?: unknown; requestedPath?: unknown; approval?: unknown; providerAction?: unknown; };",
       "exported": false,
       "origin": "ast",
-      "body_hash": "3e19dced6fac871633536fdff3c19dd9ee0eaa5eedf368e384d4b2de7bd87712",
+      "body_hash": "938fbe20188b5b206ad37955f86fcdb2d48bd0bbbe6ef7aca8d0f942844da319",
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -473,7 +642,7 @@
       "name": "isMigrationPackage",
       "kind": "function",
       "path": "src/app/api/hosted/domain/route.ts",
-      "span": "L106-L106",
+      "span": "L123-L123",
       "signature": "function isMigrationPackage(value: unknown): boolean",
       "exported": false,
       "origin": "ast",
@@ -487,7 +656,7 @@
       "name": "isRecord",
       "kind": "function",
       "path": "src/app/api/hosted/domain/route.ts",
-      "span": "L77-L77",
+      "span": "L90-L90",
       "signature": "function isRecord(value: unknown): value is Record<string, unknown>",
       "exported": false,
       "origin": "ast",
@@ -501,7 +670,7 @@
       "name": "isStringArray",
       "kind": "function",
       "path": "src/app/api/hosted/domain/route.ts",
-      "span": "L78-L78",
+      "span": "L91-L91",
       "signature": "function isStringArray(value: unknown, allowEmpty = false): value is string[]",
       "exported": false,
       "origin": "ast",
@@ -515,11 +684,11 @@
       "name": "POST",
       "kind": "function",
       "path": "src/app/api/hosted/domain/route.ts",
-      "span": "L41-L75",
+      "span": "L41-L88",
       "signature": "async function POST(request: Request)",
       "exported": true,
       "origin": "ast",
-      "body_hash": "5562cd241ffd8b685a13b0fff2c7e118d99e24d5da13511ce24b2f2e03033610",
+      "body_hash": "fec2a508386ed50dec901bf27836ae6eb350203fd071c822d86b1b4764047c63",
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -529,7 +698,7 @@
       "name": "requiredString",
       "kind": "function",
       "path": "src/app/api/hosted/domain/route.ts",
-      "span": "L79-L79",
+      "span": "L92-L92",
       "signature": "function requiredString(body: HostedDomainBody, key: keyof HostedDomainBody): boolean",
       "exported": false,
       "origin": "ast",
@@ -543,11 +712,11 @@
       "name": "validateBody",
       "kind": "function",
       "path": "src/app/api/hosted/domain/route.ts",
-      "span": "L80-L105",
+      "span": "L93-L122",
       "signature": "function validateBody(body: HostedDomainBody): string | null",
       "exported": false,
       "origin": "ast",
-      "body_hash": "9e81046c3e886de3d0c9436ad8f8d632a76a42e9ab3008ddd305fd23d299b9a4",
+      "body_hash": "b7f650480cbaf207efa488da4dd12bb822f9d68621573c88efd9d22cb89782ae",
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -586,12 +755,12 @@
       "name": "route.ts",
       "kind": "file",
       "path": "src/app/api/hosted/workspaces/route.ts",
-      "span": "L1-L29",
+      "span": "L1-L30",
       "signature": null,
       "exported": true,
       "origin": "ast",
-      "body_hash": "9f28b1ad6f12a24a779f04efe4686a7a65dab01d27fcd28e099e257e6daa4aea",
-      "chars": 1441,
+      "body_hash": "b08896b57aa9b1cf46273dec817a12af544d84ed10caea91d4e795b879710f12",
+      "chars": 1505,
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -601,11 +770,11 @@
       "name": "GET",
       "kind": "function",
       "path": "src/app/api/hosted/workspaces/route.ts",
-      "span": "L6-L16",
+      "span": "L6-L17",
       "signature": "async function GET(request: Request)",
       "exported": true,
       "origin": "ast",
-      "body_hash": "73e8ed525973a60d9eb032b2f204b8aebe4c62802b0284613d175f0efb9cd2ce",
+      "body_hash": "f7cf8f074df9a36b196e2fbfb3a28fff275447eafc5fdf8cb43f4a33c02374f5",
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -615,7 +784,7 @@
       "name": "POST",
       "kind": "function",
       "path": "src/app/api/hosted/workspaces/route.ts",
-      "span": "L18-L29",
+      "span": "L19-L30",
       "signature": "async function POST(request: Request)",
       "exported": true,
       "origin": "ast",
@@ -1768,12 +1937,12 @@
       "name": "layout.tsx",
       "kind": "file",
       "path": "src/app/layout.tsx",
-      "span": "L1-L25",
+      "span": "L1-L24",
       "signature": null,
       "exported": true,
       "origin": "ast",
-      "body_hash": "99b8e6119193ca539d69e3ae43a2891cac6b0af13da17f4460d8dd478154ebc7",
-      "chars": 893,
+      "body_hash": "119909670a44301e95fa38817123ab0d5689317b4074dab9b6a95213353da43f",
+      "chars": 1011,
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -1783,11 +1952,11 @@
       "name": "RootLayout",
       "kind": "function",
       "path": "src/app/layout.tsx",
-      "span": "L10-L25",
+      "span": "L10-L24",
       "signature": "function RootLayout({ children }: Readonly<{ children: React.ReactNode }>)",
       "exported": true,
       "origin": "ast",
-      "body_hash": "d5be6d23260cade10498f8f55e1e61837d2d700c8a8c88c5904105b5b9c8ce8b",
+      "body_hash": "3053d9b817a43c2e9c37df8f1a5a086fdb0aacb2ae0966fd332eab049e88f1e9",
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -1797,12 +1966,12 @@
       "name": "page.tsx",
       "kind": "file",
       "path": "src/app/page.tsx",
-      "span": "L1-L5",
+      "span": "L1-L17",
       "signature": null,
       "exported": true,
       "origin": "ast",
-      "body_hash": "1df89cf18524175c283522a7078965ee998cdea617780c6be48cfa7233fac3a0",
-      "chars": 159,
+      "body_hash": "f96e15223df246828e8694a4f866d41c9a98c96ca4a93e5866c37c4bce585f01",
+      "chars": 687,
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -1812,11 +1981,11 @@
       "name": "Home",
       "kind": "function",
       "path": "src/app/page.tsx",
-      "span": "L3-L5",
-      "signature": "function Home()",
+      "span": "L7-L17",
+      "signature": "async function Home()",
       "exported": true,
       "origin": "ast",
-      "body_hash": "13b8c0c02a11ba82d0b3c51ee6b33e5bb7f76fa356a061829070ba451cd52e1c",
+      "body_hash": "a2c9451beb69bf054e974259b7209ca81511529392ba124e2abfbf4369dc2995",
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -2260,16 +2429,645 @@
       "crux": null
     },
     {
+      "id": "src/components/command-centre/hosted-command-centre.tsx",
+      "name": "hosted-command-centre.tsx",
+      "kind": "file",
+      "path": "src/components/command-centre/hosted-command-centre.tsx",
+      "span": "L1-L260",
+      "signature": null,
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "d4c18347d7aaabe2adc1fe86f90f5a6bce620873cef80cf27117eda6b3b3ec22",
+      "chars": 13084,
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/components/command-centre/hosted-command-centre.tsx#EmptyState",
+      "name": "EmptyState",
+      "kind": "function",
+      "path": "src/components/command-centre/hosted-command-centre.tsx",
+      "span": "L254-L256",
+      "signature": "function EmptyState({ text }: { text: string })",
+      "exported": false,
+      "origin": "ast",
+      "body_hash": "80a30c0f4518662af08c294841d1c4fa2c3a3805ca3757a4e8aa75301fafdf3c",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre",
+      "name": "HostedCommandCentre",
+      "kind": "function",
+      "path": "src/components/command-centre/hosted-command-centre.tsx",
+      "span": "L47-L244",
+      "signature": "function HostedCommandCentre({ fixtureMode = false }: { fixtureMode?: boolean })",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "9f1abbf9dd0dbc537249499fdea6af09d3e320b17463ffb0ab6f1228720130a7",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre.captureWorkItem",
+      "name": "captureWorkItem",
+      "kind": "function",
+      "path": "src/components/command-centre/hosted-command-centre.tsx",
+      "span": "L87-L105",
+      "signature": "captureWorkItem = async (event: React.FormEvent<HTMLFormElement>)",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "80f1a892ea5290301de88d2ba7d5538e0e9a9d1ccabf7473037107443ca9eede",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre.createWorkspace",
+      "name": "createWorkspace",
+      "kind": "function",
+      "path": "src/components/command-centre/hosted-command-centre.tsx",
+      "span": "L119-L130",
+      "signature": "createWorkspace = async (event: React.FormEvent<HTMLFormElement>)",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "8ec6cf7da8c662f8cda05851e9f9202834f8fd19927e5d96d0f66266bfbe8298",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre.runRoutine",
+      "name": "runRoutine",
+      "kind": "function",
+      "path": "src/components/command-centre/hosted-command-centre.tsx",
+      "span": "L132-L142",
+      "signature": "runRoutine = async (routine: typeof hostedRoutines[number])",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "8fad01e0c8f36d577db37e2429428513097a576723817a5b2f1dcfbcc07da2f7",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre.selectWorkspace",
+      "name": "selectWorkspace",
+      "kind": "function",
+      "path": "src/components/command-centre/hosted-command-centre.tsx",
+      "span": "L107-L117",
+      "signature": "selectWorkspace = async (workspace: HostedWorkspace)",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "cbff5cbb2b6004beaeebd4b67dc466ca0da2c40a7697488235241f1b0ec2d69f",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/components/command-centre/hosted-command-centre.tsx#HostedRecords",
+      "name": "HostedRecords",
+      "kind": "type",
+      "path": "src/components/command-centre/hosted-command-centre.tsx",
+      "span": "L23-L26",
+      "signature": "type HostedRecords = { workItems?: HostedWorkItem[]; automationRuns?: Array<{ id: string; description?: string; status?: string; createdAt?: string }>; };",
+      "exported": false,
+      "origin": "ast",
+      "body_hash": "119749289b5a12e0014bc4ad21c03370208e2119064e3a31c7f3d55f9e41af43",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/components/command-centre/hosted-command-centre.tsx#HostedView",
+      "name": "HostedView",
+      "kind": "type",
+      "path": "src/components/command-centre/hosted-command-centre.tsx",
+      "span": "L11-L11",
+      "signature": "type HostedView = \"focus\" | \"queue\" | \"skills\" | \"routines\" | \"workspaces\";",
+      "exported": false,
+      "origin": "ast",
+      "body_hash": "e3b027d7409bf9bbeb563483141fdcfe3f3c171a53a5e931a4eb338c3a3193a8",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/components/command-centre/hosted-command-centre.tsx#HostedWorkItem",
+      "name": "HostedWorkItem",
+      "kind": "type",
+      "path": "src/components/command-centre/hosted-command-centre.tsx",
+      "span": "L13-L21",
+      "signature": "type HostedWorkItem = { id: string; title: string; notes?: string; status: WorkItemStatus; priority: WorkItemPriority; dueAt?: string | null; createdAt: string; };",
+      "exported": false,
+      "origin": "ast",
+      "body_hash": "6632e65ee889d3d0ece4039f2514ec4fef69d8f9d3c0803a006e01d9f3af0be3",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/components/command-centre/hosted-command-centre.tsx#priorityRank",
+      "name": "priorityRank",
+      "kind": "function",
+      "path": "src/components/command-centre/hosted-command-centre.tsx",
+      "span": "L258-L260",
+      "signature": "function priorityRank(priority: WorkItemPriority): number",
+      "exported": false,
+      "origin": "ast",
+      "body_hash": "0be281c19321a8d3b875d67ef9a7494ce0b0a259b3ecc2738acb790604cbe4bb",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/components/command-centre/hosted-command-centre.tsx#responseJson",
+      "name": "responseJson",
+      "kind": "function",
+      "path": "src/components/command-centre/hosted-command-centre.tsx",
+      "span": "L41-L45",
+      "signature": "async function responseJson<T>(response: Response): Promise<T>",
+      "exported": false,
+      "origin": "ast",
+      "body_hash": "dc6075ad1470e45d3ec036f34d46f0434033ce6ccdd1b2004467d960658fdc9d",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/components/command-centre/hosted-command-centre.tsx#ViewHeading",
+      "name": "ViewHeading",
+      "kind": "function",
+      "path": "src/components/command-centre/hosted-command-centre.tsx",
+      "span": "L246-L248",
+      "signature": "function ViewHeading({ title, detail }: { title: string; detail: string })",
+      "exported": false,
+      "origin": "ast",
+      "body_hash": "6b868891571d5008f599587d11ee246023ce8ff2aab0529d4adbb65bb881885e",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/components/command-centre/hosted-command-centre.tsx#WorkItemRow",
+      "name": "WorkItemRow",
+      "kind": "function",
+      "path": "src/components/command-centre/hosted-command-centre.tsx",
+      "span": "L250-L252",
+      "signature": "function WorkItemRow({ item }: { item: HostedWorkItem })",
+      "exported": false,
+      "origin": "ast",
+      "body_hash": "9c7201cb5907371595c882cfbde6074bcc4fdc1f77f687b5f2b15b99e3f4f10b",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
       "id": "src/proxy.ts",
       "name": "proxy.ts",
       "kind": "file",
       "path": "src/proxy.ts",
-      "span": "L1-L12",
+      "span": "L1-L15",
       "signature": null,
       "exported": true,
       "origin": "ast",
-      "body_hash": "52e4b99abfb8ff770ddd7bc9682871f1d2f48d8c2cafd26ad00cf4d72240468f",
-      "chars": 317,
+      "body_hash": "4355b24e49fae0e614fb0a81d580f95e3c0446bfbb523aaafc4b3f046fc18650",
+      "chars": 517,
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/server/adapters/neon-adapter.ts",
+      "name": "neon-adapter.ts",
+      "kind": "file",
+      "path": "src/server/adapters/neon-adapter.ts",
+      "span": "L1-L514",
+      "signature": null,
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "b45ff3e170408efaef6abe7d9847b07cb95ef887840a8223817d4d5df0808800",
+      "chars": 15841,
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/server/adapters/neon-adapter.ts#createNeonAdapter",
+      "name": "createNeonAdapter",
+      "kind": "function",
+      "path": "src/server/adapters/neon-adapter.ts",
+      "span": "L511-L513",
+      "signature": "function createNeonAdapter(config: NeonAdapterConfig): NeonAdapter",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "1169a72d6f172951c69815633a4cb6cfa8509dbe8f2355c3306a025798057968",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/server/adapters/neon-adapter.ts#NeonAdapter",
+      "name": "NeonAdapter",
+      "kind": "class",
+      "path": "src/server/adapters/neon-adapter.ts",
+      "span": "L20-L508",
+      "signature": "class NeonAdapter",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "6d4144acf4e9cc1fbcb31e79a58733b9ecf87a08bbde4ca0ec61fc30a9f85a53",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/server/adapters/neon-adapter.ts#NeonAdapter.close",
+      "name": "close",
+      "kind": "method",
+      "path": "src/server/adapters/neon-adapter.ts",
+      "span": "L493-L495",
+      "signature": "async close(): Promise<void>",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "9a66c3c6a33f1e5d8bc00570d991646ebf016938757d37585469c1ff90c78aac",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null,
+      "owner": "NeonAdapter"
+    },
+    {
+      "id": "src/server/adapters/neon-adapter.ts#NeonAdapter.constructor",
+      "name": "constructor",
+      "kind": "method",
+      "path": "src/server/adapters/neon-adapter.ts",
+      "span": "L24-L27",
+      "signature": "constructor(config: NeonAdapterConfig)",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "4ffbefb59ed883d60a47d7c933036ed6d4f97e410da5b390db9f79383b189fb5",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null,
+      "owner": "NeonAdapter"
+    },
+    {
+      "id": "src/server/adapters/neon-adapter.ts#NeonAdapter.createArtifact",
+      "name": "createArtifact",
+      "kind": "method",
+      "path": "src/server/adapters/neon-adapter.ts",
+      "span": "L66-L90",
+      "signature": "async createArtifact(artifact: Record<string, unknown>): Promise<Record<string, unknown>>",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "6dcbe3f67cfba08d9661b83e866c78125cc99cb54f499dd808402e7ba68860c3",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null,
+      "owner": "NeonAdapter"
+    },
+    {
+      "id": "src/server/adapters/neon-adapter.ts#NeonAdapter.createRepo",
+      "name": "createRepo",
+      "kind": "method",
+      "path": "src/server/adapters/neon-adapter.ts",
+      "span": "L418-L442",
+      "signature": "async createRepo(repo: Record<string, unknown>): Promise<Record<string, unknown>>",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "6a83bc3f3fb6e9c684aea018fe3386592f0af850f85caa342dbed4383be44b06",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null,
+      "owner": "NeonAdapter"
+    },
+    {
+      "id": "src/server/adapters/neon-adapter.ts#NeonAdapter.createRoutine",
+      "name": "createRoutine",
+      "kind": "method",
+      "path": "src/server/adapters/neon-adapter.ts",
+      "span": "L360-L383",
+      "signature": "async createRoutine(routine: Record<string, unknown>): Promise<Record<string, unknown>>",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "65592d47e164aa0d4f170ef048d32d5cd848a5a9bf7f267071ad9d0ee8a5aebf",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null,
+      "owner": "NeonAdapter"
+    },
+    {
+      "id": "src/server/adapters/neon-adapter.ts#NeonAdapter.createSignal",
+      "name": "createSignal",
+      "kind": "method",
+      "path": "src/server/adapters/neon-adapter.ts",
+      "span": "L463-L487",
+      "signature": "async createSignal(signal: Record<string, unknown>): Promise<Record<string, unknown>>",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "5e275df96b49410e026a2043ca7102d236c6f83c7c3bd8c17fc05ca8a930591f",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null,
+      "owner": "NeonAdapter"
+    },
+    {
+      "id": "src/server/adapters/neon-adapter.ts#NeonAdapter.createSkill",
+      "name": "createSkill",
+      "kind": "method",
+      "path": "src/server/adapters/neon-adapter.ts",
+      "span": "L300-L325",
+      "signature": "async createSkill(skill: Record<string, unknown>): Promise<Record<string, unknown>>",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "a8188690887591a4898df89e112fcb15d07ea93fbf398ecd0ad2d63b26b23f0b",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null,
+      "owner": "NeonAdapter"
+    },
+    {
+      "id": "src/server/adapters/neon-adapter.ts#NeonAdapter.createWorkItem",
+      "name": "createWorkItem",
+      "kind": "method",
+      "path": "src/server/adapters/neon-adapter.ts",
+      "span": "L183-L207",
+      "signature": "async createWorkItem(workItem: Record<string, unknown>): Promise<Record<string, unknown>>",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "0a11fbbf1c9ac8d51af464b430f45e5daf19dc736ae8f4f8b07874d66299119c",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null,
+      "owner": "NeonAdapter"
+    },
+    {
+      "id": "src/server/adapters/neon-adapter.ts#NeonAdapter.deleteArtifact",
+      "name": "deleteArtifact",
+      "kind": "method",
+      "path": "src/server/adapters/neon-adapter.ts",
+      "span": "L136-L148",
+      "signature": "async deleteArtifact(id: string): Promise<boolean>",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "71a37c2ceae1410280eecc95b95b01f7fe8123149b24ff87b062991924eec602",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null,
+      "owner": "NeonAdapter"
+    },
+    {
+      "id": "src/server/adapters/neon-adapter.ts#NeonAdapter.deleteWorkItem",
+      "name": "deleteWorkItem",
+      "kind": "method",
+      "path": "src/server/adapters/neon-adapter.ts",
+      "span": "L253-L265",
+      "signature": "async deleteWorkItem(id: string): Promise<boolean>",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "142df4c2086d7f7566a52df8407c7dafec11556bc88946e7c997158273998a73",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null,
+      "owner": "NeonAdapter"
+    },
+    {
+      "id": "src/server/adapters/neon-adapter.ts#NeonAdapter.getArtifact",
+      "name": "getArtifact",
+      "kind": "method",
+      "path": "src/server/adapters/neon-adapter.ts",
+      "span": "L52-L64",
+      "signature": "async getArtifact(id: string): Promise<Record<string, unknown> | null>",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "bbfd8126fdea6eeae46952313444574da0ebaa700f8b8ca2034ac814bfea8eb5",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null,
+      "owner": "NeonAdapter"
+    },
+    {
+      "id": "src/server/adapters/neon-adapter.ts#NeonAdapter.getClient",
+      "name": "getClient",
+      "kind": "method",
+      "path": "src/server/adapters/neon-adapter.ts",
+      "span": "L29-L31",
+      "signature": "private async getClient(): Promise<PoolClient>",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "560dc7eb1231badbf6c8b29e3b237d4842f0dafc69c02406e0c8b319a6f4666b",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null,
+      "owner": "NeonAdapter"
+    },
+    {
+      "id": "src/server/adapters/neon-adapter.ts#NeonAdapter.getRepo",
+      "name": "getRepo",
+      "kind": "method",
+      "path": "src/server/adapters/neon-adapter.ts",
+      "span": "L404-L416",
+      "signature": "async getRepo(githubOwner: string, githubRepo: string): Promise<Record<string, unknown> | null>",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "c624c60f4a805619a8a58eca5283ac696817dc95de0efe2d82c15fe3ad95bb8b",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null,
+      "owner": "NeonAdapter"
+    },
+    {
+      "id": "src/server/adapters/neon-adapter.ts#NeonAdapter.getRoutine",
+      "name": "getRoutine",
+      "kind": "method",
+      "path": "src/server/adapters/neon-adapter.ts",
+      "span": "L346-L358",
+      "signature": "async getRoutine(name: string): Promise<Record<string, unknown> | null>",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "b2334b6b85fa5c3f463e85f3c7ad9b06043aa8f79e8c7b82aa02dd681b1f1ba1",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null,
+      "owner": "NeonAdapter"
+    },
+    {
+      "id": "src/server/adapters/neon-adapter.ts#NeonAdapter.getSkill",
+      "name": "getSkill",
+      "kind": "method",
+      "path": "src/server/adapters/neon-adapter.ts",
+      "span": "L286-L298",
+      "signature": "async getSkill(command: string): Promise<Record<string, unknown> | null>",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "eaed3f0a565842b66b8105be441d2b03a2509e33d5cd1c32ab90906039ef8c01",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null,
+      "owner": "NeonAdapter"
+    },
+    {
+      "id": "src/server/adapters/neon-adapter.ts#NeonAdapter.getWorkItem",
+      "name": "getWorkItem",
+      "kind": "method",
+      "path": "src/server/adapters/neon-adapter.ts",
+      "span": "L169-L181",
+      "signature": "async getWorkItem(id: string): Promise<Record<string, unknown> | null>",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "64e62a23c6b4a2bd11f77b78ba7f2b18818b2f3974ac40a8001be493195ca54d",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null,
+      "owner": "NeonAdapter"
+    },
+    {
+      "id": "src/server/adapters/neon-adapter.ts#NeonAdapter.health",
+      "name": "health",
+      "kind": "method",
+      "path": "src/server/adapters/neon-adapter.ts",
+      "span": "L497-L507",
+      "signature": "async health(): Promise<boolean>",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "bac326b19b659e9d81a93b718e9d07445b9305dc2129c03b45ffe5ad7f6d2371",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null,
+      "owner": "NeonAdapter"
+    },
+    {
+      "id": "src/server/adapters/neon-adapter.ts#NeonAdapter.listArtifacts",
+      "name": "listArtifacts",
+      "kind": "method",
+      "path": "src/server/adapters/neon-adapter.ts",
+      "span": "L37-L50",
+      "signature": "async listArtifacts(): Promise<Record<string, unknown>[]>",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "b1893470c5bdca5c9df568a2708365eb6deb5522f26918e3f13ecc13cd9e6b00",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null,
+      "owner": "NeonAdapter"
+    },
+    {
+      "id": "src/server/adapters/neon-adapter.ts#NeonAdapter.listRepos",
+      "name": "listRepos",
+      "kind": "method",
+      "path": "src/server/adapters/neon-adapter.ts",
+      "span": "L389-L402",
+      "signature": "async listRepos(): Promise<Record<string, unknown>[]>",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "b230ff6d634d4c97b6199dbf82f6d253b6bef3a3737b1a5245d4958f2f0851c4",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null,
+      "owner": "NeonAdapter"
+    },
+    {
+      "id": "src/server/adapters/neon-adapter.ts#NeonAdapter.listRoutines",
+      "name": "listRoutines",
+      "kind": "method",
+      "path": "src/server/adapters/neon-adapter.ts",
+      "span": "L331-L344",
+      "signature": "async listRoutines(): Promise<Record<string, unknown>[]>",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "aef7261d77afba8a5d8da29a4ceeca6008b181341e545305e5d19cf419242137",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null,
+      "owner": "NeonAdapter"
+    },
+    {
+      "id": "src/server/adapters/neon-adapter.ts#NeonAdapter.listSignals",
+      "name": "listSignals",
+      "kind": "method",
+      "path": "src/server/adapters/neon-adapter.ts",
+      "span": "L448-L461",
+      "signature": "async listSignals(): Promise<Record<string, unknown>[]>",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "fa5de5505ec681ec4585a4162f2381557df404515eeafc307fe843d28690bc08",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null,
+      "owner": "NeonAdapter"
+    },
+    {
+      "id": "src/server/adapters/neon-adapter.ts#NeonAdapter.listSkills",
+      "name": "listSkills",
+      "kind": "method",
+      "path": "src/server/adapters/neon-adapter.ts",
+      "span": "L271-L284",
+      "signature": "async listSkills(): Promise<Record<string, unknown>[]>",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "2e4173a18ecc738680c652e751f960fe4122d0037a3b3062d842b92af595a158",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null,
+      "owner": "NeonAdapter"
+    },
+    {
+      "id": "src/server/adapters/neon-adapter.ts#NeonAdapter.listWorkItems",
+      "name": "listWorkItems",
+      "kind": "method",
+      "path": "src/server/adapters/neon-adapter.ts",
+      "span": "L154-L167",
+      "signature": "async listWorkItems(): Promise<Record<string, unknown>[]>",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "652d8ef3daa6041bf4934bd132c718d220bef9107f97d056248cfeebb35eebe2",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null,
+      "owner": "NeonAdapter"
+    },
+    {
+      "id": "src/server/adapters/neon-adapter.ts#NeonAdapter.updateArtifact",
+      "name": "updateArtifact",
+      "kind": "method",
+      "path": "src/server/adapters/neon-adapter.ts",
+      "span": "L92-L134",
+      "signature": "async updateArtifact(id: string, artifact: Partial<Record<string, unknown>>): Promise<Record<string, unknown> | null>",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "39781fe47ba9512015672bc1ee82a55c1b1944fb9c531f4755c692b53ed0fad1",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null,
+      "owner": "NeonAdapter"
+    },
+    {
+      "id": "src/server/adapters/neon-adapter.ts#NeonAdapter.updateWorkItem",
+      "name": "updateWorkItem",
+      "kind": "method",
+      "path": "src/server/adapters/neon-adapter.ts",
+      "span": "L209-L251",
+      "signature": "async updateWorkItem(id: string, workItem: Partial<Record<string, unknown>>): Promise<Record<string, unknown> | null>",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "de89d9b0d66e03f43702cb996c5f0d70dabbd045ab41ff39f92e6b81f7859bc5",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null,
+      "owner": "NeonAdapter"
+    },
+    {
+      "id": "src/server/adapters/neon-adapter.ts#NeonAdapterConfig",
+      "name": "NeonAdapterConfig",
+      "kind": "interface",
+      "path": "src/server/adapters/neon-adapter.ts",
+      "span": "L15-L18",
+      "signature": "interface NeonAdapterConfig",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "3d576f3ca325fa9a54608603f7f62bf05ed26849cf503fe94ef4116e6d84c88d",
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -2616,12 +3414,40 @@
       "name": "focus-board.ts",
       "kind": "file",
       "path": "src/server/focus-board/focus-board.ts",
-      "span": "L1-L88",
+      "span": "L1-L73",
       "signature": null,
       "exported": true,
       "origin": "ast",
-      "body_hash": "f8324fa909ad0ead78cbfec7913cb5beaa10f96919d2b613b72f37d472b39b9d",
-      "chars": 4921,
+      "body_hash": "95b245c934a7fbc5feb0de34d86c5c5c1eda360649bad48fb47c51ff36b8d99a",
+      "chars": 4238,
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/server/focus-board/focus-board.ts#attentionFor",
+      "name": "attentionFor",
+      "kind": "function",
+      "path": "src/server/focus-board/focus-board.ts",
+      "span": "L64-L69",
+      "signature": "function attentionFor(item: WorkItem, nowValue: number): FocusBoardWorkItem[\"attention\"]",
+      "exported": false,
+      "origin": "ast",
+      "body_hash": "f02985ab2993c79284b9492f0de8f263680e8064580286613f912bdde0983019",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/server/focus-board/focus-board.ts#attentionRank",
+      "name": "attentionRank",
+      "kind": "function",
+      "path": "src/server/focus-board/focus-board.ts",
+      "span": "L60-L62",
+      "signature": "function attentionRank(item: FocusBoardWorkItem): number",
+      "exported": false,
+      "origin": "ast",
+      "body_hash": "68ccf4b5d7ec2b72a408a2d5589c800eb0902e973f5d9e1d3b2f99c2b0f485ae",
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -2636,6 +3462,34 @@
       "exported": false,
       "origin": "ast",
       "body_hash": "d285eeb0735274c625ba973c9ff53000be75948ec5c5d3d951df35ea1df7b2b7",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/server/focus-board/focus-board.ts#getFocusBoard",
+      "name": "getFocusBoard",
+      "kind": "function",
+      "path": "src/server/focus-board/focus-board.ts",
+      "span": "L22-L58",
+      "signature": "async function getFocusBoard(repositoryId: string, repositoryRoot: string, options: FocusBoardOptions = {}): Promise<FocusBoard>",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "738c0cff1c78013dfb53b210e43b750f8aca14939edfb8ed81d03ec6ecee3e2f",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/server/focus-board/focus-board.ts#priorityRank",
+      "name": "priorityRank",
+      "kind": "function",
+      "path": "src/server/focus-board/focus-board.ts",
+      "span": "L71-L73",
+      "signature": "function priorityRank(priority: FocusBoardWorkItem[\"priority\"]): number",
+      "exported": false,
+      "origin": "ast",
+      "body_hash": "679d00bc22722ef47bd54e222a801e283e52b7c1fb69f65730d37c9cdee13ddf",
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -3186,12 +4040,12 @@
       "name": "hosted-domain-store.ts",
       "kind": "file",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L1-L213",
+      "span": "L1-L273",
       "signature": null,
       "exported": true,
       "origin": "ast",
-      "body_hash": "4a478d9543e4cec1eb4c915d01247b405df35bf436c0130b950591f92169e68e",
-      "chars": 40024,
+      "body_hash": "888b381b497709b6ae7fc43318a713a475c0116af4e246b02f4da6d0d162c735",
+      "chars": 41108,
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -3215,11 +4069,11 @@
       "name": "createHostedDomainStore",
       "kind": "function",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L187-L193",
+      "span": "L246-L253",
       "signature": "function createHostedDomainStore(): HostedDomainStore",
       "exported": false,
       "origin": "ast",
-      "body_hash": "34fd43e28721ff3a3e1482d028a152dfe143d271f1d8e25ac9c45829ed0ee7d4",
+      "body_hash": "f70de264cb16cd983fd0289fe9753a8abfd086d528366186e04c18963216afca",
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -3473,11 +4327,11 @@
       "name": "HostedDomainStore",
       "kind": "class",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L56-L185",
+      "span": "L56-L244",
       "signature": "class HostedDomainStore",
       "exported": true,
       "origin": "ast",
-      "body_hash": "54366060913107aeb00d93eb97ed3c5ce978494a29bd7a9ce29867e74f6d6416",
+      "body_hash": "2cc149f90f9fed09e7334e81734991fe5d980182e2c762611585a9d337b463f9",
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -3487,11 +4341,11 @@
       "name": "assertConnectorAccess",
       "kind": "method",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L168-L168",
-      "signature": "private async assertConnectorAccess(state: HostedState, userId: string, connectorId: string, workspaceId: string, repositoryId: string, capability: ConnectorCapability, skillId?: string, requestedPath?: string): Promise<HostedConnector>",
+      "span": "L226-L226",
+      "signature": "private async assertConnectorAccess(state: HostedState, userId: string, connectorId: string, workspaceId: string, repositoryId: string, capability: ConnectorCapability, skillId?: string, requestedPath?: string): Promise<HostedConnector | HostedDomainError>",
       "exported": true,
       "origin": "ast",
-      "body_hash": "c89f327380419fe439a514621f028b76a5d61f7d166b5492f32721a7f0f884ec",
+      "body_hash": "7a0cc108b52c639575f9bc1fa779bcc57a97899fbf0c09391263ead8bf890680",
       "summary_state": "pending",
       "summary": null,
       "crux": null,
@@ -3502,7 +4356,7 @@
       "name": "assertConnectorRepository",
       "kind": "method",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L176-L176",
+      "span": "L234-L234",
       "signature": "private assertConnectorRepository(state: HostedState, connector: HostedConnector, workspaceId: string, repositoryId: string): void",
       "exported": true,
       "origin": "ast",
@@ -3517,7 +4371,7 @@
       "name": "assertRepository",
       "kind": "method",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L175-L175",
+      "span": "L233-L233",
       "signature": "private async assertRepository(userId: string, workspaceId: string, repositoryId: string): Promise<void>",
       "exported": true,
       "origin": "ast",
@@ -3532,7 +4386,7 @@
       "name": "assertRepositoryMembership",
       "kind": "method",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L174-L174",
+      "span": "L232-L232",
       "signature": "private assertRepositoryMembership(state: HostedState, workspaceId: string, repositoryId: unknown): void",
       "exported": true,
       "origin": "ast",
@@ -3547,7 +4401,7 @@
       "name": "assertWithinRepository",
       "kind": "method",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L179-L179",
+      "span": "L237-L237",
       "signature": "private assertWithinRepository(repositoryRoot: string, path: string): string",
       "exported": true,
       "origin": "ast",
@@ -3562,7 +4416,7 @@
       "name": "assertWorkspace",
       "kind": "method",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L170-L170",
+      "span": "L228-L228",
       "signature": "private async assertWorkspace(userId: string, workspaceId: string): Promise<import(\"@/types/hosted-workspace\").HostedWorkspace>",
       "exported": true,
       "origin": "ast",
@@ -3577,7 +4431,7 @@
       "name": "audit",
       "kind": "method",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L164-L164",
+      "span": "L222-L222",
       "signature": "async audit(userId: string, workspaceId: string): Promise<HostedAudit[]>",
       "exported": true,
       "origin": "ast",
@@ -3592,7 +4446,7 @@
       "name": "auditEvent",
       "kind": "method",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L182-L182",
+      "span": "L240-L240",
       "signature": "private async auditEvent(state: HostedState, userId: string, workspaceId: string, action: string, subjectId?: string, repositoryId?: string, capability?: string, outcome?: \"allowed\" | \"denied\"): Promise<void>",
       "exported": true,
       "origin": "ast",
@@ -3607,11 +4461,11 @@
       "name": "authorizeProviderMutation",
       "kind": "method",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L105-L105",
+      "span": "L131-L148",
       "signature": "async authorizeProviderMutation(userId: string, workspaceId: string, repositoryId: string, providerAction: string, approval?: ProviderApproval): Promise<void>",
       "exported": true,
       "origin": "ast",
-      "body_hash": "2e0a7143888428aff275b1751173745975f7cf6c77412334f0b48412d29d9fb8",
+      "body_hash": "fddf1d8ec465173ea637da56953fac8669159fd6fe51795ef64fb454383b6bb4",
       "summary_state": "pending",
       "summary": null,
       "crux": null,
@@ -3622,7 +4476,7 @@
       "name": "canonicalPath",
       "kind": "method",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L178-L178",
+      "span": "L236-L236",
       "signature": "private canonicalPath(path: string): string",
       "exported": true,
       "origin": "ast",
@@ -3637,7 +4491,7 @@
       "name": "connector",
       "kind": "method",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L169-L169",
+      "span": "L227-L227",
       "signature": "private connector(state: HostedState, id: string): HostedConnector",
       "exported": true,
       "origin": "ast",
@@ -3652,11 +4506,11 @@
       "name": "connectorRequest",
       "kind": "method",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L99-L99",
+      "span": "L99-L110",
       "signature": "async connectorRequest(userId: string, connectorId: string, workspaceId: string, repositoryId: string, capability: ConnectorCapability, skillId?: string, requestedPath?: string): Promise<{ allowed: true }>",
       "exported": true,
       "origin": "ast",
-      "body_hash": "96691c32d1839cc68a56fef8fcc85ca00b3c478710b19e54b132e594548d567a",
+      "body_hash": "b84ee69e9a940b2f50a3bbc2748c9005868f1d13e30f14da715c7b9d876544d8",
       "summary_state": "pending",
       "summary": null,
       "crux": null,
@@ -3697,11 +4551,11 @@
       "name": "exportBackup",
       "kind": "method",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L117-L117",
+      "span": "L175-L175",
       "signature": "async exportBackup(userId: string, workspaceId: string): Promise<HostedBackup>",
       "exported": true,
       "origin": "ast",
-      "body_hash": "3b44cfadca15fe02c75ef64a9a14386fcde0db98d2fa4e3b9150b64eec3cd45f",
+      "body_hash": "75029792cff8e87baf5b1270c1b08ec3130b7f22f1a141f7012349e5df6f889c",
       "summary_state": "pending",
       "summary": null,
       "crux": null,
@@ -3712,7 +4566,7 @@
       "name": "exportMigration",
       "kind": "method",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L118-L118",
+      "span": "L176-L176",
       "signature": "async exportMigration(userId: string, workspaceId: string): Promise<MigrationPackage>",
       "exported": true,
       "origin": "ast",
@@ -3727,7 +4581,7 @@
       "name": "externalizeArtifact",
       "kind": "method",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L180-L180",
+      "span": "L238-L238",
       "signature": "private async externalizeArtifact(value: Record<string, unknown>): Promise<Record<string, unknown>>",
       "exported": true,
       "origin": "ast",
@@ -3746,7 +4600,7 @@
       "signature": "async grantCapability(userId: string, workspaceId: string, connectorId: string, repositoryId: string, capability: ConnectorCapability, skillId?: string, allowedPaths?: string[]): Promise<void>",
       "exported": true,
       "origin": "ast",
-      "body_hash": "aa164fe3fb9486dc23e23844128dcdd6e8ee0409a640c108be267fbed1e159a9",
+      "body_hash": "ac7862391b6827cd630ce2e6c644f56ec57e113b15535c7e8da41c2ac5e891d7",
       "summary_state": "pending",
       "summary": null,
       "crux": null,
@@ -3761,7 +4615,7 @@
       "signature": "async grantRepository(userId: string, workspaceId: string, connectorId: string, repositoryId: string): Promise<void>",
       "exported": true,
       "origin": "ast",
-      "body_hash": "e25d33a8a0b45ad22c5751b5cf7942dfe90e26a6e649207aa86b53c1c2a457e0",
+      "body_hash": "2c846dfc3327a80be3469df15bb5387cdbb612c29a9030a73c88a61362e4aa6d",
       "summary_state": "pending",
       "summary": null,
       "crux": null,
@@ -3772,7 +4626,7 @@
       "name": "hostedSafeWork",
       "kind": "method",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L104-L104",
+      "span": "L130-L130",
       "signature": "async hostedSafeWork(userId: string, workspaceId: string, description: string): Promise<{ id: string; status: \"completed\" }>",
       "exported": true,
       "origin": "ast",
@@ -3787,11 +4641,11 @@
       "name": "importMigration",
       "kind": "method",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L119-L163",
+      "span": "L177-L221",
       "signature": "async importMigration(userId: string, workspaceId: string, packageData: MigrationPackage, selectedKinds?: HostedRecordKind[], selectedRepositoryIds?: string[]): Promise<{ imported: number; warnings: string[] }>",
       "exported": true,
       "origin": "ast",
-      "body_hash": "e9b4f0e7509cb01c5941e79877be571815c8a45f0cab6edaac9fb4b064699e58",
+      "body_hash": "ec9c1f512983e56bb82e281ee73988ae6722c18552ea19b29bf6bd7e40a3fdc5",
       "summary_state": "pending",
       "summary": null,
       "crux": null,
@@ -3817,7 +4671,7 @@
       "name": "listCapabilityGrants",
       "kind": "method",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L111-L111",
+      "span": "L169-L169",
       "signature": "async listCapabilityGrants(userId: string, workspaceId: string): Promise<Array<{ connectorId: string; repositoryId: string; grants: HostedCapabilityGrant[] }>>",
       "exported": true,
       "origin": "ast",
@@ -3832,11 +4686,11 @@
       "name": "listConnectorStatus",
       "kind": "method",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L109-L109",
+      "span": "L167-L167",
       "signature": "async listConnectorStatus(userId: string, workspaceId: string): Promise<HostedConnector[]>",
       "exported": true,
       "origin": "ast",
-      "body_hash": "83ea01ae24449ccbeb542610de73dd53b7ce93e5d0839ea9501686e0aa0d0afd",
+      "body_hash": "8e802339fa0d0512983a4a116b50eafef612767015e3eb97667d6bfd39f1239a",
       "summary_state": "pending",
       "summary": null,
       "crux": null,
@@ -3847,7 +4701,7 @@
       "name": "listCredentials",
       "kind": "method",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L114-L114",
+      "span": "L172-L172",
       "signature": "async listCredentials(userId: string, workspaceId: string): Promise<HostedCredentialMetadata[]>",
       "exported": true,
       "origin": "ast",
@@ -3892,7 +4746,7 @@
       "name": "listRepositoryGrants",
       "kind": "method",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L110-L110",
+      "span": "L168-L168",
       "signature": "async listRepositoryGrants(userId: string, workspaceId: string): Promise<Array<{ connectorId: string; repositoryIds: string[] }>>",
       "exported": true,
       "origin": "ast",
@@ -3911,7 +4765,7 @@
       "signature": "async listSnapshots(userId: string, workspaceId: string): Promise<HostedSnapshot[]>",
       "exported": true,
       "origin": "ast",
-      "body_hash": "29940c21d838046887da4e4976044212248e18e5a287112ccde72d742c60d4c0",
+      "body_hash": "a9c5e74f245278e4fcd178b6f839be7a72124720253a2a98272344ea54feaa8b",
       "summary_state": "pending",
       "summary": null,
       "crux": null,
@@ -3922,7 +4776,7 @@
       "name": "markSnapshotsStale",
       "kind": "method",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L172-L172",
+      "span": "L230-L230",
       "signature": "private markSnapshotsStale(state: HostedState, workspaceId: string, connector: HostedConnector): void",
       "exported": true,
       "origin": "ast",
@@ -3937,7 +4791,7 @@
       "name": "mutateAudit",
       "kind": "method",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L165-L165",
+      "span": "L223-L223",
       "signature": "async mutateAudit(id: string): Promise<never>",
       "exported": true,
       "origin": "ast",
@@ -3952,7 +4806,7 @@
       "name": "normalizeExpiredConnectors",
       "kind": "method",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L173-L173",
+      "span": "L231-L231",
       "signature": "private normalizeExpiredConnectors(state: HostedState, workspaceId: string): boolean",
       "exported": true,
       "origin": "ast",
@@ -3967,7 +4821,7 @@
       "name": "pathAllowed",
       "kind": "method",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L177-L177",
+      "span": "L235-L235",
       "signature": "private pathAllowed(repositoryRoot: string, allowedPaths: string[] | undefined, requestedPath: string | undefined): boolean",
       "exported": true,
       "origin": "ast",
@@ -3982,7 +4836,7 @@
       "name": "publicCredential",
       "kind": "method",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L181-L181",
+      "span": "L239-L239",
       "signature": "private publicCredential(credential: HostedCredentialRecord): HostedCredentialMetadata",
       "exported": true,
       "origin": "ast",
@@ -3997,11 +4851,11 @@
       "name": "publishSnapshot",
       "kind": "method",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L101-L101",
+      "span": "L112-L127",
       "signature": "async publishSnapshot(userId: string, connectorId: string, workspaceId: string, repositoryId: string, data: Record<string, unknown>): Promise<HostedSnapshot>",
       "exported": true,
       "origin": "ast",
-      "body_hash": "8b1f175477f7aa2709f886f6d41ad18cc9755296676ed8cc4aea86427813a144",
+      "body_hash": "f11c94c768dca9eabe0c3bab90d9584fcc16b810e87a050dbf7af1bfae84db9e",
       "summary_state": "pending",
       "summary": null,
       "crux": null,
@@ -4016,7 +4870,7 @@
       "signature": "async putRecord(userId: string, workspaceId: string, kind: HostedRecordKind, value: Record<string, unknown>): Promise<Record<string, unknown> & { id: string }>",
       "exported": true,
       "origin": "ast",
-      "body_hash": "4b48a372a7d221f0bd13d5ce36dd941860048c64fd54df6f80a8feb3554f3409",
+      "body_hash": "a229a5e51cf5198edbc60c4e4328fe54ce50b18f55d0d727fda76606cf8041b0",
       "summary_state": "pending",
       "summary": null,
       "crux": null,
@@ -4027,11 +4881,11 @@
       "name": "queueLocalWork",
       "kind": "method",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L102-L102",
+      "span": "L128-L128",
       "signature": "async queueLocalWork(userId: string, workspaceId: string, repositoryId: string, description: string): Promise<{ id: string; status: \"pending_offline\" }>",
       "exported": true,
       "origin": "ast",
-      "body_hash": "b48a7e1a981e8a35332fec7eba50413131446398616d710caf647bf1062b090f",
+      "body_hash": "4e3ea2293f54c8023f2c25cf26009ed0a7f591b4a6f0cf638136fbad7cbba131",
       "summary_state": "pending",
       "summary": null,
       "crux": null,
@@ -4042,7 +4896,7 @@
       "name": "read",
       "kind": "method",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L183-L183",
+      "span": "L242-L242",
       "signature": "private read(): Promise<HostedState>",
       "exported": true,
       "origin": "ast",
@@ -4061,7 +4915,7 @@
       "signature": "async reconnectConnector(userId: string, workspaceId: string, connectorId: string, ttlMs: number): Promise<HostedConnector>",
       "exported": true,
       "origin": "ast",
-      "body_hash": "61fd4f540d8d83073f138275a5c632e8bdeb601ded1db88c20c8951ec85155da",
+      "body_hash": "68078638c8ebd563cf3d5e50767adcbd32ffa9e41e0d9ab61620743d48bfc652",
       "summary_state": "pending",
       "summary": null,
       "crux": null,
@@ -4072,7 +4926,7 @@
       "name": "recordDenied",
       "kind": "method",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L167-L167",
+      "span": "L225-L225",
       "signature": "private async recordDenied(state: HostedState, userId: string, connector: HostedConnector, workspaceId: string, repositoryId: string, capability: ConnectorCapability): Promise<void>",
       "exported": true,
       "origin": "ast",
@@ -4091,7 +4945,7 @@
       "signature": "async registerConnector(userId: string, workspaceId: string, ttlMs: number): Promise<HostedConnector>",
       "exported": true,
       "origin": "ast",
-      "body_hash": "cd917751c7c0086310351538c04322e518140a9cf55495fbcd0409b17b42a99c",
+      "body_hash": "f9cd80af558113b04d8da8c4ceb44a90f79634e10da94010b8528d5a82551ae2",
       "summary_state": "pending",
       "summary": null,
       "crux": null,
@@ -4106,7 +4960,7 @@
       "signature": "async registerRepository(userId: string, workspaceId: string, localPath: string): Promise<HostedRepository>",
       "exported": true,
       "origin": "ast",
-      "body_hash": "1d344ac0649eda577d4a345bfeeb8dd5c8f33cc0b411bddc78d14a7a32e7e6a1",
+      "body_hash": "8059ac6f495e0f01b596f41c28b904acea26dd4f050300f47ac066f52b02bb8d",
       "summary_state": "pending",
       "summary": null,
       "crux": null,
@@ -4117,11 +4971,11 @@
       "name": "resumePendingLocalWork",
       "kind": "method",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L103-L103",
+      "span": "L129-L129",
       "signature": "async resumePendingLocalWork(userId: string, workspaceId: string, connectorId: string): Promise<number>",
       "exported": true,
       "origin": "ast",
-      "body_hash": "3256de0e91a53b41a83fde5744a292e1a94e30f8a766b08b48bb321468fefde8",
+      "body_hash": "23170884a64cf8f4dc61e0abc4f45d99db6be06438de7bc19399d9b31cf72725",
       "summary_state": "pending",
       "summary": null,
       "crux": null,
@@ -4136,7 +4990,7 @@
       "signature": "async revokeCapability(userId: string, workspaceId: string, connectorId: string, repositoryId: string, grantId: string): Promise<void>",
       "exported": true,
       "origin": "ast",
-      "body_hash": "dcfa5ec33ef31eb1d6076853e8dcfb336a911025c55a7e5d813241c5d0f4daa8",
+      "body_hash": "7b8315f8102ea215599962c99b68b97c1ffcca754666b63a6f65dbb506851920",
       "summary_state": "pending",
       "summary": null,
       "crux": null,
@@ -4151,7 +5005,7 @@
       "signature": "async revokeConnector(userId: string, workspaceId: string, connectorId: string): Promise<void>",
       "exported": true,
       "origin": "ast",
-      "body_hash": "39442936bc01e71e0b319c4e17d300dffd13bf863606866e8e59d1c9cbf1c1b1",
+      "body_hash": "dcce6b4a7896809d03e49daf68b3de7d81d9a492763b8d5a2189994bf947a698",
       "summary_state": "pending",
       "summary": null,
       "crux": null,
@@ -4162,11 +5016,11 @@
       "name": "revokeCredential",
       "kind": "method",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L115-L115",
+      "span": "L173-L173",
       "signature": "async revokeCredential(userId: string, workspaceId: string, credentialId: string): Promise<void>",
       "exported": true,
       "origin": "ast",
-      "body_hash": "f0d44cab5aadf587f99b8e9cec775af8ab222bb0e55c7b311b858678e7d7123b",
+      "body_hash": "113491c13f15aa2c7bb962e2c5aefec828ae92ce9b11f9c46aa4a2e2f219b0dd",
       "summary_state": "pending",
       "summary": null,
       "crux": null,
@@ -4181,7 +5035,7 @@
       "signature": "async revokeRepository(userId: string, workspaceId: string, connectorId: string, repositoryId: string): Promise<void>",
       "exported": true,
       "origin": "ast",
-      "body_hash": "8c7f4e36db705c4d5a76210d54263bb0a9ca9748e8bfed5b4fe9e35d14453b92",
+      "body_hash": "ad8e02a653eafc48f942fff9a56efd7df16fdb2a40e6520ce255497fd0b568d2",
       "summary_state": "pending",
       "summary": null,
       "crux": null,
@@ -4192,11 +5046,11 @@
       "name": "runReadOnlySkill",
       "kind": "method",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L107-L107",
+      "span": "L150-L165",
       "signature": "async runReadOnlySkill(userId: string, workspaceId: string, connectorId: string, repositoryId: string, skillId: string): Promise<Record<string, unknown>>",
       "exported": true,
       "origin": "ast",
-      "body_hash": "211ac27b8cf324145aa27beebe9338af78083b86fcffdf10513d2d9d714b8f7f",
+      "body_hash": "2fc8b88fd8562d85b1d4ea0e918362410edb0dee726ca34328d929e480dbd7dc",
       "summary_state": "pending",
       "summary": null,
       "crux": null,
@@ -4207,11 +5061,11 @@
       "name": "saveCredential",
       "kind": "method",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L113-L113",
+      "span": "L171-L171",
       "signature": "async saveCredential(userId: string, workspaceId: string, input: { provider: string; scopes: string[]; secret: string; expiresAt?: string | null; identity?: string | null }): Promise<HostedCredentialMetadata>",
       "exported": true,
       "origin": "ast",
-      "body_hash": "bb9e2789a823d84c87e34884671d422f7938000fae2c2ef6b44ff5f11226adcd",
+      "body_hash": "9bb29c2f8b0e60156aa3c5c43f968622502a4f7f9e1d943ae5d7ffe9e0d616dc",
       "summary_state": "pending",
       "summary": null,
       "crux": null,
@@ -4226,7 +5080,22 @@
       "signature": "async setConnectorOffline(userId: string, workspaceId: string, connectorId: string): Promise<void>",
       "exported": true,
       "origin": "ast",
-      "body_hash": "93ea5d72cb9aff528409a29e40224956ef5ba0f75a2f02a76156ae8db12a0eaa",
+      "body_hash": "9f0a08d3151fc1321d12f3eb161897b664fb4aca772065009d52d4aa396eba27",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null,
+      "owner": "HostedDomainStore"
+    },
+    {
+      "id": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.withMutationLock",
+      "name": "withMutationLock",
+      "kind": "method",
+      "path": "src/server/hosted-domain/hosted-domain-store.ts",
+      "span": "L241-L241",
+      "signature": "private withMutationLock<T>(operation: () => Promise<T>): Promise<T>",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "59cc851d4d9465c888923ae8db2dd7716d588494de929fe905960672b2cc1ed8",
       "summary_state": "pending",
       "summary": null,
       "crux": null,
@@ -4237,7 +5106,7 @@
       "name": "workspaceOwner",
       "kind": "method",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L171-L171",
+      "span": "L229-L229",
       "signature": "private workspaceOwner(workspaceId: string): Promise<string>",
       "exported": true,
       "origin": "ast",
@@ -4252,7 +5121,7 @@
       "name": "write",
       "kind": "method",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L184-L184",
+      "span": "L243-L243",
       "signature": "private write(state: HostedState): Promise<void>",
       "exported": true,
       "origin": "ast",
@@ -4341,7 +5210,7 @@
       "signature": "interface HostedStateProvider",
       "exported": true,
       "origin": "ast",
-      "body_hash": "9e88edcabfb342f931450254dcb482590e9d9d2f98c5937af961531f09e7b442",
+      "body_hash": "41bd59eda281b33c12b761390929b76d93302e8abc6a677bb7dc4cf00ccb1490",
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -4351,7 +5220,7 @@
       "name": "isRecord",
       "kind": "function",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L197-L197",
+      "span": "L257-L257",
       "signature": "function isRecord(value: unknown): value is Record<string, unknown>",
       "exported": false,
       "origin": "ast",
@@ -4365,7 +5234,7 @@
       "name": "mergeRecordMaps",
       "kind": "function",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L199-L207",
+      "span": "L259-L267",
       "signature": "function mergeRecordMaps(left: Record<string, Array<Record<string, unknown>>>, right: HostedRecordMap): HostedRecordMap",
       "exported": false,
       "origin": "ast",
@@ -4379,7 +5248,7 @@
       "name": "mergeRelationships",
       "kind": "function",
       "path": "src/server/hosted-domain/hosted-domain-store.ts",
-      "span": "L209-L212",
+      "span": "L269-L272",
       "signature": "function mergeRelationships(left: Array<{ from: string; to: string; kind: string }>, right: Array<{ from: string; to: string; kind: string }>): Array<{ from: string; to: string; kind: string }>",
       "exported": false,
       "origin": "ast",
@@ -4523,12 +5392,12 @@
       "name": "neon-hosted-provider.ts",
       "kind": "file",
       "path": "src/server/hosted-persistence/neon-hosted-provider.ts",
-      "span": "L1-L71",
+      "span": "L1-L89",
       "signature": null,
       "exported": true,
       "origin": "ast",
-      "body_hash": "e76f66d537255025a5bb916810029101775c0f4be9e4eeac89830591f8ed9d08",
-      "chars": 5306,
+      "body_hash": "635d12abbca7bd80afa8d8b2274c186a88b9f62d9ca90630eddcd4d6b3f84b33",
+      "chars": 6827,
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -4538,7 +5407,7 @@
       "name": "emptyHostedState",
       "kind": "function",
       "path": "src/server/hosted-persistence/neon-hosted-provider.ts",
-      "span": "L20-L20",
+      "span": "L21-L21",
       "signature": "emptyHostedState = (): HostedState",
       "exported": false,
       "origin": "ast",
@@ -4552,7 +5421,7 @@
       "name": "emptyWorkspaceState",
       "kind": "function",
       "path": "src/server/hosted-persistence/neon-hosted-provider.ts",
-      "span": "L21-L21",
+      "span": "L22-L22",
       "signature": "emptyWorkspaceState = (): HostedWorkspaceState",
       "exported": false,
       "origin": "ast",
@@ -4566,7 +5435,7 @@
       "name": "EncryptedProtectedSecretStore",
       "kind": "class",
       "path": "src/server/hosted-persistence/neon-hosted-provider.ts",
-      "span": "L49-L69",
+      "span": "L57-L77",
       "signature": "class EncryptedProtectedSecretStore implements ProtectedSecretStore",
       "exported": true,
       "origin": "ast",
@@ -4580,7 +5449,7 @@
       "name": "decrypt",
       "kind": "method",
       "path": "src/server/hosted-persistence/neon-hosted-provider.ts",
-      "span": "L60-L66",
+      "span": "L68-L74",
       "signature": "decrypt(reference: string): string",
       "exported": true,
       "origin": "ast",
@@ -4595,7 +5464,7 @@
       "name": "loadKey",
       "kind": "method",
       "path": "src/server/hosted-persistence/neon-hosted-provider.ts",
-      "span": "L68-L68",
+      "span": "L76-L76",
       "signature": "private loadKey(): Buffer",
       "exported": true,
       "origin": "ast",
@@ -4610,7 +5479,7 @@
       "name": "put",
       "kind": "method",
       "path": "src/server/hosted-persistence/neon-hosted-provider.ts",
-      "span": "L52-L58",
+      "span": "L60-L66",
       "signature": "async put(secret: string): Promise<string>",
       "exported": true,
       "origin": "ast",
@@ -4625,11 +5494,25 @@
       "name": "hostedDatabaseUrl",
       "kind": "function",
       "path": "src/server/hosted-persistence/neon-hosted-provider.ts",
-      "span": "L23-L27",
+      "span": "L24-L31",
       "signature": "function hostedDatabaseUrl(): string",
       "exported": true,
       "origin": "ast",
-      "body_hash": "9d50bfd46c5ff119e9e74d50db0ad185f214aa7624570706ad7b37b9480d0a1d",
+      "body_hash": "553816870a4f80a6acb1a34dcfd7599c408480c213fe594fb7c464c40256a330",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/server/hosted-persistence/neon-hosted-provider.ts#isHostedJsonFixtureMode",
+      "name": "isHostedJsonFixtureMode",
+      "kind": "function",
+      "path": "src/server/hosted-persistence/neon-hosted-provider.ts",
+      "span": "L86-L89",
+      "signature": "function isHostedJsonFixtureMode(): boolean",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "61b6fc1ed31b7575dc6f01eaab404d66ec07490a15990e1cf96d22ba4230e6a8",
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -4639,11 +5522,11 @@
       "name": "isHostedNeonConfigured",
       "kind": "function",
       "path": "src/server/hosted-persistence/neon-hosted-provider.ts",
-      "span": "L71-L71",
+      "span": "L79-L84",
       "signature": "function isHostedNeonConfigured(): boolean",
       "exported": true,
       "origin": "ast",
-      "body_hash": "c7ad33018842f00c839a585cae7fc34aeadb33bb2f3cf41956987135380e830c",
+      "body_hash": "6b6e7f396aa746e3082cecf927fddb87612d627e7055246fb4d178604129822f",
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -4653,11 +5536,11 @@
       "name": "NeonHostedStateProvider",
       "kind": "class",
       "path": "src/server/hosted-persistence/neon-hosted-provider.ts",
-      "span": "L29-L37",
+      "span": "L33-L43",
       "signature": "class NeonHostedStateProvider implements HostedStateProvider",
       "exported": true,
       "origin": "ast",
-      "body_hash": "7ce55e202c21dd09173a8fb75442668a9688d9bab8a3f47d921296aec245aa84",
+      "body_hash": "2d796bed9980ad6c3fe8cf301ef4a5b18336bd279f8773108d6bcbd09cccc084",
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -4667,7 +5550,7 @@
       "name": "close",
       "kind": "method",
       "path": "src/server/hosted-persistence/neon-hosted-provider.ts",
-      "span": "L35-L35",
+      "span": "L41-L41",
       "signature": "async close(): Promise<void>",
       "exported": true,
       "origin": "ast",
@@ -4682,7 +5565,7 @@
       "name": "ensureSchema",
       "kind": "method",
       "path": "src/server/hosted-persistence/neon-hosted-provider.ts",
-      "span": "L36-L36",
+      "span": "L42-L42",
       "signature": "private ensureSchema(): Promise<void>",
       "exported": true,
       "origin": "ast",
@@ -4697,11 +5580,26 @@
       "name": "read",
       "kind": "method",
       "path": "src/server/hosted-persistence/neon-hosted-provider.ts",
-      "span": "L33-L33",
+      "span": "L38-L38",
       "signature": "async read(): Promise<HostedState>",
       "exported": true,
       "origin": "ast",
-      "body_hash": "ee7679ebb5609b0d40868d867f9be464f2717d728cba0f4bf5534121f7630beb",
+      "body_hash": "b36fecb83c4f75a083fdde2595d166410afb50ce93047056fc6cf0e681f25a0d",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null,
+      "owner": "NeonHostedStateProvider"
+    },
+    {
+      "id": "src/server/hosted-persistence/neon-hosted-provider.ts#NeonHostedStateProvider.withMutationLock",
+      "name": "withMutationLock",
+      "kind": "method",
+      "path": "src/server/hosted-persistence/neon-hosted-provider.ts",
+      "span": "L40-L40",
+      "signature": "async withMutationLock<T>(operation: () => Promise<T>): Promise<T>",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "677d2c4b1eed503eb21722b1d2157ab4db76fd906622d36babe9f7452d2f2e6f",
       "summary_state": "pending",
       "summary": null,
       "crux": null,
@@ -4712,11 +5610,11 @@
       "name": "write",
       "kind": "method",
       "path": "src/server/hosted-persistence/neon-hosted-provider.ts",
-      "span": "L34-L34",
+      "span": "L39-L39",
       "signature": "async write(state: HostedState): Promise<void>",
       "exported": true,
       "origin": "ast",
-      "body_hash": "5173604a5d8b94882b1fdabe59c68e9287264738787551d7db9fae01845f35fb",
+      "body_hash": "8ed9e15f88191af968723903328238cdc5c9e7f7903412db66bd839d4876c742",
       "summary_state": "pending",
       "summary": null,
       "crux": null,
@@ -4727,11 +5625,11 @@
       "name": "NeonHostedWorkspaceStateProvider",
       "kind": "class",
       "path": "src/server/hosted-persistence/neon-hosted-provider.ts",
-      "span": "L39-L47",
+      "span": "L45-L55",
       "signature": "class NeonHostedWorkspaceStateProvider implements HostedWorkspaceStateProvider",
       "exported": true,
       "origin": "ast",
-      "body_hash": "bbe40ce8b8116b8df8d424a9297767fa672ead4d483886c94a19478014a7d877",
+      "body_hash": "52606ab2b25b26bf32d61cd3601d0d7b1296233b99dbd22800331e42a3dc72ff",
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -4741,7 +5639,7 @@
       "name": "close",
       "kind": "method",
       "path": "src/server/hosted-persistence/neon-hosted-provider.ts",
-      "span": "L45-L45",
+      "span": "L53-L53",
       "signature": "async close(): Promise<void>",
       "exported": true,
       "origin": "ast",
@@ -4756,7 +5654,7 @@
       "name": "ensureSchema",
       "kind": "method",
       "path": "src/server/hosted-persistence/neon-hosted-provider.ts",
-      "span": "L46-L46",
+      "span": "L54-L54",
       "signature": "private ensureSchema(): Promise<void>",
       "exported": true,
       "origin": "ast",
@@ -4771,11 +5669,26 @@
       "name": "read",
       "kind": "method",
       "path": "src/server/hosted-persistence/neon-hosted-provider.ts",
-      "span": "L43-L43",
+      "span": "L50-L50",
       "signature": "async read(): Promise<HostedWorkspaceState>",
       "exported": true,
       "origin": "ast",
-      "body_hash": "0978cf03adcd18f70fda7c9fd5a95c4dc02828d83ddaeadc93b9d14947169895",
+      "body_hash": "128634d9dc972302ae3849f4b7c8c603463a0028c1ac3502b9bb283fb1dd90b6",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null,
+      "owner": "NeonHostedWorkspaceStateProvider"
+    },
+    {
+      "id": "src/server/hosted-persistence/neon-hosted-provider.ts#NeonHostedWorkspaceStateProvider.withMutationLock",
+      "name": "withMutationLock",
+      "kind": "method",
+      "path": "src/server/hosted-persistence/neon-hosted-provider.ts",
+      "span": "L52-L52",
+      "signature": "async withMutationLock<T>(operation: () => Promise<T>): Promise<T>",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "723dddfffc79ea8cca6d6af3736b7cd6e5c02ef88ae2296c6a245fdfbb0016ab",
       "summary_state": "pending",
       "summary": null,
       "crux": null,
@@ -4786,11 +5699,11 @@
       "name": "write",
       "kind": "method",
       "path": "src/server/hosted-persistence/neon-hosted-provider.ts",
-      "span": "L44-L44",
+      "span": "L51-L51",
       "signature": "async write(state: HostedWorkspaceState): Promise<void>",
       "exported": true,
       "origin": "ast",
-      "body_hash": "3ec44ef4b5b7ff5f47b8def4538db8944e75d18db338af0b6cb301d8d7ea1717",
+      "body_hash": "7c261fe8cf877f1ab3c5f2fcf3b3e5369ba37b98c32af7937b8a5fed6b33012d",
       "summary_state": "pending",
       "summary": null,
       "crux": null,
@@ -4801,12 +5714,12 @@
       "name": "hosted-workspace-store.ts",
       "kind": "file",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L1-L145",
+      "span": "L1-L164",
       "signature": null,
       "exported": true,
       "origin": "ast",
-      "body_hash": "0127ec6ae1d0fa53b628e234bcf803518b3a658a85ba4cae036e1c600f789f37",
-      "chars": 6054,
+      "body_hash": "506db0c1accebf5008f2dbad55be1208f0e3d0daae45156bd74e9ec18e0aa9de",
+      "chars": 7018,
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -4816,11 +5729,11 @@
       "name": "createHostedWorkspaceStore",
       "kind": "function",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L138-L143",
+      "span": "L157-L162",
       "signature": "function createHostedWorkspaceStore(): HostedWorkspaceStore",
       "exported": false,
       "origin": "ast",
-      "body_hash": "3a4824d5291c65a0ef8c6ec24960d9d3e6fdc47d153f1fee5d959cde5d0be631",
+      "body_hash": "6887e8794a4be1dda6c458a40912180ae6ab499524551498eaedf288ea7edba7",
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -4891,7 +5804,7 @@
       "signature": "interface HostedWorkspaceStateProvider",
       "exported": true,
       "origin": "ast",
-      "body_hash": "620e9488cd7b5aecc28cdcaf1e2617615ca0aed775a5d340d9a56cbe3647baeb",
+      "body_hash": "523ffbe7b19b943afb43a4ba3d787b25609ca6c039c7c2d9f21811a358dc88a2",
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -4901,11 +5814,11 @@
       "name": "HostedWorkspaceStore",
       "kind": "class",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L28-L136",
+      "span": "L28-L155",
       "signature": "class HostedWorkspaceStore",
       "exported": true,
       "origin": "ast",
-      "body_hash": "2c3a24af67aef0173e68849bb2d49ca2ee77320d48f6f59ae8b67350ef5875d0",
+      "body_hash": "38befbcc417cd971b1d781d68bb534f9d3215b721523aed871a3d7814e51858e",
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -4915,7 +5828,7 @@
       "name": "active",
       "kind": "method",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L65-L69",
+      "span": "L82-L86",
       "signature": "async active(userId: string): Promise<HostedWorkspace | null>",
       "exported": true,
       "origin": "ast",
@@ -4930,7 +5843,7 @@
       "name": "assertFixtureOnly",
       "kind": "method",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L133-L135",
+      "span": "L152-L154",
       "signature": "private assertFixtureOnly(): void",
       "exported": true,
       "origin": "ast",
@@ -4945,7 +5858,7 @@
       "name": "audit",
       "kind": "method",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L98-L101",
+      "span": "L115-L118",
       "signature": "async audit(userId: string): Promise<HostedAuditEvent[]>",
       "exported": true,
       "origin": "ast",
@@ -4986,11 +5899,26 @@
       "owner": "HostedWorkspaceStore"
     },
     {
+      "id": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.ensureDefault",
+      "name": "ensureDefault",
+      "kind": "method",
+      "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
+      "span": "L55-L70",
+      "signature": "async ensureDefault(userId: string): Promise<HostedWorkspace>",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "b3a0083af92cf96be29c6a84878c6ee1692d6c8937f921b790e63471b90cef93",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null,
+      "owner": "HostedWorkspaceStore"
+    },
+    {
       "id": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.event",
       "name": "event",
       "kind": "method",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L107-L109",
+      "span": "L124-L126",
       "signature": "private event(action: HostedAuditEvent[\"action\"], userId: string, workspaceId?: string): HostedAuditEvent",
       "exported": true,
       "origin": "ast",
@@ -5020,22 +5948,36 @@
       "name": "mutate",
       "kind": "method",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L123-L131",
+      "span": "L140-L150",
       "signature": "private async mutate<T>(operation: (state: HostedWorkspaceState) => T | Promise<T>): Promise<T>",
       "exported": true,
       "origin": "ast",
-      "body_hash": "2bfe2ac2ec9e4e529050129997fd251beb120d63d01d3f4e4ab89ee6fa97e046",
+      "body_hash": "d78878d9c3f8c6eebf7cba5e385144a7a94c2229aea96d45884e8b9920ae4ab9",
       "summary_state": "pending",
       "summary": null,
       "crux": null,
       "owner": "HostedWorkspaceStore"
     },
     {
+      "id": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.mutate.mutateState",
+      "name": "mutateState",
+      "kind": "function",
+      "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
+      "span": "L142-L147",
+      "signature": "mutateState = async ()",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "1a27613c3c43278f35a457cb041364af8edd5c65d3596b22a69978250ab8d906",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
       "id": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.owner",
       "name": "owner",
       "kind": "method",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L76-L82",
+      "span": "L93-L99",
       "signature": "async owner(workspaceId: string): Promise<string>",
       "exported": true,
       "origin": "ast",
@@ -5050,7 +5992,7 @@
       "name": "owns",
       "kind": "method",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L71-L74",
+      "span": "L88-L91",
       "signature": "async owns(userId: string, workspaceId: string): Promise<boolean>",
       "exported": true,
       "origin": "ast",
@@ -5065,7 +6007,7 @@
       "name": "read",
       "kind": "method",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L111-L115",
+      "span": "L128-L132",
       "signature": "private read(): Promise<HostedWorkspaceState>",
       "exported": true,
       "origin": "ast",
@@ -5080,7 +6022,7 @@
       "name": "recordIdentity",
       "kind": "method",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L84-L89",
+      "span": "L101-L106",
       "signature": "async recordIdentity(identity: HostedIdentity): Promise<void>",
       "exported": true,
       "origin": "ast",
@@ -5095,7 +6037,7 @@
       "name": "recordList",
       "kind": "method",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L91-L96",
+      "span": "L108-L113",
       "signature": "async recordList(userId: string): Promise<void>",
       "exported": true,
       "origin": "ast",
@@ -5110,7 +6052,7 @@
       "name": "select",
       "kind": "method",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L55-L63",
+      "span": "L72-L80",
       "signature": "async select(userId: string, workspaceId: string): Promise<HostedWorkspace>",
       "exported": true,
       "origin": "ast",
@@ -5125,7 +6067,7 @@
       "name": "user",
       "kind": "method",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L103-L105",
+      "span": "L120-L122",
       "signature": "private user(state: HostedWorkspaceState, userId: string): HostedUserState",
       "exported": true,
       "origin": "ast",
@@ -5140,11 +6082,11 @@
       "name": "write",
       "kind": "method",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L117-L121",
+      "span": "L134-L138",
       "signature": "private write(state: HostedWorkspaceState): Promise<void>",
       "exported": true,
       "origin": "ast",
-      "body_hash": "8fb53bd294d39c5a2a643c07673b351e8a7522d155dc195f5813436aa2772197",
+      "body_hash": "23710977c87a2833181fac8b46ce02b0c66b9234dd2d9bd1fac0f9b336510357",
       "summary_state": "pending",
       "summary": null,
       "crux": null,
@@ -6007,12 +6949,12 @@
       "name": "integration-registry.ts",
       "kind": "file",
       "path": "src/server/integrations/integration-registry.ts",
-      "span": "L1-L102",
+      "span": "L1-L78",
       "signature": null,
       "exported": true,
       "origin": "ast",
-      "body_hash": "9ac59160ce1eb5b78c4cd45981275abf264a11dd77b9bf6e03a84dc515beb12a",
-      "chars": 5635,
+      "body_hash": "8f748cd559ae8ad47e1f139f70b24aa4446fa3f8dbe665625486bec8b68206e0",
+      "chars": 4572,
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -6022,11 +6964,11 @@
       "name": "getIntegrationStatuses",
       "kind": "function",
       "path": "src/server/integrations/integration-registry.ts",
-      "span": "L26-L102",
+      "span": "L19-L78",
       "signature": "async function getIntegrationStatuses(root = process.cwd(), env: Record<string, string | undefined> = process.env): Promise<IntegrationAdapterStatus[]>",
       "exported": true,
       "origin": "ast",
-      "body_hash": "3b3746f12dadd094e1d575c88e23b083456fd68d899a231afbb5d31c9bc4207f",
+      "body_hash": "4d4ba92bd2eb4edb6c74aa87f0ed521f89de4b1736272d7905f921bc5c42245a",
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -7342,12 +8284,12 @@
       "name": "local-background-executor.ts",
       "kind": "file",
       "path": "src/server/routines/local-background-executor.ts",
-      "span": "L1-L175",
+      "span": "L1-L165",
       "signature": null,
       "exported": true,
       "origin": "ast",
-      "body_hash": "66f2f986ca70402ad74d948f6e904ef7af016af332a70cdd812294bc983d2a59",
-      "chars": 8550,
+      "body_hash": "be319dd8d253b16e32f5136fa4f23144e1c2010a799971dd68018adfba2b4d0c",
+      "chars": 8042,
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -7357,11 +8299,11 @@
       "name": "createLocalBackgroundExecutor",
       "kind": "function",
       "path": "src/server/routines/local-background-executor.ts",
-      "span": "L29-L168",
+      "span": "L29-L158",
       "signature": "function createLocalBackgroundExecutor(options: LocalBackgroundExecutorOptions = {})",
       "exported": true,
       "origin": "ast",
-      "body_hash": "eb56e34b5ffd5d1315c7dff0e680e06279c3aba8ab0acfcc55dd434f6dd2112f",
+      "body_hash": "3c26f2bf612805b3d35c3e9d63c2548297ef7c6580f2b73950f468e0c84cc8e6",
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -7399,7 +8341,7 @@
       "name": "isDue",
       "kind": "function",
       "path": "src/server/routines/local-background-executor.ts",
-      "span": "L132-L140",
+      "span": "L122-L130",
       "signature": "async function isDue(routine: RoutineDefinition, workspaceContext: Awaited<ReturnType<typeof createWorkspaceContext>>): Promise<boolean>",
       "exported": true,
       "origin": "ast",
@@ -7441,11 +8383,11 @@
       "name": "runDue",
       "kind": "function",
       "path": "src/server/routines/local-background-executor.ts",
-      "span": "L87-L130",
+      "span": "L87-L120",
       "signature": "async function runDue(trigger: RoutineExecutorTrigger = {}): Promise<number>",
       "exported": true,
       "origin": "ast",
-      "body_hash": "86268f57cbe8998953b4561b7e06d6dba33c4d54468c1d2d5e48bff3711f43e4",
+      "body_hash": "05ab850fc139ac3d75611d1f74f911a4ad87117eaf56dc60cbf7e37e8d668d24",
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -7469,7 +8411,7 @@
       "name": "start",
       "kind": "method",
       "path": "src/server/routines/local-background-executor.ts",
-      "span": "L143-L149",
+      "span": "L133-L139",
       "signature": "async start(trigger: RoutineExecutorTrigger = {}): Promise<RoutineExecutorStatus>",
       "exported": true,
       "origin": "ast",
@@ -7483,7 +8425,7 @@
       "name": "status",
       "kind": "method",
       "path": "src/server/routines/local-background-executor.ts",
-      "span": "L162-L166",
+      "span": "L152-L156",
       "signature": "async status(): Promise<RoutineExecutorStatus>",
       "exported": true,
       "origin": "ast",
@@ -7497,7 +8439,7 @@
       "name": "stop",
       "kind": "method",
       "path": "src/server/routines/local-background-executor.ts",
-      "span": "L150-L157",
+      "span": "L140-L147",
       "signature": "async stop(): Promise<RoutineExecutorStatus>",
       "exported": true,
       "origin": "ast",
@@ -7511,7 +8453,7 @@
       "name": "trigger",
       "kind": "method",
       "path": "src/server/routines/local-background-executor.ts",
-      "span": "L158-L161",
+      "span": "L148-L151",
       "signature": "async trigger(trigger: RoutineExecutorTrigger = {}): Promise<{ executed: number; status: RoutineExecutorStatus }>",
       "exported": true,
       "origin": "ast",
@@ -7595,7 +8537,7 @@
       "name": "utcWeek",
       "kind": "function",
       "path": "src/server/routines/local-background-executor.ts",
-      "span": "L170-L173",
+      "span": "L160-L163",
       "signature": "function utcWeek(date: Date): number",
       "exported": false,
       "origin": "ast",
@@ -11076,6 +12018,91 @@
       "crux": null
     },
     {
+      "id": "tests/fixtures/neon-fixtures.ts",
+      "name": "neon-fixtures.ts",
+      "kind": "file",
+      "path": "tests/fixtures/neon-fixtures.ts",
+      "span": "L1-L273",
+      "signature": null,
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "c96aa5e9cd645a05bb495127c3b440406ae43beb78a8218de14fdd75de64ec7d",
+      "chars": 8948,
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "tests/fixtures/neon-fixtures.ts#cleanupTestData",
+      "name": "cleanupTestData",
+      "kind": "function",
+      "path": "tests/fixtures/neon-fixtures.ts",
+      "span": "L170-L200",
+      "signature": "async function cleanupTestData( adapter: NeonAdapter, tenantId: string ): Promise<void>",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "ec392a078a152541802530ffc9bc2f000f3210ec887e1de095bddce7d21c51ac",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "tests/fixtures/neon-fixtures.ts#dumpFixtureData",
+      "name": "dumpFixtureData",
+      "kind": "function",
+      "path": "tests/fixtures/neon-fixtures.ts",
+      "span": "L252-L272",
+      "signature": "async function dumpFixtureData(fixture: TestFixture): Promise<void>",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "0e55cd6cf52ada24b847a77a0093393677bd4a7e93043196bef77c6da5c857f9",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "tests/fixtures/neon-fixtures.ts#seedTestData",
+      "name": "seedTestData",
+      "kind": "function",
+      "path": "tests/fixtures/neon-fixtures.ts",
+      "span": "L29-L164",
+      "signature": "async function seedTestData(): Promise<TestFixture>",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "3b6651b0b858a34f3f904df607126748c277c9b3cb20de05c59d2d87ae5cb03c",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "tests/fixtures/neon-fixtures.ts#TestFixture",
+      "name": "TestFixture",
+      "kind": "interface",
+      "path": "tests/fixtures/neon-fixtures.ts",
+      "span": "L15-L23",
+      "signature": "interface TestFixture",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "104349ca970534c8bc461775d529ab396d10780d3e2bf6816c06ed2ac7b08978",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "tests/fixtures/neon-fixtures.ts#verifyTenantIsolation",
+      "name": "verifyTenantIsolation",
+      "kind": "function",
+      "path": "tests/fixtures/neon-fixtures.ts",
+      "span": "L232-L246",
+      "signature": "async function verifyTenantIsolation( adapter1: NeonAdapter, tenantId1: string, adapter2: NeonAdapter, tenantId2: string ): Promise<boolean>",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "1d5099df04b039136306b0bac53f41939a122125a3140288d8792fb26b10e5ff",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
       "id": "tests/focus-board.test.ts",
       "name": "focus-board.test.ts",
       "kind": "file",
@@ -11153,12 +12180,12 @@
       "name": "hosted-identity.test.ts",
       "kind": "file",
       "path": "tests/hosted-identity.test.ts",
-      "span": "L1-L100",
+      "span": "L1-L125",
       "signature": null,
       "exported": true,
       "origin": "ast",
-      "body_hash": "95148470bf470a5bc5418074f38a1b56b4dae6dbaa117f1fe1613a6f92ee23a9",
-      "chars": 5250,
+      "body_hash": "2c34b8527950f7b9094a06c57250fbd03bbee3ba8ff1f159eb4ac454da94e7da",
+      "chars": 6408,
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -11196,12 +12223,12 @@
       "name": "hosted-persistence.test.ts",
       "kind": "file",
       "path": "tests/hosted-persistence.test.ts",
-      "span": "L1-L60",
+      "span": "L1-L180",
       "signature": null,
       "exported": true,
       "origin": "ast",
-      "body_hash": "26386349dff0b6b22572600270588f9e66f2f9fd88e1ae759936cfc61374916d",
-      "chars": 4095,
+      "body_hash": "7f2b0d431008a4160b5f95bcc4d4db6eb62e7f29845bcfeb190a664967b6d56b",
+      "chars": 10037,
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -11298,7 +12325,7 @@
       "name": "MemoryWorkspaceProvider",
       "kind": "class",
       "path": "tests/hosted-persistence.test.ts",
-      "span": "L19-L23",
+      "span": "L50-L54",
       "signature": "class MemoryWorkspaceProvider implements HostedWorkspaceStateProvider",
       "exported": false,
       "origin": "ast",
@@ -11312,7 +12339,7 @@
       "name": "constructor",
       "kind": "method",
       "path": "tests/hosted-persistence.test.ts",
-      "span": "L20-L20",
+      "span": "L51-L51",
       "signature": "constructor(private state: HostedWorkspaceState)",
       "exported": false,
       "origin": "ast",
@@ -11327,7 +12354,7 @@
       "name": "read",
       "kind": "method",
       "path": "tests/hosted-persistence.test.ts",
-      "span": "L21-L21",
+      "span": "L52-L52",
       "signature": "async read(): Promise<HostedWorkspaceState>",
       "exported": false,
       "origin": "ast",
@@ -11342,7 +12369,7 @@
       "name": "write",
       "kind": "method",
       "path": "tests/hosted-persistence.test.ts",
-      "span": "L22-L22",
+      "span": "L53-L53",
       "signature": "async write(state: HostedWorkspaceState): Promise<void>",
       "exported": false,
       "origin": "ast",
@@ -11353,16 +12380,162 @@
       "owner": "MemoryWorkspaceProvider"
     },
     {
+      "id": "tests/hosted-persistence.test.ts#TransactionalMemoryDomainProvider",
+      "name": "TransactionalMemoryDomainProvider",
+      "kind": "class",
+      "path": "tests/hosted-persistence.test.ts",
+      "span": "L19-L48",
+      "signature": "class TransactionalMemoryDomainProvider implements HostedStateProvider",
+      "exported": false,
+      "origin": "ast",
+      "body_hash": "7863116e92d8e6ee8f99d086b780088648f4515de0d84a2de8544f88aa328107",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "tests/hosted-persistence.test.ts#TransactionalMemoryDomainProvider.read",
+      "name": "read",
+      "kind": "method",
+      "path": "tests/hosted-persistence.test.ts",
+      "span": "L27-L34",
+      "signature": "async read(): Promise<HostedState>",
+      "exported": false,
+      "origin": "ast",
+      "body_hash": "9807e7756ea91f781c8ddca79fddbd68e2fae25ed2c2a1c40b64fd8f05b51723",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null,
+      "owner": "TransactionalMemoryDomainProvider"
+    },
+    {
+      "id": "tests/hosted-persistence.test.ts#TransactionalMemoryDomainProvider.withMutationLock",
+      "name": "withMutationLock",
+      "kind": "method",
+      "path": "tests/hosted-persistence.test.ts",
+      "span": "L38-L47",
+      "signature": "async withMutationLock<T>(operation: () => Promise<T>): Promise<T>",
+      "exported": false,
+      "origin": "ast",
+      "body_hash": "f16e569e84627f04ea6e93413d9ffadb86182948754386449ceb0cd020ee933a",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null,
+      "owner": "TransactionalMemoryDomainProvider"
+    },
+    {
+      "id": "tests/hosted-persistence.test.ts#TransactionalMemoryDomainProvider.withMutationLock.release",
+      "name": "release",
+      "kind": "function",
+      "path": "tests/hosted-persistence.test.ts",
+      "span": "L41-L41",
+      "signature": "release: () => void = ()",
+      "exported": false,
+      "origin": "ast",
+      "body_hash": "fac5d567fa375e0fb981f892b3aae1eb319a5ceab6e35c91e3fa71389cf2ea2d",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "tests/hosted-persistence.test.ts#TransactionalMemoryDomainProvider.write",
+      "name": "write",
+      "kind": "method",
+      "path": "tests/hosted-persistence.test.ts",
+      "span": "L36-L36",
+      "signature": "async write(state: HostedState): Promise<void>",
+      "exported": false,
+      "origin": "ast",
+      "body_hash": "87e5f752260753fd5533488ba2f4e797d41ee92cd83ba4ee969adfd78f8bb4e5",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null,
+      "owner": "TransactionalMemoryDomainProvider"
+    },
+    {
+      "id": "tests/hosted-persistence.test.ts#TransactionalMemoryWorkspaceProvider",
+      "name": "TransactionalMemoryWorkspaceProvider",
+      "kind": "class",
+      "path": "tests/hosted-persistence.test.ts",
+      "span": "L56-L85",
+      "signature": "class TransactionalMemoryWorkspaceProvider implements HostedWorkspaceStateProvider",
+      "exported": false,
+      "origin": "ast",
+      "body_hash": "52fce44230e7b7bcd92f0a3d97b06e7e6d1ed67337e02037f73617f575245caf",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "tests/hosted-persistence.test.ts#TransactionalMemoryWorkspaceProvider.read",
+      "name": "read",
+      "kind": "method",
+      "path": "tests/hosted-persistence.test.ts",
+      "span": "L64-L71",
+      "signature": "async read(): Promise<HostedWorkspaceState>",
+      "exported": false,
+      "origin": "ast",
+      "body_hash": "2ea79e0790159c9d469c4e580c5570f387383dce168263c03c2bc7932bf9562f",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null,
+      "owner": "TransactionalMemoryWorkspaceProvider"
+    },
+    {
+      "id": "tests/hosted-persistence.test.ts#TransactionalMemoryWorkspaceProvider.withMutationLock",
+      "name": "withMutationLock",
+      "kind": "method",
+      "path": "tests/hosted-persistence.test.ts",
+      "span": "L75-L84",
+      "signature": "async withMutationLock<T>(operation: () => Promise<T>): Promise<T>",
+      "exported": false,
+      "origin": "ast",
+      "body_hash": "f16e569e84627f04ea6e93413d9ffadb86182948754386449ceb0cd020ee933a",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null,
+      "owner": "TransactionalMemoryWorkspaceProvider"
+    },
+    {
+      "id": "tests/hosted-persistence.test.ts#TransactionalMemoryWorkspaceProvider.withMutationLock.release",
+      "name": "release",
+      "kind": "function",
+      "path": "tests/hosted-persistence.test.ts",
+      "span": "L78-L78",
+      "signature": "release: () => void = ()",
+      "exported": false,
+      "origin": "ast",
+      "body_hash": "fac5d567fa375e0fb981f892b3aae1eb319a5ceab6e35c91e3fa71389cf2ea2d",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "tests/hosted-persistence.test.ts#TransactionalMemoryWorkspaceProvider.write",
+      "name": "write",
+      "kind": "method",
+      "path": "tests/hosted-persistence.test.ts",
+      "span": "L73-L73",
+      "signature": "async write(state: HostedWorkspaceState): Promise<void>",
+      "exported": false,
+      "origin": "ast",
+      "body_hash": "a600d1e68c4d540241d23a3246eee72dade480330cb7b5eeb661092cb9ec4a15",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null,
+      "owner": "TransactionalMemoryWorkspaceProvider"
+    },
+    {
       "id": "tests/hosted-personal-os.test.ts",
       "name": "hosted-personal-os.test.ts",
       "kind": "file",
       "path": "tests/hosted-personal-os.test.ts",
-      "span": "L1-L360",
+      "span": "L1-L379",
       "signature": null,
       "exported": true,
       "origin": "ast",
-      "body_hash": "12e9d1bce8dfff990cd027f7c4b056fe3a698253aaedd16d81743e8da8669527",
-      "chars": 29816,
+      "body_hash": "416cf8e4e15331293a954d5dd87c2383a75fbf3be955b6911c05acd4b3fcb10d",
+      "chars": 31074,
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -11793,13 +12966,13 @@
     },
     {
       "source": "next-env.d.ts",
-      "target": "./.next/dev/types/root-params.d.ts",
+      "target": "./.next/types/root-params.d.ts",
       "relation": "imports",
       "confidence": "extracted"
     },
     {
       "source": "next-env.d.ts",
-      "target": "./.next/dev/types/routes.d.ts",
+      "target": "./.next/types/routes.d.ts",
       "relation": "imports",
       "confidence": "extracted"
     },
@@ -11813,6 +12986,156 @@
       "source": "playwright.config.ts",
       "target": "@playwright/test",
       "relation": "imports",
+      "confidence": "extracted"
+    },
+    {
+      "source": "scripts/migrate-to-neon.ts",
+      "target": "scripts/migrate-to-neon.ts#main",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "scripts/migrate-to-neon.ts",
+      "target": "scripts/migrate-to-neon.ts#createOrGetTenant",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "scripts/migrate-to-neon.ts",
+      "target": "scripts/migrate-to-neon.ts#getClient",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "scripts/migrate-to-neon.ts",
+      "target": "scripts/migrate-to-neon.ts#loadExistingState",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "scripts/migrate-to-neon.ts",
+      "target": "scripts/migrate-to-neon.ts#main",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "scripts/migrate-to-neon.ts",
+      "target": "scripts/migrate-to-neon.ts#migrateArtifacts",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "scripts/migrate-to-neon.ts",
+      "target": "scripts/migrate-to-neon.ts#migrateRepos",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "scripts/migrate-to-neon.ts",
+      "target": "scripts/migrate-to-neon.ts#migrateRoutines",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "scripts/migrate-to-neon.ts",
+      "target": "scripts/migrate-to-neon.ts#migrateSkills",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "scripts/migrate-to-neon.ts",
+      "target": "scripts/migrate-to-neon.ts#migrateWorkItems",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "scripts/migrate-to-neon.ts",
+      "target": "scripts/migrate-to-neon.ts#MigrationState",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "scripts/migrate-to-neon.ts",
+      "target": "scripts/migrate-to-neon.ts#readJsonFile",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "scripts/migrate-to-neon.ts",
+      "target": "node:crypto",
+      "relation": "imports",
+      "confidence": "extracted"
+    },
+    {
+      "source": "scripts/migrate-to-neon.ts",
+      "target": "node:fs/promises",
+      "relation": "imports",
+      "confidence": "extracted"
+    },
+    {
+      "source": "scripts/migrate-to-neon.ts",
+      "target": "node:path",
+      "relation": "imports",
+      "confidence": "extracted"
+    },
+    {
+      "source": "scripts/migrate-to-neon.ts",
+      "target": "pg",
+      "relation": "imports",
+      "confidence": "extracted"
+    },
+    {
+      "source": "scripts/migrate-to-neon.ts#loadExistingState",
+      "target": "scripts/migrate-to-neon.ts#readJsonFile",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "scripts/migrate-to-neon.ts#main",
+      "target": "scripts/migrate-to-neon.ts#createOrGetTenant",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "scripts/migrate-to-neon.ts#main",
+      "target": "scripts/migrate-to-neon.ts#getClient",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "scripts/migrate-to-neon.ts#main",
+      "target": "scripts/migrate-to-neon.ts#loadExistingState",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "scripts/migrate-to-neon.ts#main",
+      "target": "scripts/migrate-to-neon.ts#migrateArtifacts",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "scripts/migrate-to-neon.ts#main",
+      "target": "scripts/migrate-to-neon.ts#migrateRepos",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "scripts/migrate-to-neon.ts#main",
+      "target": "scripts/migrate-to-neon.ts#migrateRoutines",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "scripts/migrate-to-neon.ts#main",
+      "target": "scripts/migrate-to-neon.ts#migrateSkills",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "scripts/migrate-to-neon.ts#main",
+      "target": "scripts/migrate-to-neon.ts#migrateWorkItems",
+      "relation": "calls",
       "confidence": "extracted"
     },
     {
@@ -12012,6 +13335,12 @@
       "target": "next/server",
       "relation": "imports",
       "confidence": "extracted"
+    },
+    {
+      "source": "src/app/api/focus-board/route.ts#GET",
+      "target": "src/server/focus-board/focus-board.ts#getFocusBoard",
+      "relation": "calls",
+      "confidence": "inferred"
     },
     {
       "source": "src/app/api/focus-board/route.ts#GET",
@@ -14354,6 +15683,24 @@
       "confidence": "extracted"
     },
     {
+      "source": "src/app/page.tsx",
+      "target": "@/components/command-centre/hosted-command-centre",
+      "relation": "imports",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/app/page.tsx",
+      "target": "@clerk/nextjs/server",
+      "relation": "imports",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/app/page.tsx",
+      "target": "next/navigation",
+      "relation": "imports",
+      "confidence": "extracted"
+    },
+    {
       "source": "src/app/sign-in/[[...sign-in]]/page.tsx",
       "target": "src/app/sign-in/[[...sign-in]]/page.tsx#SignInPage",
       "relation": "contains",
@@ -14679,6 +16026,12 @@
     },
     {
       "source": "src/components/command-centre/command-centre-shell.tsx#CommandCentreShell",
+      "target": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre.runRoutine",
+      "relation": "calls",
+      "confidence": "inferred"
+    },
+    {
+      "source": "src/components/command-centre/command-centre-shell.tsx#CommandCentreShell",
       "target": "src/server/incoming-signals/signal-triage.ts#triageSignal",
       "relation": "calls",
       "confidence": "inferred"
@@ -14714,9 +16067,507 @@
       "confidence": "extracted"
     },
     {
+      "source": "src/components/command-centre/hosted-command-centre.tsx",
+      "target": "src/components/command-centre/hosted-command-centre.tsx#EmptyState",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/components/command-centre/hosted-command-centre.tsx",
+      "target": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/components/command-centre/hosted-command-centre.tsx",
+      "target": "src/components/command-centre/hosted-command-centre.tsx#HostedRecords",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/components/command-centre/hosted-command-centre.tsx",
+      "target": "src/components/command-centre/hosted-command-centre.tsx#HostedView",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/components/command-centre/hosted-command-centre.tsx",
+      "target": "src/components/command-centre/hosted-command-centre.tsx#HostedWorkItem",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/components/command-centre/hosted-command-centre.tsx",
+      "target": "src/components/command-centre/hosted-command-centre.tsx#priorityRank",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/components/command-centre/hosted-command-centre.tsx",
+      "target": "src/components/command-centre/hosted-command-centre.tsx#responseJson",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/components/command-centre/hosted-command-centre.tsx",
+      "target": "src/components/command-centre/hosted-command-centre.tsx#ViewHeading",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/components/command-centre/hosted-command-centre.tsx",
+      "target": "src/components/command-centre/hosted-command-centre.tsx#WorkItemRow",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/components/command-centre/hosted-command-centre.tsx",
+      "target": "@/types/hosted-workspace",
+      "relation": "imports",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/components/command-centre/hosted-command-centre.tsx",
+      "target": "@/types/skill",
+      "relation": "imports",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/components/command-centre/hosted-command-centre.tsx",
+      "target": "@/types/work-item",
+      "relation": "imports",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/components/command-centre/hosted-command-centre.tsx",
+      "target": "lucide-react",
+      "relation": "imports",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/components/command-centre/hosted-command-centre.tsx",
+      "target": "react",
+      "relation": "imports",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/components/command-centre/hosted-command-centre.tsx",
+      "target": "src/components/command-centre/auth-controls.tsx",
+      "relation": "imports",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre",
+      "target": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre.captureWorkItem",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre",
+      "target": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre.createWorkspace",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre",
+      "target": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre.runRoutine",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre",
+      "target": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre.selectWorkspace",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre",
+      "target": "src/components/command-centre/hosted-command-centre.tsx#priorityRank",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre",
+      "target": "src/components/command-centre/hosted-command-centre.tsx#responseJson",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre",
+      "target": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre.captureWorkItem",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre",
+      "target": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre.createWorkspace",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre",
+      "target": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre.runRoutine",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre",
+      "target": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre.selectWorkspace",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre.captureWorkItem",
+      "target": "src/components/command-centre/hosted-command-centre.tsx#responseJson",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre.createWorkspace",
+      "target": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre.selectWorkspace",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre.createWorkspace",
+      "target": "src/components/command-centre/hosted-command-centre.tsx#responseJson",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre.runRoutine",
+      "target": "src/components/command-centre/hosted-command-centre.tsx#responseJson",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre.selectWorkspace",
+      "target": "src/components/command-centre/hosted-command-centre.tsx#responseJson",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
       "source": "src/proxy.ts",
       "target": "@clerk/nextjs/server",
       "relation": "imports",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/proxy.ts",
+      "target": "next/server",
+      "relation": "imports",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts",
+      "target": "src/server/adapters/neon-adapter.ts#createNeonAdapter",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapterConfig",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts",
+      "target": "node:crypto",
+      "relation": "imports",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts",
+      "target": "pg",
+      "relation": "imports",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.close",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.constructor",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.createArtifact",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.createRepo",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.createRoutine",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.createSignal",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.createSkill",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.createWorkItem",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.deleteArtifact",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.deleteWorkItem",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.getArtifact",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.getClient",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.getRepo",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.getRoutine",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.getSkill",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.getWorkItem",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.health",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.listArtifacts",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.listRepos",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.listRoutines",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.listSignals",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.listSkills",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.listWorkItems",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.updateArtifact",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.updateWorkItem",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter.createArtifact",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.getClient",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter.createRepo",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.getClient",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter.createRoutine",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.getClient",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter.createSignal",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.getClient",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter.createSkill",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.getClient",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter.createWorkItem",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.getClient",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter.deleteArtifact",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.getClient",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter.deleteWorkItem",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.getClient",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter.getArtifact",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.getClient",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter.getRepo",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.getClient",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter.getRoutine",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.getClient",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter.getSkill",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.getClient",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter.getWorkItem",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.getClient",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter.health",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.getClient",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter.listArtifacts",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.getClient",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter.listRepos",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.getClient",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter.listRoutines",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.getClient",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter.listSignals",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.getClient",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter.listSkills",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.getClient",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter.listWorkItems",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.getClient",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter.updateArtifact",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.getClient",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/adapters/neon-adapter.ts#NeonAdapter.updateWorkItem",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.getClient",
+      "relation": "calls",
       "confidence": "extracted"
     },
     {
@@ -14868,12 +16719,6 @@
       "target": "src/server/artifacts/artifact-store.ts#ArtifactStore.readIndex",
       "relation": "calls",
       "confidence": "extracted"
-    },
-    {
-      "source": "src/server/artifacts/artifact-store.ts#ArtifactStore.getArtifact",
-      "target": "src/server/local-store/json-file.ts#readJsonFile",
-      "relation": "calls",
-      "confidence": "inferred"
     },
     {
       "source": "src/server/artifacts/artifact-store.ts#ArtifactStore.getArtifact",
@@ -15075,13 +16920,31 @@
     },
     {
       "source": "src/server/focus-board/focus-board.ts",
-      "target": "src/server/routines/routine-registry.ts#createRoutineRegistry",
-      "relation": "calls",
-      "confidence": "inferred"
+      "target": "src/server/focus-board/focus-board.ts#attentionFor",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/focus-board/focus-board.ts",
+      "target": "src/server/focus-board/focus-board.ts#attentionRank",
+      "relation": "contains",
+      "confidence": "extracted"
     },
     {
       "source": "src/server/focus-board/focus-board.ts",
       "target": "src/server/focus-board/focus-board.ts#FocusBoardOptions",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/focus-board/focus-board.ts",
+      "target": "src/server/focus-board/focus-board.ts#getFocusBoard",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/focus-board/focus-board.ts",
+      "target": "src/server/focus-board/focus-board.ts#priorityRank",
       "relation": "contains",
       "confidence": "extracted"
     },
@@ -15140,31 +17003,55 @@
       "confidence": "extracted"
     },
     {
-      "source": "src/server/focus-board/focus-board.ts",
+      "source": "src/server/focus-board/focus-board.ts#getFocusBoard",
+      "target": "src/server/focus-board/focus-board.ts#attentionFor",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/focus-board/focus-board.ts#getFocusBoard",
+      "target": "src/server/focus-board/focus-board.ts#attentionRank",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/focus-board/focus-board.ts#getFocusBoard",
+      "target": "src/server/focus-board/focus-board.ts#priorityRank",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/focus-board/focus-board.ts#getFocusBoard",
+      "target": "src/server/routines/routine-registry.ts#createRoutineRegistry",
+      "relation": "calls",
+      "confidence": "inferred"
+    },
+    {
+      "source": "src/server/focus-board/focus-board.ts#getFocusBoard",
       "target": "src/server/artifacts/artifact-store.ts#ArtifactStore",
       "relation": "references",
       "confidence": "extracted"
     },
     {
-      "source": "src/server/focus-board/focus-board.ts",
+      "source": "src/server/focus-board/focus-board.ts#getFocusBoard",
       "target": "src/server/operational/operational-store.ts#OperationalStore",
       "relation": "references",
       "confidence": "extracted"
     },
     {
-      "source": "src/server/focus-board/focus-board.ts",
+      "source": "src/server/focus-board/focus-board.ts#getFocusBoard",
       "target": "src/server/routines/routine-history-store.ts#RoutineHistoryStore",
       "relation": "references",
       "confidence": "extracted"
     },
     {
-      "source": "src/server/focus-board/focus-board.ts",
+      "source": "src/server/focus-board/focus-board.ts#getFocusBoard",
       "target": "src/server/skill-runs/skill-run-store.ts#SkillRunStore",
       "relation": "references",
       "confidence": "extracted"
     },
     {
-      "source": "src/server/focus-board/focus-board.ts",
+      "source": "src/server/focus-board/focus-board.ts#getFocusBoard",
       "target": "src/server/work-items/work-item-store.ts#WorkItemStore",
       "relation": "references",
       "confidence": "extracted"
@@ -15456,12 +17343,6 @@
       "target": "src/server/handoffs/handoff-store.ts#HandoffStore.readIndex",
       "relation": "calls",
       "confidence": "extracted"
-    },
-    {
-      "source": "src/server/handoffs/handoff-store.ts#HandoffStore.readIndex",
-      "target": "src/server/local-store/json-file.ts#readJsonFile",
-      "relation": "calls",
-      "confidence": "inferred"
     },
     {
       "source": "src/server/handoffs/handoff-store.ts#HandoffStore.readIndex",
@@ -15873,6 +17754,18 @@
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#createHostedDomainStore",
+      "target": "src/server/hosted-persistence/neon-hosted-provider.ts#isHostedJsonFixtureMode",
+      "relation": "calls",
+      "confidence": "inferred"
+    },
+    {
+      "source": "src/server/hosted-domain/hosted-domain-store.ts#createHostedDomainStore",
+      "target": "src/server/hosted-persistence/neon-hosted-provider.ts#isHostedNeonConfigured",
+      "relation": "calls",
+      "confidence": "inferred"
+    },
+    {
+      "source": "src/server/hosted-domain/hosted-domain-store.ts#createHostedDomainStore",
       "target": "src/server/hosted-persistence/neon-hosted-provider.ts#EncryptedProtectedSecretStore",
       "relation": "references",
       "confidence": "extracted"
@@ -15880,6 +17773,18 @@
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#createHostedDomainStore",
       "target": "src/server/hosted-persistence/neon-hosted-provider.ts#NeonHostedStateProvider",
+      "relation": "references",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/hosted-domain/hosted-domain-store.ts#createHostedDomainStore",
+      "target": "src/server/hosted-persistence/neon-hosted-provider.ts#NeonHostedWorkspaceStateProvider",
+      "relation": "references",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/hosted-domain/hosted-domain-store.ts#createHostedDomainStore",
+      "target": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore",
       "relation": "references",
       "confidence": "extracted"
     },
@@ -15924,12 +17829,6 @@
       "target": "src/server/hosted-domain/hosted-domain-store.ts#emptyState",
       "relation": "calls",
       "confidence": "extracted"
-    },
-    {
-      "source": "src/server/hosted-domain/hosted-domain-store.ts#DeterministicJsonHostedStateProvider.read",
-      "target": "src/server/local-store/json-file.ts#readJsonFile",
-      "relation": "calls",
-      "confidence": "inferred"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#DeterministicJsonHostedStateProvider.write",
@@ -16269,6 +18168,12 @@
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.withMutationLock",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore",
       "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.workspaceOwner",
       "relation": "contains",
       "confidence": "extracted"
@@ -16383,6 +18288,12 @@
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.authorizeProviderMutation",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.withMutationLock",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.authorizeProviderMutation",
       "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
       "relation": "calls",
       "confidence": "extracted"
@@ -16392,12 +18303,6 @@
       "target": "src/server/hosted-domain/hosted-domain-store.ts#isRecord",
       "relation": "calls",
       "confidence": "extracted"
-    },
-    {
-      "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.authorizeProviderMutation",
-      "target": "src/server/local-store/state-lock.ts#withStateLock",
-      "relation": "calls",
-      "confidence": "inferred"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.connectorRequest",
@@ -16419,15 +18324,15 @@
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.connectorRequest",
-      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.withMutationLock",
       "relation": "calls",
       "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.connectorRequest",
-      "target": "src/server/local-store/state-lock.ts#withStateLock",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
       "relation": "calls",
-      "confidence": "inferred"
+      "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.constructor",
@@ -16473,15 +18378,15 @@
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.exportBackup",
-      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.withMutationLock",
       "relation": "calls",
       "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.exportBackup",
-      "target": "src/server/local-store/state-lock.ts#withStateLock",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
       "relation": "calls",
-      "confidence": "inferred"
+      "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.exportMigration",
@@ -16545,15 +18450,15 @@
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.grantCapability",
-      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.withMutationLock",
       "relation": "calls",
       "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.grantCapability",
-      "target": "src/server/local-store/state-lock.ts#withStateLock",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
       "relation": "calls",
-      "confidence": "inferred"
+      "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.grantRepository",
@@ -16587,15 +18492,15 @@
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.grantRepository",
-      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.withMutationLock",
       "relation": "calls",
       "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.grantRepository",
-      "target": "src/server/local-store/state-lock.ts#withStateLock",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
       "relation": "calls",
-      "confidence": "inferred"
+      "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.hostedSafeWork",
@@ -16623,15 +18528,15 @@
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.importMigration",
-      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.withMutationLock",
       "relation": "calls",
       "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.importMigration",
-      "target": "src/server/local-store/state-lock.ts#withStateLock",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
       "relation": "calls",
-      "confidence": "inferred"
+      "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.listAllRecords",
@@ -16671,15 +18576,15 @@
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.listConnectorStatus",
-      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.withMutationLock",
       "relation": "calls",
       "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.listConnectorStatus",
-      "target": "src/server/local-store/state-lock.ts#withStateLock",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
       "relation": "calls",
-      "confidence": "inferred"
+      "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.listCredentials",
@@ -16749,15 +18654,15 @@
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.listSnapshots",
-      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.withMutationLock",
       "relation": "calls",
       "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.listSnapshots",
-      "target": "src/server/local-store/state-lock.ts#withStateLock",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
       "relation": "calls",
-      "confidence": "inferred"
+      "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.normalizeExpiredConnectors",
@@ -16791,15 +18696,15 @@
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.publishSnapshot",
-      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.withMutationLock",
       "relation": "calls",
       "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.publishSnapshot",
-      "target": "src/server/local-store/state-lock.ts#withStateLock",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
       "relation": "calls",
-      "confidence": "inferred"
+      "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.putRecord",
@@ -16827,15 +18732,15 @@
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.putRecord",
-      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.withMutationLock",
       "relation": "calls",
       "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.putRecord",
-      "target": "src/server/local-store/state-lock.ts#withStateLock",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
       "relation": "calls",
-      "confidence": "inferred"
+      "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.queueLocalWork",
@@ -16863,15 +18768,15 @@
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.queueLocalWork",
-      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.withMutationLock",
       "relation": "calls",
       "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.queueLocalWork",
-      "target": "src/server/local-store/state-lock.ts#withStateLock",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
       "relation": "calls",
-      "confidence": "inferred"
+      "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.reconnectConnector",
@@ -16899,15 +18804,15 @@
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.reconnectConnector",
-      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.withMutationLock",
       "relation": "calls",
       "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.reconnectConnector",
-      "target": "src/server/local-store/state-lock.ts#withStateLock",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
       "relation": "calls",
-      "confidence": "inferred"
+      "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.recordDenied",
@@ -16941,15 +18846,15 @@
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.registerConnector",
-      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.withMutationLock",
       "relation": "calls",
       "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.registerConnector",
-      "target": "src/server/local-store/state-lock.ts#withStateLock",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
       "relation": "calls",
-      "confidence": "inferred"
+      "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.registerRepository",
@@ -16977,15 +18882,15 @@
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.registerRepository",
-      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.withMutationLock",
       "relation": "calls",
       "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.registerRepository",
-      "target": "src/server/local-store/state-lock.ts#withStateLock",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
       "relation": "calls",
-      "confidence": "inferred"
+      "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.resumePendingLocalWork",
@@ -17013,15 +18918,15 @@
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.resumePendingLocalWork",
-      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.withMutationLock",
       "relation": "calls",
       "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.resumePendingLocalWork",
-      "target": "src/server/local-store/state-lock.ts#withStateLock",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
       "relation": "calls",
-      "confidence": "inferred"
+      "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.revokeCapability",
@@ -17055,15 +18960,15 @@
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.revokeCapability",
-      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.withMutationLock",
       "relation": "calls",
       "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.revokeCapability",
-      "target": "src/server/local-store/state-lock.ts#withStateLock",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
       "relation": "calls",
-      "confidence": "inferred"
+      "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.revokeConnector",
@@ -17097,15 +19002,15 @@
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.revokeConnector",
-      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.withMutationLock",
       "relation": "calls",
       "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.revokeConnector",
-      "target": "src/server/local-store/state-lock.ts#withStateLock",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
       "relation": "calls",
-      "confidence": "inferred"
+      "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.revokeCredential",
@@ -17127,15 +19032,15 @@
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.revokeCredential",
-      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.withMutationLock",
       "relation": "calls",
       "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.revokeCredential",
-      "target": "src/server/local-store/state-lock.ts#withStateLock",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
       "relation": "calls",
-      "confidence": "inferred"
+      "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.revokeRepository",
@@ -17169,15 +19074,15 @@
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.revokeRepository",
-      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.withMutationLock",
       "relation": "calls",
       "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.revokeRepository",
-      "target": "src/server/local-store/state-lock.ts#withStateLock",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
       "relation": "calls",
-      "confidence": "inferred"
+      "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.runReadOnlySkill",
@@ -17199,15 +19104,15 @@
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.runReadOnlySkill",
-      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.withMutationLock",
       "relation": "calls",
       "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.runReadOnlySkill",
-      "target": "src/server/local-store/state-lock.ts#withStateLock",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
       "relation": "calls",
-      "confidence": "inferred"
+      "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.saveCredential",
@@ -17235,15 +19140,15 @@
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.saveCredential",
-      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.withMutationLock",
       "relation": "calls",
       "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.saveCredential",
-      "target": "src/server/local-store/state-lock.ts#withStateLock",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
       "relation": "calls",
-      "confidence": "inferred"
+      "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.setConnectorOffline",
@@ -17277,12 +19182,18 @@
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.setConnectorOffline",
-      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.withMutationLock",
       "relation": "calls",
       "confidence": "extracted"
     },
     {
       "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.setConnectorOffline",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.write",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.withMutationLock",
       "target": "src/server/local-store/state-lock.ts#withStateLock",
       "relation": "calls",
       "confidence": "inferred"
@@ -17367,6 +19278,12 @@
     },
     {
       "source": "src/server/hosted-persistence/neon-hosted-provider.ts",
+      "target": "src/server/hosted-persistence/neon-hosted-provider.ts#isHostedJsonFixtureMode",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/hosted-persistence/neon-hosted-provider.ts",
       "target": "src/server/hosted-persistence/neon-hosted-provider.ts#isHostedNeonConfigured",
       "relation": "contains",
       "confidence": "extracted"
@@ -17398,6 +19315,12 @@
     {
       "source": "src/server/hosted-persistence/neon-hosted-provider.ts",
       "target": "@neondatabase/serverless",
+      "relation": "imports",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/hosted-persistence/neon-hosted-provider.ts",
+      "target": "node:async_hooks",
       "relation": "imports",
       "confidence": "extracted"
     },
@@ -17463,6 +19386,12 @@
     },
     {
       "source": "src/server/hosted-persistence/neon-hosted-provider.ts#NeonHostedStateProvider",
+      "target": "src/server/hosted-persistence/neon-hosted-provider.ts#NeonHostedStateProvider.withMutationLock",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/hosted-persistence/neon-hosted-provider.ts#NeonHostedStateProvider",
       "target": "src/server/hosted-persistence/neon-hosted-provider.ts#NeonHostedStateProvider.write",
       "relation": "contains",
       "confidence": "extracted"
@@ -17486,8 +19415,26 @@
       "confidence": "extracted"
     },
     {
+      "source": "src/server/hosted-persistence/neon-hosted-provider.ts#NeonHostedStateProvider.withMutationLock",
+      "target": "src/server/hosted-persistence/neon-hosted-provider.ts#NeonHostedStateProvider.ensureSchema",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
       "source": "src/server/hosted-persistence/neon-hosted-provider.ts#NeonHostedStateProvider.write",
       "target": "src/server/hosted-persistence/neon-hosted-provider.ts#NeonHostedStateProvider.ensureSchema",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/hosted-persistence/neon-hosted-provider.ts#NeonHostedStateProvider.write",
+      "target": "src/server/hosted-persistence/neon-hosted-provider.ts#NeonHostedStateProvider.withMutationLock",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/hosted-persistence/neon-hosted-provider.ts#NeonHostedStateProvider.write",
+      "target": "src/server/hosted-persistence/neon-hosted-provider.ts#NeonHostedStateProvider.write",
       "relation": "calls",
       "confidence": "extracted"
     },
@@ -17517,6 +19464,12 @@
     },
     {
       "source": "src/server/hosted-persistence/neon-hosted-provider.ts#NeonHostedWorkspaceStateProvider",
+      "target": "src/server/hosted-persistence/neon-hosted-provider.ts#NeonHostedWorkspaceStateProvider.withMutationLock",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/hosted-persistence/neon-hosted-provider.ts#NeonHostedWorkspaceStateProvider",
       "target": "src/server/hosted-persistence/neon-hosted-provider.ts#NeonHostedWorkspaceStateProvider.write",
       "relation": "contains",
       "confidence": "extracted"
@@ -17540,8 +19493,26 @@
       "confidence": "extracted"
     },
     {
+      "source": "src/server/hosted-persistence/neon-hosted-provider.ts#NeonHostedWorkspaceStateProvider.withMutationLock",
+      "target": "src/server/hosted-persistence/neon-hosted-provider.ts#NeonHostedWorkspaceStateProvider.ensureSchema",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
       "source": "src/server/hosted-persistence/neon-hosted-provider.ts#NeonHostedWorkspaceStateProvider.write",
       "target": "src/server/hosted-persistence/neon-hosted-provider.ts#NeonHostedWorkspaceStateProvider.ensureSchema",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/hosted-persistence/neon-hosted-provider.ts#NeonHostedWorkspaceStateProvider.write",
+      "target": "src/server/hosted-persistence/neon-hosted-provider.ts#NeonHostedWorkspaceStateProvider.withMutationLock",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/hosted-persistence/neon-hosted-provider.ts#NeonHostedWorkspaceStateProvider.write",
+      "target": "src/server/hosted-persistence/neon-hosted-provider.ts#NeonHostedWorkspaceStateProvider.write",
       "relation": "calls",
       "confidence": "extracted"
     },
@@ -17625,6 +19596,18 @@
     },
     {
       "source": "src/server/hosted-workspaces/hosted-workspace-store.ts#createHostedWorkspaceStore",
+      "target": "src/server/hosted-persistence/neon-hosted-provider.ts#isHostedJsonFixtureMode",
+      "relation": "calls",
+      "confidence": "inferred"
+    },
+    {
+      "source": "src/server/hosted-workspaces/hosted-workspace-store.ts#createHostedWorkspaceStore",
+      "target": "src/server/hosted-persistence/neon-hosted-provider.ts#isHostedNeonConfigured",
+      "relation": "calls",
+      "confidence": "inferred"
+    },
+    {
+      "source": "src/server/hosted-workspaces/hosted-workspace-store.ts#createHostedWorkspaceStore",
       "target": "src/server/hosted-persistence/neon-hosted-provider.ts#NeonHostedWorkspaceStateProvider",
       "relation": "references",
       "confidence": "extracted"
@@ -17668,6 +19651,12 @@
     {
       "source": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore",
       "target": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.create",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore",
+      "target": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.ensureDefault",
       "relation": "contains",
       "confidence": "extracted"
     },
@@ -17774,6 +19763,24 @@
       "confidence": "extracted"
     },
     {
+      "source": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.ensureDefault",
+      "target": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.event",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.ensureDefault",
+      "target": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.mutate",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.ensureDefault",
+      "target": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.user",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
       "source": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.list",
       "target": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.read",
       "relation": "calls",
@@ -17793,21 +19800,27 @@
     },
     {
       "source": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.mutate",
+      "target": "src/server/local-store/state-lock.ts#withStateLock",
+      "relation": "calls",
+      "confidence": "inferred"
+    },
+    {
+      "source": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.mutate",
+      "target": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.mutate.mutateState",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.mutate.mutateState",
       "target": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.read",
       "relation": "calls",
       "confidence": "extracted"
     },
     {
-      "source": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.mutate",
+      "source": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.mutate.mutateState",
       "target": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.write",
       "relation": "calls",
       "confidence": "extracted"
-    },
-    {
-      "source": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.mutate",
-      "target": "src/server/local-store/state-lock.ts#withStateLock",
-      "relation": "calls",
-      "confidence": "inferred"
     },
     {
       "source": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.owner",
@@ -17832,12 +19845,6 @@
       "target": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.assertFixtureOnly",
       "relation": "calls",
       "confidence": "extracted"
-    },
-    {
-      "source": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.read",
-      "target": "src/server/local-store/json-file.ts#readJsonFile",
-      "relation": "calls",
-      "confidence": "inferred"
     },
     {
       "source": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.recordIdentity",
@@ -17902,12 +19909,6 @@
     {
       "source": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.write",
       "target": "src/server/local-store/json-file.ts#writeJsonFile",
-      "relation": "calls",
-      "confidence": "inferred"
-    },
-    {
-      "source": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.write",
-      "target": "src/server/local-store/state-lock.ts#withStateLock",
       "relation": "calls",
       "confidence": "inferred"
     },
@@ -18036,12 +20037,6 @@
       "target": "src/server/incoming-signals/incoming-signal-store.ts#IncomingSignalStore.readSignals",
       "relation": "calls",
       "confidence": "extracted"
-    },
-    {
-      "source": "src/server/incoming-signals/incoming-signal-store.ts#IncomingSignalStore.readSignals",
-      "target": "src/server/local-store/json-file.ts#readJsonFile",
-      "relation": "calls",
-      "confidence": "inferred"
     },
     {
       "source": "src/server/incoming-signals/incoming-signal-store.ts#IncomingSignalStore.readSignals",
@@ -18662,6 +20657,24 @@
       "confidence": "extracted"
     },
     {
+      "source": "src/server/integrations/integration-registry.ts",
+      "target": "src/server/integrations/integration-definitions.ts",
+      "relation": "imports",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/integrations/integration-registry.ts",
+      "target": "src/server/integrations/sentry-adapter.ts",
+      "relation": "imports",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/integrations/integration-registry.ts#getIntegrationStatuses",
+      "target": "src/server/integrations/integration-definitions.ts#createDeferredIntegration",
+      "relation": "calls",
+      "confidence": "inferred"
+    },
+    {
       "source": "src/server/integrations/integration-registry.ts#getIntegrationStatuses",
       "target": "src/server/email/email-adapter.ts#LocalEmailAdapter",
       "relation": "references",
@@ -18670,6 +20683,12 @@
     {
       "source": "src/server/integrations/integration-registry.ts#getIntegrationStatuses",
       "target": "src/server/git/local-git-adapter.ts#LocalGitAdapter",
+      "relation": "references",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/integrations/integration-registry.ts#getIntegrationStatuses",
+      "target": "src/server/integrations/sentry-adapter.ts#SentryAdapter",
       "relation": "references",
       "confidence": "extracted"
     },
@@ -19743,12 +21762,6 @@
     },
     {
       "source": "src/server/repo-memory/repo-memory.ts#getRepoMemorySnapshot",
-      "target": "src/server/local-store/json-file.ts#readJsonFile",
-      "relation": "calls",
-      "confidence": "inferred"
-    },
-    {
-      "source": "src/server/repo-memory/repo-memory.ts#getRepoMemorySnapshot",
       "target": "src/server/local-store/paths.ts#initializeLocalStore",
       "relation": "calls",
       "confidence": "inferred"
@@ -20007,12 +22020,6 @@
     },
     {
       "source": "src/server/routines/local-background-executor.ts#createLocalBackgroundExecutor.getState",
-      "target": "src/server/local-store/json-file.ts#readJsonFile",
-      "relation": "calls",
-      "confidence": "inferred"
-    },
-    {
-      "source": "src/server/routines/local-background-executor.ts#createLocalBackgroundExecutor.getState",
       "target": "src/server/local-store/paths.ts#initializeLocalStore",
       "relation": "calls",
       "confidence": "inferred"
@@ -20062,6 +22069,12 @@
     {
       "source": "src/server/routines/local-background-executor.ts#createLocalBackgroundExecutor.resolveContext",
       "target": "src/server/workspace/workspace-store.ts#WorkspaceStore.getContext",
+      "relation": "calls",
+      "confidence": "inferred"
+    },
+    {
+      "source": "src/server/routines/local-background-executor.ts#createLocalBackgroundExecutor.runDue",
+      "target": "src/server/operational/operational-executor.ts#createOperationalExecutor",
       "relation": "calls",
       "confidence": "inferred"
     },
@@ -20340,12 +22353,6 @@
       "target": "src/server/routines/routine-history-store.ts#RoutineHistoryStore.writeHistory",
       "relation": "calls",
       "confidence": "extracted"
-    },
-    {
-      "source": "src/server/routines/routine-history-store.ts#RoutineHistoryStore.readHistory",
-      "target": "src/server/local-store/json-file.ts#readJsonFile",
-      "relation": "calls",
-      "confidence": "inferred"
     },
     {
       "source": "src/server/routines/routine-history-store.ts#RoutineHistoryStore.readHistory",
@@ -21249,12 +23256,6 @@
     },
     {
       "source": "src/server/skill-runs/skill-run-store.ts#SkillRunStore.readIndex",
-      "target": "src/server/local-store/json-file.ts#readJsonFile",
-      "relation": "calls",
-      "confidence": "inferred"
-    },
-    {
-      "source": "src/server/skill-runs/skill-run-store.ts#SkillRunStore.readIndex",
       "target": "src/server/local-store/paths.ts#initializeLocalStore",
       "relation": "calls",
       "confidence": "inferred"
@@ -21753,12 +23754,6 @@
     },
     {
       "source": "src/server/work-items/work-item-store.ts#WorkItemStore.readItems",
-      "target": "src/server/local-store/json-file.ts#readJsonFile",
-      "relation": "calls",
-      "confidence": "inferred"
-    },
-    {
-      "source": "src/server/work-items/work-item-store.ts#WorkItemStore.readItems",
       "target": "src/server/local-store/paths.ts#initializeLocalStore",
       "relation": "calls",
       "confidence": "inferred"
@@ -22170,12 +24165,6 @@
       "target": "src/server/workspace/workspace-store.ts#WorkspaceStore.readWorkspace",
       "relation": "calls",
       "confidence": "extracted"
-    },
-    {
-      "source": "src/server/workspace/workspace-store.ts#WorkspaceStore.readWorkspace",
-      "target": "src/server/local-store/json-file.ts#readJsonFile",
-      "relation": "calls",
-      "confidence": "inferred"
     },
     {
       "source": "src/server/workspace/workspace-store.ts#WorkspaceStore.readWorkspace",
@@ -22971,6 +24960,18 @@
     },
     {
       "source": "tests/api-routes.test.ts",
+      "target": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre.runRoutine",
+      "relation": "calls",
+      "confidence": "inferred"
+    },
+    {
+      "source": "tests/api-routes.test.ts",
+      "target": "src/server/focus-board/focus-board.ts#getFocusBoard",
+      "relation": "calls",
+      "confidence": "inferred"
+    },
+    {
+      "source": "tests/api-routes.test.ts",
       "target": "tests/api-routes.test.ts#body",
       "relation": "calls",
       "confidence": "extracted"
@@ -23282,8 +25283,92 @@
       "confidence": "extracted"
     },
     {
+      "source": "tests/fixtures/neon-fixtures.ts",
+      "target": "tests/fixtures/neon-fixtures.ts#cleanupTestData",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "tests/fixtures/neon-fixtures.ts",
+      "target": "tests/fixtures/neon-fixtures.ts#dumpFixtureData",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "tests/fixtures/neon-fixtures.ts",
+      "target": "tests/fixtures/neon-fixtures.ts#seedTestData",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "tests/fixtures/neon-fixtures.ts",
+      "target": "tests/fixtures/neon-fixtures.ts#TestFixture",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "tests/fixtures/neon-fixtures.ts",
+      "target": "tests/fixtures/neon-fixtures.ts#verifyTenantIsolation",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "tests/fixtures/neon-fixtures.ts",
+      "target": "@/server/adapters/neon-adapter",
+      "relation": "imports",
+      "confidence": "extracted"
+    },
+    {
+      "source": "tests/fixtures/neon-fixtures.ts",
+      "target": "node:crypto",
+      "relation": "imports",
+      "confidence": "extracted"
+    },
+    {
+      "source": "tests/fixtures/neon-fixtures.ts#seedTestData",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.createArtifact",
+      "relation": "calls",
+      "confidence": "inferred"
+    },
+    {
+      "source": "tests/fixtures/neon-fixtures.ts#seedTestData",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.createRepo",
+      "relation": "calls",
+      "confidence": "inferred"
+    },
+    {
+      "source": "tests/fixtures/neon-fixtures.ts#seedTestData",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.createRoutine",
+      "relation": "calls",
+      "confidence": "inferred"
+    },
+    {
+      "source": "tests/fixtures/neon-fixtures.ts#seedTestData",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.createSkill",
+      "relation": "calls",
+      "confidence": "inferred"
+    },
+    {
+      "source": "tests/fixtures/neon-fixtures.ts#seedTestData",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.createWorkItem",
+      "relation": "calls",
+      "confidence": "inferred"
+    },
+    {
+      "source": "tests/fixtures/neon-fixtures.ts#verifyTenantIsolation",
+      "target": "src/server/adapters/neon-adapter.ts#NeonAdapter.listArtifacts",
+      "relation": "calls",
+      "confidence": "inferred"
+    },
+    {
       "source": "tests/focus-board.test.ts",
       "target": "src/server/artifacts/artifact-store.ts#ArtifactStore.createArtifact",
+      "relation": "calls",
+      "confidence": "inferred"
+    },
+    {
+      "source": "tests/focus-board.test.ts",
+      "target": "src/server/focus-board/focus-board.ts#getFocusBoard",
       "relation": "calls",
       "confidence": "inferred"
     },
@@ -23649,6 +25734,18 @@
     },
     {
       "source": "tests/hosted-identity.test.ts",
+      "target": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre.createWorkspace",
+      "relation": "calls",
+      "confidence": "inferred"
+    },
+    {
+      "source": "tests/hosted-identity.test.ts",
+      "target": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre.selectWorkspace",
+      "relation": "calls",
+      "confidence": "inferred"
+    },
+    {
+      "source": "tests/hosted-identity.test.ts",
       "target": "src/server/hosted-auth/auth-adapter.ts#DeterministicAuthAdapter.authenticate",
       "relation": "calls",
       "confidence": "inferred"
@@ -23787,6 +25884,18 @@
     },
     {
       "source": "tests/hosted-persistence.test.ts",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.audit",
+      "relation": "calls",
+      "confidence": "inferred"
+    },
+    {
+      "source": "tests/hosted-persistence.test.ts",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.connectorRequest",
+      "relation": "calls",
+      "confidence": "inferred"
+    },
+    {
+      "source": "tests/hosted-persistence.test.ts",
       "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.createWorkspace",
       "relation": "calls",
       "confidence": "inferred"
@@ -23806,6 +25915,12 @@
     {
       "source": "tests/hosted-persistence.test.ts",
       "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.putRecord",
+      "relation": "calls",
+      "confidence": "inferred"
+    },
+    {
+      "source": "tests/hosted-persistence.test.ts",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedDomainStore.registerConnector",
       "relation": "calls",
       "confidence": "inferred"
     },
@@ -23835,6 +25950,12 @@
     },
     {
       "source": "tests/hosted-persistence.test.ts",
+      "target": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.create",
+      "relation": "calls",
+      "confidence": "inferred"
+    },
+    {
+      "source": "tests/hosted-persistence.test.ts",
       "target": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.list",
       "relation": "calls",
       "confidence": "inferred"
@@ -23848,6 +25969,18 @@
     {
       "source": "tests/hosted-persistence.test.ts",
       "target": "tests/hosted-persistence.test.ts#emptyWorkspaceState",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "tests/hosted-persistence.test.ts",
+      "target": "tests/hosted-persistence.test.ts#TransactionalMemoryDomainProvider.read",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "tests/hosted-persistence.test.ts",
+      "target": "tests/hosted-persistence.test.ts#TransactionalMemoryWorkspaceProvider.read",
       "relation": "calls",
       "confidence": "extracted"
     },
@@ -23872,6 +26005,18 @@
     {
       "source": "tests/hosted-persistence.test.ts",
       "target": "tests/hosted-persistence.test.ts#MemoryWorkspaceProvider",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "tests/hosted-persistence.test.ts",
+      "target": "tests/hosted-persistence.test.ts#TransactionalMemoryDomainProvider",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "tests/hosted-persistence.test.ts",
+      "target": "tests/hosted-persistence.test.ts#TransactionalMemoryWorkspaceProvider",
       "relation": "contains",
       "confidence": "extracted"
     },
@@ -23970,6 +26115,78 @@
       "target": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStateProvider",
       "relation": "implements",
       "confidence": "inferred"
+    },
+    {
+      "source": "tests/hosted-persistence.test.ts#TransactionalMemoryDomainProvider",
+      "target": "tests/hosted-persistence.test.ts#emptyDomainState",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "tests/hosted-persistence.test.ts#TransactionalMemoryDomainProvider",
+      "target": "tests/hosted-persistence.test.ts#TransactionalMemoryDomainProvider.read",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "tests/hosted-persistence.test.ts#TransactionalMemoryDomainProvider",
+      "target": "tests/hosted-persistence.test.ts#TransactionalMemoryDomainProvider.withMutationLock",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "tests/hosted-persistence.test.ts#TransactionalMemoryDomainProvider",
+      "target": "tests/hosted-persistence.test.ts#TransactionalMemoryDomainProvider.write",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "tests/hosted-persistence.test.ts#TransactionalMemoryDomainProvider",
+      "target": "src/server/hosted-domain/hosted-domain-store.ts#HostedStateProvider",
+      "relation": "implements",
+      "confidence": "inferred"
+    },
+    {
+      "source": "tests/hosted-persistence.test.ts#TransactionalMemoryDomainProvider.withMutationLock",
+      "target": "tests/hosted-persistence.test.ts#TransactionalMemoryDomainProvider.withMutationLock.release",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "tests/hosted-persistence.test.ts#TransactionalMemoryWorkspaceProvider",
+      "target": "tests/hosted-persistence.test.ts#emptyWorkspaceState",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "tests/hosted-persistence.test.ts#TransactionalMemoryWorkspaceProvider",
+      "target": "tests/hosted-persistence.test.ts#TransactionalMemoryWorkspaceProvider.read",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "tests/hosted-persistence.test.ts#TransactionalMemoryWorkspaceProvider",
+      "target": "tests/hosted-persistence.test.ts#TransactionalMemoryWorkspaceProvider.withMutationLock",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "tests/hosted-persistence.test.ts#TransactionalMemoryWorkspaceProvider",
+      "target": "tests/hosted-persistence.test.ts#TransactionalMemoryWorkspaceProvider.write",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "tests/hosted-persistence.test.ts#TransactionalMemoryWorkspaceProvider",
+      "target": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStateProvider",
+      "relation": "implements",
+      "confidence": "inferred"
+    },
+    {
+      "source": "tests/hosted-persistence.test.ts#TransactionalMemoryWorkspaceProvider.withMutationLock",
+      "target": "tests/hosted-persistence.test.ts#TransactionalMemoryWorkspaceProvider.withMutationLock.release",
+      "relation": "contains",
+      "confidence": "extracted"
     },
     {
       "source": "tests/hosted-personal-os.test.ts",
