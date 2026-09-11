@@ -54,7 +54,7 @@ export class ClerkAuthAdapter implements AuthAdapter {
     const identity = await auth();
     if (!identity.userId) throw new AuthError("UNAUTHENTICATED");
     if (!identity.orgId) throw new AuthError("UNAUTHENTICATED", "Select an organization before opening the hosted application.");
-    return { userId: identity.userId, tenantId: identity.orgId, displayName: identity.userId };
+    return { userId: identity.userId, tenantId: identity.orgId, displayName: identity.userId, orgRole: identity.orgRole ?? null };
   }
 }
 

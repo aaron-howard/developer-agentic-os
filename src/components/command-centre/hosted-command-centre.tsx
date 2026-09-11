@@ -1,14 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { BriefcaseBusiness, CheckCircle2, ClipboardList, Layers3, Plus, RefreshCw, Sparkles, Workflow } from "lucide-react";
+import { BriefcaseBusiness, CheckCircle2, ClipboardList, GitBranch, Layers3, Plus, RefreshCw, Sparkles, Workflow } from "lucide-react";
 
 import type { SkillCommand } from "@/types/skill";
 import type { HostedWorkspace } from "@/types/hosted-workspace";
 import type { WorkItemPriority, WorkItemStatus } from "@/types/work-item";
 import { AuthControls } from "./auth-controls";
 
-type HostedView = "focus" | "queue" | "skills" | "routines" | "workspaces";
+type HostedView = "focus" | "queue" | "skills" | "routines" | "workspaces" | "github";
 
 type HostedWorkItem = {
   id: string;
@@ -31,6 +31,7 @@ const views: Array<{ id: HostedView; label: string; icon: typeof CheckCircle2 }>
   { id: "skills", label: "Skills", icon: Sparkles },
   { id: "routines", label: "Routines", icon: Workflow },
   { id: "workspaces", label: "Workspaces", icon: Layers3 },
+  { id: "github", label: "GitHub", icon: GitBranch },
 ];
 
 const hostedRoutines = [
@@ -60,6 +61,14 @@ export function HostedCommandCentre({ fixtureMode = false }: { fixtureMode?: boo
   const [error, setError] = useState<string | null>(null);
   const [capturingWorkItem, setCapturingWorkItem] = useState(false);
   const [creatingWorkspace, setCreatingWorkspace] = useState(false);
+  const [githubConnected, setGithubConnected] = useState(false);
+  const [githubRepos, setGithubRepos] = useState<Array<{ fullName: string; private: boolean; htmlUrl: string; updatedAt: string | null }>>([]);
+  const [githubLoading, setGithubLoading] = useState(false);
+  const [githubError, setGithubError] = useState<string | null>(null);
+  const [githubOrgStatus, setGithubOrgStatus] = useState<{ requiredOrg: string | null; orgVerified: boolean | null; orgVerificationReason: string | null }>({ requiredOrg: null, orgVerified: null, orgVerificationReason: null });
+  const [githubOrgInput, setGithubOrgInput] = useState("");
+  const [githubOrgCanEdit, setGithubOrgCanEdit] = useState(false);
+  const [savingGithubOrg, setSavingGithubOrg] = useState(false);
   const capturingWorkItemRef = useRef(false);
   const creatingWorkspaceRef = useRef(false);
   const selectionSequence = useRef(0);
@@ -99,6 +108,43 @@ export function HostedCommandCentre({ fixtureMode = false }: { fixtureMode?: boo
   }, [fetchRecords]);
 
   useEffect(() => { void load(); }, [load]);
+
+  const loadGitHubRepos = useCallback(async () => {
+    setGithubLoading(true);
+    setGithubError(null);
+    try {
+      const [reposResult, linkResult, settingsResult] = await Promise.all([
+        fetch("/api/hosted/github/repos").then((response) => responseJson<{ connected: boolean; repos: typeof githubRepos }>(response)),
+        fetch("/api/hosted/auth/github-link").then((response) => responseJson<{ requiredOrg: string | null; orgVerified: boolean | null; orgVerificationReason: string | null }>(response)),
+        fetch("/api/hosted/settings/github-org").then((response) => responseJson<{ githubOrg: string | null; canEdit: boolean }>(response)),
+      ]);
+      setGithubConnected(reposResult.connected);
+      setGithubRepos(reposResult.repos);
+      setGithubOrgStatus(linkResult);
+      setGithubOrgInput(settingsResult.githubOrg ?? "");
+      setGithubOrgCanEdit(settingsResult.canEdit);
+    } catch (reposError) {
+      setGithubError(reposError instanceof Error ? reposError.message : "GitHub repositories could not be loaded.");
+    } finally {
+      setGithubLoading(false);
+    }
+  }, []);
+
+  const saveGitHubOrg = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setSavingGithubOrg(true);
+    try {
+      await fetch("/api/hosted/settings/github-org", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ githubOrg: githubOrgInput }) }).then((response) => responseJson(response));
+      await loadGitHubRepos();
+      setStatus("GitHub org updated.");
+    } catch (saveError) {
+      setStatus(saveError instanceof Error ? saveError.message : "GitHub org could not be saved.");
+    } finally {
+      setSavingGithubOrg(false);
+    }
+  };
+
+  useEffect(() => { if (view === "github") void loadGitHubRepos(); }, [view, loadGitHubRepos]);
 
   const captureWorkItem = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -268,6 +314,47 @@ export function HostedCommandCentre({ fixtureMode = false }: { fixtureMode?: boo
                 <h2>New workspace</h2>
                 <label>Name<input required value={workspaceName} onChange={(event) => setWorkspaceName(event.target.value)} /></label>
                 <button className="hosted-primary" type="submit" disabled={creatingWorkspace}><Plus size={15} aria-hidden="true" /> {creatingWorkspace ? "Creating..." : "Create workspace"}</button>
+              </form>
+            </section>
+          ) : null}
+
+          {view === "github" ? (
+            <section className="hosted-view">
+              <ViewHeading title="GitHub" detail={githubLoading ? "Loading..." : `${githubRepos.length} repositories`} />
+              {githubError ? <EmptyState text={githubError} /> : null}
+              {!githubLoading && !githubError && !githubConnected ? <EmptyState text="Connect your GitHub account (button next to your avatar) to see your repositories here." /> : null}
+              {!githubLoading && !githubError && githubConnected && githubOrgStatus.requiredOrg ? (
+                <p className="hosted-status" role="status">
+                  {githubOrgStatus.orgVerified
+                    ? `Verified as an active member of the ${githubOrgStatus.requiredOrg} GitHub org.`
+                    : `Not verified as a member of the ${githubOrgStatus.requiredOrg} GitHub org (${githubOrgStatus.orgVerificationReason ?? "unknown reason"}).`}
+                </p>
+              ) : null}
+              {!githubLoading && !githubError && githubConnected && !githubRepos.length ? <EmptyState text="No repositories were found for your linked GitHub account." /> : null}
+              <div className="hosted-list">
+                {githubRepos.map((repo) => (
+                  <a className="hosted-row" href={repo.htmlUrl} key={repo.fullName} rel="noreferrer" target="_blank">
+                    <div><strong>{repo.fullName}</strong></div>
+                    <span className="hosted-tag">{repo.private ? "private" : "public"}</span>
+                  </a>
+                ))}
+              </div>
+              <form className="hosted-capture" onSubmit={(event) => void saveGitHubOrg(event)}>
+                <h2>GitHub org entitlement (ADR 0002)</h2>
+                <label>
+                  Required GitHub org slug
+                  <input
+                    disabled={!githubOrgCanEdit}
+                    placeholder="e.g. acme-corp"
+                    value={githubOrgInput}
+                    onChange={(event) => setGithubOrgInput(event.target.value)}
+                  />
+                </label>
+                {githubOrgCanEdit ? (
+                  <button className="hosted-primary" type="submit" disabled={savingGithubOrg}>{savingGithubOrg ? "Saving..." : "Save"}</button>
+                ) : (
+                  <p className="tiny">Only an organization admin can change this setting.</p>
+                )}
               </form>
             </section>
           ) : null}

@@ -2,6 +2,7 @@ export type HostedIdentity = {
   userId: string;
   tenantId: string;
   displayName: string;
+  orgRole?: string | null;
 };
 
 export type HostedWorkspace = {
@@ -11,7 +12,7 @@ export type HostedWorkspace = {
   createdAt: string;
 };
 
-export type HostedAuditAction = "identity.authenticated" | "workspace.created" | "workspace.listed" | "workspace.selected";
+export type HostedAuditAction = "identity.authenticated" | "workspace.created" | "workspace.listed" | "workspace.selected" | "settings.updated";
 
 export type HostedAuditEvent = {
   id: string;

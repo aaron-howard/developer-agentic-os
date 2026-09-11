@@ -14,6 +14,7 @@ type HostedUserState = {
 export type HostedWorkspaceState = {
   users: Record<string, HostedUserState>;
   audit: HostedAuditEvent[];
+  settings?: { githubOrg: string | null };
 };
 
 export interface HostedWorkspaceStateProvider { read(): Promise<HostedWorkspaceState>; write(state: HostedWorkspaceState): Promise<void>; withMutationLock?<T>(operation: () => Promise<T>): Promise<T>; }
@@ -102,6 +103,19 @@ export class HostedWorkspaceStore {
     await this.mutate((state) => {
       this.user(state, identity.userId);
       state.audit.push(this.event("identity.authenticated", identity.userId));
+    });
+  }
+
+  // Tenant-scoped (the whole state blob is per-tenant), so this is the same GitHub org for every member.
+  async getGitHubOrg(): Promise<string | null> {
+    const state = await this.read();
+    return state.settings?.githubOrg ?? null;
+  }
+
+  async setGitHubOrg(userId: string, githubOrg: string | null): Promise<void> {
+    await this.mutate((state) => {
+      state.settings = { githubOrg: githubOrg?.trim() || null };
+      state.audit.push(this.event("settings.updated", userId));
     });
   }
 

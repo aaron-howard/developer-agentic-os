@@ -1,8 +1,8 @@
 {
   "meta": {
     "version": 1,
-    "nodeCount": 901,
-    "edgeCount": 2478,
+    "nodeCount": 925,
+    "edgeCount": 2523,
     "languages": [
       "javascript",
       "tsx",
@@ -581,6 +581,35 @@
       "crux": null
     },
     {
+      "id": "src/app/api/hosted/auth/github-link/route.ts",
+      "name": "route.ts",
+      "kind": "file",
+      "path": "src/app/api/hosted/auth/github-link/route.ts",
+      "span": "L1-L23",
+      "signature": null,
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "e4ebbae95c9883cc238d66068e2464512cd15efc0d326fdf0d18952894bebbbb",
+      "chars": 1024,
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/app/api/hosted/auth/github-link/route.ts#GET",
+      "name": "GET",
+      "kind": "function",
+      "path": "src/app/api/hosted/auth/github-link/route.ts",
+      "span": "L6-L22",
+      "signature": "async function GET(request: Request)",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "04dd97dabc13aad5b0b8beaf79c6087fae324a68df76be3296dde1db15129363",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
       "id": "src/app/api/hosted/auth/session/route.ts",
       "name": "route.ts",
       "kind": "file",
@@ -732,6 +761,78 @@
       "exported": false,
       "origin": "ast",
       "body_hash": "b7f650480cbaf207efa488da4dd12bb822f9d68621573c88efd9d22cb89782ae",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/app/api/hosted/github/repos/route.ts",
+      "name": "route.ts",
+      "kind": "file",
+      "path": "src/app/api/hosted/github/repos/route.ts",
+      "span": "L1-L13",
+      "signature": null,
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "0fcbf4274eb1229c6dfea7bdafa6fc06ffda484febf04c8c378c1c0930bf35a9",
+      "chars": 434,
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/app/api/hosted/github/repos/route.ts#GET",
+      "name": "GET",
+      "kind": "function",
+      "path": "src/app/api/hosted/github/repos/route.ts",
+      "span": "L6-L12",
+      "signature": "async function GET(request: Request)",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "ef6db7d3dcf99cea6e7ae8a11d61b2898c0c6a7c03fbe02ca3513c2f23fec254",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/app/api/hosted/settings/github-org/route.ts",
+      "name": "route.ts",
+      "kind": "file",
+      "path": "src/app/api/hosted/settings/github-org/route.ts",
+      "span": "L1-L22",
+      "signature": null,
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "3a10e9d6f8f44c45dd865a653bd909a495f020eb9272c79fef2b89ba327355f9",
+      "chars": 1067,
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/app/api/hosted/settings/github-org/route.ts#GET",
+      "name": "GET",
+      "kind": "function",
+      "path": "src/app/api/hosted/settings/github-org/route.ts",
+      "span": "L5-L10",
+      "signature": "async function GET(request: Request)",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "af4434d0cc811ee9a235e538b5b083db76838dc6c2553d9a04c4eda11e930f53",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/app/api/hosted/settings/github-org/route.ts#POST",
+      "name": "POST",
+      "kind": "function",
+      "path": "src/app/api/hosted/settings/github-org/route.ts",
+      "span": "L12-L21",
+      "signature": "async function POST(request: Request)",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "26066d2d17acca14b819f313a62770b2c08c7d94042aac8b43847298dc73f3c1",
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -2064,16 +2165,45 @@
       "crux": null
     },
     {
+      "id": "src/app/sso-callback/page.tsx",
+      "name": "page.tsx",
+      "kind": "file",
+      "path": "src/app/sso-callback/page.tsx",
+      "span": "L1-L8",
+      "signature": null,
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "e5a4d911fc1e86eb581744c7dee0cde22a2699bc5acf5592aecf70d318dede83",
+      "chars": 236,
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/app/sso-callback/page.tsx#SsoCallbackPage",
+      "name": "SsoCallbackPage",
+      "kind": "function",
+      "path": "src/app/sso-callback/page.tsx",
+      "span": "L5-L7",
+      "signature": "function SsoCallbackPage()",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "85335bade036d988ab134714b466ab7976b4e4a4ee084cd11f73107c58a4fcdf",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
       "id": "src/components/command-centre/auth-controls.tsx",
       "name": "auth-controls.tsx",
       "kind": "file",
       "path": "src/components/command-centre/auth-controls.tsx",
-      "span": "L1-L38",
+      "span": "L1-L66",
       "signature": null,
       "exported": true,
       "origin": "ast",
-      "body_hash": "cda26d3b467007efdff7363556e8043392feefe59edc85c6e7201e975cd64f07",
-      "chars": 1490,
+      "body_hash": "fb7953e01f60e8b61d6baa0890206abb3e38d57e42b0f12d59f2c7fa7481a0ab",
+      "chars": 2546,
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -2083,11 +2213,39 @@
       "name": "AuthControls",
       "kind": "function",
       "path": "src/components/command-centre/auth-controls.tsx",
-      "span": "L18-L37",
+      "span": "L45-L65",
       "signature": "function AuthControls()",
       "exported": true,
       "origin": "ast",
-      "body_hash": "001bc16a6782cdcc3c5ba8a8911fbc23b5f2498450656db70b4a085456046122",
+      "body_hash": "e8a5486d1935f751309b3841e7f1afcbe84ea5990d6b6c3c093b099231363f83",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/components/command-centre/auth-controls.tsx#ConnectGitHubButton",
+      "name": "ConnectGitHubButton",
+      "kind": "function",
+      "path": "src/components/command-centre/auth-controls.tsx",
+      "span": "L19-L43",
+      "signature": "function ConnectGitHubButton()",
+      "exported": false,
+      "origin": "ast",
+      "body_hash": "3175d4285d92d6228388972849456b459f92125a67a5fec1f25dcbe11605b365",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/components/command-centre/auth-controls.tsx#ConnectGitHubButton.connect",
+      "name": "connect",
+      "kind": "function",
+      "path": "src/components/command-centre/auth-controls.tsx",
+      "span": "L26-L36",
+      "signature": "connect = async ()",
+      "exported": false,
+      "origin": "ast",
+      "body_hash": "129ebc48b5b78d4ceb188721aa560915476bb344f166e55f898fb46eba259948",
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -2097,7 +2255,7 @@
       "name": "CreateOrganizationButton",
       "kind": "function",
       "path": "src/components/command-centre/auth-controls.tsx",
-      "span": "L5-L16",
+      "span": "L6-L17",
       "signature": "function CreateOrganizationButton()",
       "exported": false,
       "origin": "ast",
@@ -2462,12 +2620,12 @@
       "name": "hosted-command-centre.tsx",
       "kind": "file",
       "path": "src/components/command-centre/hosted-command-centre.tsx",
-      "span": "L1-L294",
+      "span": "L1-L381",
       "signature": null,
       "exported": true,
       "origin": "ast",
-      "body_hash": "31dccfe541706c88136d3c96d4d8c4fd638f63eb67772a670f9cf7f3f8b17b16",
-      "chars": 15054,
+      "body_hash": "5f35691db53b11ef45899e4b5a51e62916672b7192c06f749d34287270290701",
+      "chars": 20291,
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -2477,7 +2635,7 @@
       "name": "EmptyState",
       "kind": "function",
       "path": "src/components/command-centre/hosted-command-centre.tsx",
-      "span": "L288-L290",
+      "span": "L375-L377",
       "signature": "function EmptyState({ text }: { text: string })",
       "exported": false,
       "origin": "ast",
@@ -2491,11 +2649,11 @@
       "name": "HostedCommandCentre",
       "kind": "function",
       "path": "src/components/command-centre/hosted-command-centre.tsx",
-      "span": "L47-L278",
+      "span": "L48-L365",
       "signature": "function HostedCommandCentre({ fixtureMode = false }: { fixtureMode?: boolean })",
       "exported": true,
       "origin": "ast",
-      "body_hash": "483051e4e44b911c6174f694952ce6eb1c787d1ed6b4df4ab5a1db35a4dba3a4",
+      "body_hash": "1de7f4700ce7840357cd3963065954caf8c7c1afefcd1d3787ed8c8778729019",
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -2505,7 +2663,7 @@
       "name": "captureWorkItem",
       "kind": "function",
       "path": "src/components/command-centre/hosted-command-centre.tsx",
-      "span": "L103-L126",
+      "span": "L149-L172",
       "signature": "captureWorkItem = async (event: React.FormEvent<HTMLFormElement>)",
       "exported": true,
       "origin": "ast",
@@ -2519,7 +2677,7 @@
       "name": "createWorkspace",
       "kind": "function",
       "path": "src/components/command-centre/hosted-command-centre.tsx",
-      "span": "L148-L164",
+      "span": "L194-L210",
       "signature": "createWorkspace = async (event: React.FormEvent<HTMLFormElement>)",
       "exported": true,
       "origin": "ast",
@@ -2533,7 +2691,7 @@
       "name": "runRoutine",
       "kind": "function",
       "path": "src/components/command-centre/hosted-command-centre.tsx",
-      "span": "L166-L176",
+      "span": "L212-L222",
       "signature": "runRoutine = async (routine: typeof hostedRoutines[number])",
       "exported": true,
       "origin": "ast",
@@ -2543,11 +2701,25 @@
       "crux": null
     },
     {
+      "id": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre.saveGitHubOrg",
+      "name": "saveGitHubOrg",
+      "kind": "function",
+      "path": "src/components/command-centre/hosted-command-centre.tsx",
+      "span": "L133-L145",
+      "signature": "saveGitHubOrg = async (event: React.FormEvent<HTMLFormElement>)",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "b1b1c287c8163ce1433375699ea20700312c7a3b763246699509d8f7fb175468",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
       "id": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre.selectWorkspace",
       "name": "selectWorkspace",
       "kind": "function",
       "path": "src/components/command-centre/hosted-command-centre.tsx",
-      "span": "L128-L146",
+      "span": "L174-L192",
       "signature": "selectWorkspace = async (workspace: HostedWorkspace)",
       "exported": true,
       "origin": "ast",
@@ -2576,10 +2748,10 @@
       "kind": "type",
       "path": "src/components/command-centre/hosted-command-centre.tsx",
       "span": "L11-L11",
-      "signature": "type HostedView = \"focus\" | \"queue\" | \"skills\" | \"routines\" | \"workspaces\";",
+      "signature": "type HostedView = \"focus\" | \"queue\" | \"skills\" | \"routines\" | \"workspaces\" | \"github\";",
       "exported": false,
       "origin": "ast",
-      "body_hash": "e3b027d7409bf9bbeb563483141fdcfe3f3c171a53a5e931a4eb338c3a3193a8",
+      "body_hash": "27995827de12c2ce09e7e6440fad6e38fd66062cb062b94d2a7fc405cb3b05ac",
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -2603,7 +2775,7 @@
       "name": "priorityRank",
       "kind": "function",
       "path": "src/components/command-centre/hosted-command-centre.tsx",
-      "span": "L292-L294",
+      "span": "L379-L381",
       "signature": "function priorityRank(priority: WorkItemPriority): number",
       "exported": false,
       "origin": "ast",
@@ -2617,7 +2789,7 @@
       "name": "responseJson",
       "kind": "function",
       "path": "src/components/command-centre/hosted-command-centre.tsx",
-      "span": "L41-L45",
+      "span": "L42-L46",
       "signature": "async function responseJson<T>(response: Response): Promise<T>",
       "exported": false,
       "origin": "ast",
@@ -2631,7 +2803,7 @@
       "name": "ViewHeading",
       "kind": "function",
       "path": "src/components/command-centre/hosted-command-centre.tsx",
-      "span": "L280-L282",
+      "span": "L367-L369",
       "signature": "function ViewHeading({ title, detail }: { title: string; detail: string })",
       "exported": false,
       "origin": "ast",
@@ -2645,7 +2817,7 @@
       "name": "WorkItemRow",
       "kind": "function",
       "path": "src/components/command-centre/hosted-command-centre.tsx",
-      "span": "L284-L286",
+      "span": "L371-L373",
       "signature": "function WorkItemRow({ item }: { item: HostedWorkItem })",
       "exported": false,
       "origin": "ast",
@@ -3841,8 +4013,8 @@
       "signature": null,
       "exported": true,
       "origin": "ast",
-      "body_hash": "afba2c30183ac2237a990dcf05734a74da82e972a2f580ed986e0e345476f408",
-      "chars": 3124,
+      "body_hash": "b8ce61679d79d97f229ca4c9dcfd542a4b15572aca8a2fc583056777ec7af2a7",
+      "chars": 3159,
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -3913,7 +4085,7 @@
       "signature": "class ClerkAuthAdapter implements AuthAdapter",
       "exported": true,
       "origin": "ast",
-      "body_hash": "68577ad015826f8a3eb227d419230a0d57a30271c516c6691b382fa88c42d468",
+      "body_hash": "1878df8483d599bef350dc9ecb0efa1367339f8a4fd9db9b5662f6d81db336a5",
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -3927,7 +4099,7 @@
       "signature": "async authenticate(request: Request): Promise<HostedIdentity>",
       "exported": true,
       "origin": "ast",
-      "body_hash": "610f69cef39c5bc9995eda30a3fa47d5be3cd12a5de7f71ac18d125dbff3dd3d",
+      "body_hash": "eeb6bb7c2b650e00e97ec08cb3ae42c130463904b8bc40279bf27e81cc621e7f",
       "summary_state": "pending",
       "summary": null,
       "crux": null,
@@ -4063,6 +4235,147 @@
       "summary": null,
       "crux": null,
       "owner": "UnconfiguredHostedTokenVerifier"
+    },
+    {
+      "id": "src/server/hosted-auth/github-link.ts",
+      "name": "github-link.ts",
+      "kind": "file",
+      "path": "src/server/hosted-auth/github-link.ts",
+      "span": "L1-L64",
+      "signature": null,
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "0cc5cfc29e215d0515f525b736c5135a91e77df33340e83d097e7aa6fe6bbe6f",
+      "chars": 3386,
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/server/hosted-auth/github-link.ts#getGitHubAccessToken",
+      "name": "getGitHubAccessToken",
+      "kind": "function",
+      "path": "src/server/hosted-auth/github-link.ts",
+      "span": "L16-L20",
+      "signature": "async function getGitHubAccessToken(userId: string): Promise<string | null>",
+      "exported": false,
+      "origin": "ast",
+      "body_hash": "9b43985cd218951c207dfc8bd82fd6637c5adfe38fa465bdf8a8e32ddc6569f0",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/server/hosted-auth/github-link.ts#getGitHubLinkStatus",
+      "name": "getGitHubLinkStatus",
+      "kind": "function",
+      "path": "src/server/hosted-auth/github-link.ts",
+      "span": "L8-L14",
+      "signature": "async function getGitHubLinkStatus(userId: string): Promise<GitHubLinkStatus>",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "46da466cdf672e14da518d0ff4491cfb96e1233ab1984f1516056e88329de3d5",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/server/hosted-auth/github-link.ts#GitHubLinkStatus",
+      "name": "GitHubLinkStatus",
+      "kind": "type",
+      "path": "src/server/hosted-auth/github-link.ts",
+      "span": "L3-L6",
+      "signature": "type GitHubLinkStatus = { connected: boolean; username: string | null; };",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "f24e05d462fc329acc4b2bab8cbce03cd9c8cce91e37addf2ab343ef6698a839",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/server/hosted-auth/github-link.ts#GitHubOrgMembership",
+      "name": "GitHubOrgMembership",
+      "kind": "type",
+      "path": "src/server/hosted-auth/github-link.ts",
+      "span": "L47-L47",
+      "signature": "type GitHubOrgMembership = { verified: boolean; reason: GitHubOrgMembershipReason | null };",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "727a9c984dd1c79e4a71751dd8ee99fe47f5e0566465a58007855d4c92d49f9d",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/server/hosted-auth/github-link.ts#GitHubOrgMembershipReason",
+      "name": "GitHubOrgMembershipReason",
+      "kind": "type",
+      "path": "src/server/hosted-auth/github-link.ts",
+      "span": "L46-L46",
+      "signature": "type GitHubOrgMembershipReason = \"no_token\" | \"not_a_member\" | \"api_error\";",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "36b545d696c3caeff8d6bf9e0bc93d73a3eafc839659d8126d4dad2361143896",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/server/hosted-auth/github-link.ts#GitHubRepoList",
+      "name": "GitHubRepoList",
+      "kind": "type",
+      "path": "src/server/hosted-auth/github-link.ts",
+      "span": "L29-L29",
+      "signature": "type GitHubRepoList = { connected: boolean; repos: GitHubRepoSummary[] };",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "ba7171f1be855300d035c480c8adaec8f6691253d086b975361c9b066e6e927a",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/server/hosted-auth/github-link.ts#GitHubRepoSummary",
+      "name": "GitHubRepoSummary",
+      "kind": "type",
+      "path": "src/server/hosted-auth/github-link.ts",
+      "span": "L22-L27",
+      "signature": "type GitHubRepoSummary = { fullName: string; private: boolean; htmlUrl: string; updatedAt: string | null; };",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "f40d19d7edb3ed7d3dc904914470cfd15a5c7020f2386c1ea262e718316d4bf2",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/server/hosted-auth/github-link.ts#listGitHubRepos",
+      "name": "listGitHubRepos",
+      "kind": "function",
+      "path": "src/server/hosted-auth/github-link.ts",
+      "span": "L32-L44",
+      "signature": "async function listGitHubRepos(userId: string): Promise<GitHubRepoList>",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "e535893ffd6e7a4bf577ecd80f44242673e2e7466febb8d3b64262ea6d1ee930",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
+    },
+    {
+      "id": "src/server/hosted-auth/github-link.ts#verifyGitHubOrgMembership",
+      "name": "verifyGitHubOrgMembership",
+      "kind": "function",
+      "path": "src/server/hosted-auth/github-link.ts",
+      "span": "L50-L63",
+      "signature": "async function verifyGitHubOrgMembership(userId: string, org: string): Promise<GitHubOrgMembership>",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "6393c8bdd3d491068c73e309afa968e15364b838165be17fedfe7087a4dedc80",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null
     },
     {
       "id": "src/server/hosted-domain/hosted-domain-store.ts",
@@ -5817,12 +6130,12 @@
       "name": "hosted-workspace-store.ts",
       "kind": "file",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L1-L173",
+      "span": "L1-L187",
       "signature": null,
       "exported": true,
       "origin": "ast",
-      "body_hash": "c051e5f40554646402fee811ccf5ff9d77082874ae792b25381a269564c6865f",
-      "chars": 7528,
+      "body_hash": "4626b0167d65289c46cbf520a79cf0f2c9886775c0f2821f3b7449f3af93c0fd",
+      "chars": 8085,
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -5846,7 +6159,7 @@
       "name": "HostedWorkspaceError",
       "kind": "class",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L21-L26",
+      "span": "L22-L27",
       "signature": "class HostedWorkspaceError extends Error",
       "exported": true,
       "origin": "ast",
@@ -5860,7 +6173,7 @@
       "name": "constructor",
       "kind": "method",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L22-L25",
+      "span": "L23-L26",
       "signature": "constructor(readonly code: \"INVALID_NAME\" | \"NOT_FOUND\", message: string)",
       "exported": true,
       "origin": "ast",
@@ -5875,11 +6188,11 @@
       "name": "HostedWorkspaceState",
       "kind": "type",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L14-L17",
-      "signature": "type HostedWorkspaceState = { users: Record<string, HostedUserState>; audit: HostedAuditEvent[]; };",
+      "span": "L14-L18",
+      "signature": "type HostedWorkspaceState = { users: Record<string, HostedUserState>; audit: HostedAuditEvent[]; settings?: { githubOrg: string | null }; };",
       "exported": true,
       "origin": "ast",
-      "body_hash": "3dfd6e39a89080de029642278ddf7fc31c61fce59b3e17fe2d8c2d80c0e0959b",
+      "body_hash": "fda5ba1f9b643e1c435ee3d9ad023c39bc9c435bc0ceba1daf94eb797b2461bd",
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -5889,7 +6202,7 @@
       "name": "HostedWorkspaceStateProvider",
       "kind": "interface",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L19-L19",
+      "span": "L20-L20",
       "signature": "interface HostedWorkspaceStateProvider",
       "exported": true,
       "origin": "ast",
@@ -5903,11 +6216,11 @@
       "name": "HostedWorkspaceStore",
       "kind": "class",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L28-L155",
+      "span": "L29-L169",
       "signature": "class HostedWorkspaceStore",
       "exported": true,
       "origin": "ast",
-      "body_hash": "38befbcc417cd971b1d781d68bb534f9d3215b721523aed871a3d7814e51858e",
+      "body_hash": "29167ca2a4abb1bfd38b5a25db5bf3f48d6aea1a3c194d0c98d05effdb1000db",
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -5917,7 +6230,7 @@
       "name": "active",
       "kind": "method",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L82-L86",
+      "span": "L83-L87",
       "signature": "async active(userId: string): Promise<HostedWorkspace | null>",
       "exported": true,
       "origin": "ast",
@@ -5932,7 +6245,7 @@
       "name": "assertFixtureOnly",
       "kind": "method",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L152-L154",
+      "span": "L166-L168",
       "signature": "private assertFixtureOnly(): void",
       "exported": true,
       "origin": "ast",
@@ -5947,7 +6260,7 @@
       "name": "audit",
       "kind": "method",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L115-L118",
+      "span": "L129-L132",
       "signature": "async audit(userId: string): Promise<HostedAuditEvent[]>",
       "exported": true,
       "origin": "ast",
@@ -5962,7 +6275,7 @@
       "name": "constructor",
       "kind": "method",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L32-L35",
+      "span": "L33-L36",
       "signature": "constructor(root = process.cwd(), private readonly provider?: HostedWorkspaceStateProvider)",
       "exported": true,
       "origin": "ast",
@@ -5977,7 +6290,7 @@
       "name": "create",
       "kind": "method",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L42-L53",
+      "span": "L43-L54",
       "signature": "async create(userId: string, name: string): Promise<HostedWorkspace>",
       "exported": true,
       "origin": "ast",
@@ -5992,7 +6305,7 @@
       "name": "ensureDefault",
       "kind": "method",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L55-L70",
+      "span": "L56-L71",
       "signature": "async ensureDefault(userId: string): Promise<HostedWorkspace>",
       "exported": true,
       "origin": "ast",
@@ -6007,7 +6320,7 @@
       "name": "event",
       "kind": "method",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L124-L126",
+      "span": "L138-L140",
       "signature": "private event(action: HostedAuditEvent[\"action\"], userId: string, workspaceId?: string): HostedAuditEvent",
       "exported": true,
       "origin": "ast",
@@ -6018,11 +6331,26 @@
       "owner": "HostedWorkspaceStore"
     },
     {
+      "id": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.getGitHubOrg",
+      "name": "getGitHubOrg",
+      "kind": "method",
+      "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
+      "span": "L110-L113",
+      "signature": "async getGitHubOrg(): Promise<string | null>",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "606d629b1ca0624a1976d213ed45da1ae2e6281d0a988d131c78c7d4ce207675",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null,
+      "owner": "HostedWorkspaceStore"
+    },
+    {
       "id": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.list",
       "name": "list",
       "kind": "method",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L37-L40",
+      "span": "L38-L41",
       "signature": "async list(userId: string): Promise<HostedWorkspace[]>",
       "exported": true,
       "origin": "ast",
@@ -6037,7 +6365,7 @@
       "name": "mutate",
       "kind": "method",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L140-L150",
+      "span": "L154-L164",
       "signature": "private async mutate<T>(operation: (state: HostedWorkspaceState) => T | Promise<T>): Promise<T>",
       "exported": true,
       "origin": "ast",
@@ -6052,7 +6380,7 @@
       "name": "mutateState",
       "kind": "function",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L142-L147",
+      "span": "L156-L161",
       "signature": "mutateState = async ()",
       "exported": true,
       "origin": "ast",
@@ -6066,7 +6394,7 @@
       "name": "owner",
       "kind": "method",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L93-L99",
+      "span": "L94-L100",
       "signature": "async owner(workspaceId: string): Promise<string>",
       "exported": true,
       "origin": "ast",
@@ -6081,7 +6409,7 @@
       "name": "owns",
       "kind": "method",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L88-L91",
+      "span": "L89-L92",
       "signature": "async owns(userId: string, workspaceId: string): Promise<boolean>",
       "exported": true,
       "origin": "ast",
@@ -6096,7 +6424,7 @@
       "name": "read",
       "kind": "method",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L128-L132",
+      "span": "L142-L146",
       "signature": "private read(): Promise<HostedWorkspaceState>",
       "exported": true,
       "origin": "ast",
@@ -6111,7 +6439,7 @@
       "name": "recordIdentity",
       "kind": "method",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L101-L106",
+      "span": "L102-L107",
       "signature": "async recordIdentity(identity: HostedIdentity): Promise<void>",
       "exported": true,
       "origin": "ast",
@@ -6126,7 +6454,7 @@
       "name": "recordList",
       "kind": "method",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L108-L113",
+      "span": "L122-L127",
       "signature": "async recordList(userId: string): Promise<void>",
       "exported": true,
       "origin": "ast",
@@ -6141,7 +6469,7 @@
       "name": "select",
       "kind": "method",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L72-L80",
+      "span": "L73-L81",
       "signature": "async select(userId: string, workspaceId: string): Promise<HostedWorkspace>",
       "exported": true,
       "origin": "ast",
@@ -6152,11 +6480,26 @@
       "owner": "HostedWorkspaceStore"
     },
     {
+      "id": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.setGitHubOrg",
+      "name": "setGitHubOrg",
+      "kind": "method",
+      "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
+      "span": "L115-L120",
+      "signature": "async setGitHubOrg(userId: string, githubOrg: string | null): Promise<void>",
+      "exported": true,
+      "origin": "ast",
+      "body_hash": "6b4ade96ab40d4be2f0b921e11d24c42669996a127053e6f0e73f4c49bd9cbd1",
+      "summary_state": "pending",
+      "summary": null,
+      "crux": null,
+      "owner": "HostedWorkspaceStore"
+    },
+    {
       "id": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.user",
       "name": "user",
       "kind": "method",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L120-L122",
+      "span": "L134-L136",
       "signature": "private user(state: HostedWorkspaceState, userId: string): HostedUserState",
       "exported": true,
       "origin": "ast",
@@ -6171,7 +6514,7 @@
       "name": "write",
       "kind": "method",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L134-L138",
+      "span": "L148-L152",
       "signature": "private write(state: HostedWorkspaceState): Promise<void>",
       "exported": true,
       "origin": "ast",
@@ -6186,7 +6529,7 @@
       "name": "hostedWorkspaceStoreForTenant",
       "kind": "function",
       "path": "src/server/hosted-workspaces/hosted-workspace-store.ts",
-      "span": "L159-L171",
+      "span": "L173-L185",
       "signature": "function hostedWorkspaceStoreForTenant(tenantId: string): HostedWorkspaceStore",
       "exported": true,
       "origin": "ast",
@@ -10905,12 +11248,12 @@
       "name": "hosted-workspace.ts",
       "kind": "file",
       "path": "src/types/hosted-workspace.ts",
-      "span": "L1-L22",
+      "span": "L1-L23",
       "signature": null,
       "exported": true,
       "origin": "ast",
-      "body_hash": "dd6df186e96e075fbc4868d863b38ac5a184896d1f3fa177a3e8b7f567750182",
-      "chars": 490,
+      "body_hash": "1e2bdb4b18632acdf0d29f46e65d0d27a087a4096e785acd6fcb66baaec373df",
+      "chars": 539,
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -10920,11 +11263,11 @@
       "name": "HostedAuditAction",
       "kind": "type",
       "path": "src/types/hosted-workspace.ts",
-      "span": "L14-L14",
-      "signature": "type HostedAuditAction = \"identity.authenticated\" | \"workspace.created\" | \"workspace.listed\" | \"workspace.selected\";",
+      "span": "L15-L15",
+      "signature": "type HostedAuditAction = \"identity.authenticated\" | \"workspace.created\" | \"workspace.listed\" | \"workspace.selected\" | \"settings.updated\";",
       "exported": true,
       "origin": "ast",
-      "body_hash": "3bb531ef4d787b22b223817fc710dd778487ff0236a9fbfbb669d485e6e994d6",
+      "body_hash": "0ba09e67924b2673061e8bfdae1e14eac58d811b160246f5d6f7aa3257af05aa",
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -10934,7 +11277,7 @@
       "name": "HostedAuditEvent",
       "kind": "type",
       "path": "src/types/hosted-workspace.ts",
-      "span": "L16-L22",
+      "span": "L17-L23",
       "signature": "type HostedAuditEvent = { id: string; action: HostedAuditAction; userId: string; workspaceId?: string; occurredAt: string; };",
       "exported": true,
       "origin": "ast",
@@ -10948,11 +11291,11 @@
       "name": "HostedIdentity",
       "kind": "type",
       "path": "src/types/hosted-workspace.ts",
-      "span": "L1-L5",
-      "signature": "type HostedIdentity = { userId: string; tenantId: string; displayName: string; };",
+      "span": "L1-L6",
+      "signature": "type HostedIdentity = { userId: string; tenantId: string; displayName: string; orgRole?: string | null; };",
       "exported": true,
       "origin": "ast",
-      "body_hash": "f0f4d2a45278f9666af8bc2e6c0326dd824bd662210d4f17159de6ff8a1143ab",
+      "body_hash": "1bf2ca68350c302cba61cd0496549f6b71812c1d1eda457041a7691a76d36ea5",
       "summary_state": "pending",
       "summary": null,
       "crux": null
@@ -10962,7 +11305,7 @@
       "name": "HostedWorkspace",
       "kind": "type",
       "path": "src/types/hosted-workspace.ts",
-      "span": "L7-L12",
+      "span": "L8-L13",
       "signature": "type HostedWorkspace = { id: string; ownerId: string; name: string; createdAt: string; };",
       "exported": true,
       "origin": "ast",
@@ -13731,6 +14074,48 @@
       "confidence": "inferred"
     },
     {
+      "source": "src/app/api/hosted/auth/github-link/route.ts",
+      "target": "src/app/api/hosted/auth/github-link/route.ts#GET",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/app/api/hosted/auth/github-link/route.ts",
+      "target": "@/app/api/hosted/_shared",
+      "relation": "imports",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/app/api/hosted/auth/github-link/route.ts",
+      "target": "@/server/hosted-auth/github-link",
+      "relation": "imports",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/app/api/hosted/auth/github-link/route.ts",
+      "target": "next/server",
+      "relation": "imports",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/app/api/hosted/auth/github-link/route.ts#GET",
+      "target": "src/app/api/hosted/_shared.ts#hostedIdentity",
+      "relation": "calls",
+      "confidence": "inferred"
+    },
+    {
+      "source": "src/app/api/hosted/auth/github-link/route.ts#GET",
+      "target": "src/server/hosted-auth/github-link.ts#getGitHubLinkStatus",
+      "relation": "calls",
+      "confidence": "inferred"
+    },
+    {
+      "source": "src/app/api/hosted/auth/github-link/route.ts#GET",
+      "target": "src/server/hosted-auth/github-link.ts#verifyGitHubOrgMembership",
+      "relation": "calls",
+      "confidence": "inferred"
+    },
+    {
       "source": "src/app/api/hosted/auth/session/route.ts",
       "target": "src/app/api/hosted/auth/session/route.ts#GET",
       "relation": "contains",
@@ -13891,6 +14276,78 @@
       "target": "src/app/api/hosted/domain/route.ts#requiredString",
       "relation": "calls",
       "confidence": "extracted"
+    },
+    {
+      "source": "src/app/api/hosted/github/repos/route.ts",
+      "target": "src/app/api/hosted/github/repos/route.ts#GET",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/app/api/hosted/github/repos/route.ts",
+      "target": "@/app/api/hosted/_shared",
+      "relation": "imports",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/app/api/hosted/github/repos/route.ts",
+      "target": "@/server/hosted-auth/github-link",
+      "relation": "imports",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/app/api/hosted/github/repos/route.ts",
+      "target": "next/server",
+      "relation": "imports",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/app/api/hosted/github/repos/route.ts#GET",
+      "target": "src/app/api/hosted/_shared.ts#hostedIdentity",
+      "relation": "calls",
+      "confidence": "inferred"
+    },
+    {
+      "source": "src/app/api/hosted/github/repos/route.ts#GET",
+      "target": "src/server/hosted-auth/github-link.ts#listGitHubRepos",
+      "relation": "calls",
+      "confidence": "inferred"
+    },
+    {
+      "source": "src/app/api/hosted/settings/github-org/route.ts",
+      "target": "src/app/api/hosted/settings/github-org/route.ts#GET",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/app/api/hosted/settings/github-org/route.ts",
+      "target": "src/app/api/hosted/settings/github-org/route.ts#POST",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/app/api/hosted/settings/github-org/route.ts",
+      "target": "@/app/api/hosted/_shared",
+      "relation": "imports",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/app/api/hosted/settings/github-org/route.ts",
+      "target": "next/server",
+      "relation": "imports",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/app/api/hosted/settings/github-org/route.ts#GET",
+      "target": "src/app/api/hosted/_shared.ts#hostedIdentity",
+      "relation": "calls",
+      "confidence": "inferred"
+    },
+    {
+      "source": "src/app/api/hosted/settings/github-org/route.ts#POST",
+      "target": "src/app/api/hosted/_shared.ts#hostedIdentity",
+      "relation": "calls",
+      "confidence": "inferred"
     },
     {
       "source": "src/app/api/hosted/workspaces/[id]/select/route.ts",
@@ -15843,8 +16300,26 @@
       "confidence": "extracted"
     },
     {
+      "source": "src/app/sso-callback/page.tsx",
+      "target": "src/app/sso-callback/page.tsx#SsoCallbackPage",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/app/sso-callback/page.tsx",
+      "target": "@clerk/nextjs",
+      "relation": "imports",
+      "confidence": "extracted"
+    },
+    {
       "source": "src/components/command-centre/auth-controls.tsx",
       "target": "src/components/command-centre/auth-controls.tsx#AuthControls",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/components/command-centre/auth-controls.tsx",
+      "target": "src/components/command-centre/auth-controls.tsx#ConnectGitHubButton",
       "relation": "contains",
       "confidence": "extracted"
     },
@@ -15858,6 +16333,24 @@
       "source": "src/components/command-centre/auth-controls.tsx",
       "target": "@clerk/nextjs",
       "relation": "imports",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/components/command-centre/auth-controls.tsx",
+      "target": "react",
+      "relation": "imports",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/components/command-centre/auth-controls.tsx#ConnectGitHubButton",
+      "target": "src/components/command-centre/auth-controls.tsx#ConnectGitHubButton.connect",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/components/command-centre/auth-controls.tsx#ConnectGitHubButton",
+      "target": "src/components/command-centre/auth-controls.tsx#ConnectGitHubButton.connect",
+      "relation": "contains",
       "confidence": "extracted"
     },
     {
@@ -16300,6 +16793,12 @@
     },
     {
       "source": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre",
+      "target": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre.saveGitHubOrg",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre",
       "target": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre.selectWorkspace",
       "relation": "calls",
       "confidence": "extracted"
@@ -16336,6 +16835,12 @@
     },
     {
       "source": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre",
+      "target": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre.saveGitHubOrg",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre",
       "target": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre.selectWorkspace",
       "relation": "contains",
       "confidence": "extracted"
@@ -16360,6 +16865,12 @@
     },
     {
       "source": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre.runRoutine",
+      "target": "src/components/command-centre/hosted-command-centre.tsx#responseJson",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/components/command-centre/hosted-command-centre.tsx#HostedCommandCentre.saveGitHubOrg",
       "target": "src/components/command-centre/hosted-command-centre.tsx#responseJson",
       "relation": "calls",
       "confidence": "extracted"
@@ -17658,6 +18169,78 @@
       "source": "src/server/hosted-auth/auth-adapter.ts#UnconfiguredHostedTokenVerifier",
       "target": "src/server/hosted-auth/auth-adapter.ts#HostedTokenVerifier",
       "relation": "implements",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/hosted-auth/github-link.ts",
+      "target": "src/server/hosted-auth/github-link.ts#getGitHubAccessToken",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/hosted-auth/github-link.ts",
+      "target": "src/server/hosted-auth/github-link.ts#getGitHubLinkStatus",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/hosted-auth/github-link.ts",
+      "target": "src/server/hosted-auth/github-link.ts#GitHubLinkStatus",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/hosted-auth/github-link.ts",
+      "target": "src/server/hosted-auth/github-link.ts#GitHubOrgMembership",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/hosted-auth/github-link.ts",
+      "target": "src/server/hosted-auth/github-link.ts#GitHubOrgMembershipReason",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/hosted-auth/github-link.ts",
+      "target": "src/server/hosted-auth/github-link.ts#GitHubRepoList",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/hosted-auth/github-link.ts",
+      "target": "src/server/hosted-auth/github-link.ts#GitHubRepoSummary",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/hosted-auth/github-link.ts",
+      "target": "src/server/hosted-auth/github-link.ts#listGitHubRepos",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/hosted-auth/github-link.ts",
+      "target": "src/server/hosted-auth/github-link.ts#verifyGitHubOrgMembership",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/hosted-auth/github-link.ts",
+      "target": "@clerk/nextjs/server",
+      "relation": "imports",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/hosted-auth/github-link.ts#listGitHubRepos",
+      "target": "src/server/hosted-auth/github-link.ts#getGitHubAccessToken",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/hosted-auth/github-link.ts#verifyGitHubOrgMembership",
+      "target": "src/server/hosted-auth/github-link.ts#getGitHubAccessToken",
+      "relation": "calls",
       "confidence": "extracted"
     },
     {
@@ -19810,6 +20393,12 @@
     },
     {
       "source": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore",
+      "target": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.getGitHubOrg",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore",
       "target": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.list",
       "relation": "contains",
       "confidence": "extracted"
@@ -19853,6 +20442,12 @@
     {
       "source": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore",
       "target": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.select",
+      "relation": "contains",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore",
+      "target": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.setGitHubOrg",
       "relation": "contains",
       "confidence": "extracted"
     },
@@ -19919,6 +20514,12 @@
     {
       "source": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.ensureDefault",
       "target": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.user",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.getGitHubOrg",
+      "target": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.read",
       "relation": "calls",
       "confidence": "extracted"
     },
@@ -20039,6 +20640,18 @@
     {
       "source": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.select",
       "target": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.user",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.setGitHubOrg",
+      "target": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.event",
+      "relation": "calls",
+      "confidence": "extracted"
+    },
+    {
+      "source": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.setGitHubOrg",
+      "target": "src/server/hosted-workspaces/hosted-workspace-store.ts#HostedWorkspaceStore.mutate",
       "relation": "calls",
       "confidence": "extracted"
     },

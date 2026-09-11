@@ -8,7 +8,8 @@ export async function GET(request: Request) {
   if (identity instanceof NextResponse) return identity;
 
   const link = await getGitHubLinkStatus(identity.userId);
-  const requiredOrg = process.env.GITHUB_ORG?.trim() || null;
+  // Tenant setting takes priority; GITHUB_ORG env var is a deployment-wide fallback for single-tenant setups.
+  const requiredOrg = (await identity.workspaceStore.getGitHubOrg()) || process.env.GITHUB_ORG?.trim() || null;
   const membership = link.connected && requiredOrg ? await verifyGitHubOrgMembership(identity.userId, requiredOrg) : null;
 
   return NextResponse.json({
