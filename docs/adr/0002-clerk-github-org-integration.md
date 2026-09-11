@@ -1,6 +1,6 @@
 # ADR 0002: Clerk + GitHub Org Integration for Multi-Tenant Identity
 
-**Status**: Proposed
+**Status**: Accepted
 
 **Date**: 2026-09-09
 
