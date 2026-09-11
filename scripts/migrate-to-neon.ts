@@ -15,7 +15,7 @@
  */
 
 import { Pool, PoolClient } from "pg";
-import { readdir, readFile } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { randomUUID } from "node:crypto";
 

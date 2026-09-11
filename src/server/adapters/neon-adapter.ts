@@ -9,7 +9,7 @@
  *   const artifacts = await adapter.listArtifacts();
  */
 
-import { Pool, PoolClient, QueryResult } from "pg";
+import { Pool, PoolClient } from "pg";
 import { randomUUID } from "node:crypto";
 
 export interface NeonAdapterConfig {

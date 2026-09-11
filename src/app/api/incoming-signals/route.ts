@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { IncomingSignalError, IncomingSignalStore } from "@/server/incoming-signals/incoming-signal-store";
+import { IncomingSignalError } from "@/server/incoming-signals/incoming-signal-store";
 import { repositoryContextForRequest } from "@/server/workspace/request-context";
 import { createWorkspaceContext } from "@/server/workspace/workspace-context";
 import { WorkspaceError } from "@/server/workspace/workspace-store";

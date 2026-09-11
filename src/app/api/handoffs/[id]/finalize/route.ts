@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { HandoffError, HandoffStore } from "@/server/handoffs/handoff-store";
+import { HandoffError } from "@/server/handoffs/handoff-store";
 import { repositoryContextForRequest } from "@/server/workspace/request-context";
 import { createWorkspaceContext } from "@/server/workspace/workspace-context";
 import { WorkspaceError } from "@/server/workspace/workspace-store";

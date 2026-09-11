@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 
-import { ArtifactStore } from "@/server/artifacts/artifact-store";
 import { repositoryContextForRequest } from "@/server/workspace/request-context";
 import { createWorkspaceContext } from "@/server/workspace/workspace-context";
 import { WorkspaceError } from "@/server/workspace/workspace-store";

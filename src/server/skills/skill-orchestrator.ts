@@ -1,7 +1,7 @@
 import { ArtifactStore } from "../artifacts/artifact-store";
 import { SkillRunStore } from "../skill-runs/skill-run-store";
 import type { WorkflowReference } from "@/types/artifact";
-import type { SkillCommand, SkillHandlerResult, SkillRunResult } from "@/types/skill";
+import type { SkillCommand, SkillRunResult } from "@/types/skill";
 import { contextFromRoot } from "../workspace/repository-context";
 import type { SkillHandler } from "./skill-handlers";
 
