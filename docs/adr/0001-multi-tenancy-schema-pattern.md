@@ -1,14 +1,22 @@
 # ADR 0001: Multi-Tenancy Schema Pattern
 
-**Status**: Proposed
+**Status**: Accepted and Implemented
 
 **Date**: 2026-09-09
+**Last Updated**: 2026-09-12
+
+## Status Update
+
+This pattern is now implemented in the hosted product. The Neon migration creates tenant-scoped tables in `migrations/001-init.sql`, tenant filtering is enforced in `src/server/adapters/neon-adapter.ts`, and hosted state storage uses a composite `(tenant_id, state_key)` key in `src/server/hosted-persistence/neon-hosted-provider.ts`.
+
+The application now treats each Clerk organization as a tenant, each table as tenant-scoped, and all reads/writes as constrained to the authenticated org's `tenant_id`.
 
 ## Context
 
 Developer Agentic OS v2 is transitioning from local-first single-tenant (JSON files in `.developer-agentic-os/`) to a multi-tenant SaaS model on Vercel + Neon.
 
 Key constraints:
+
 - Multiple organizations (tenants) run independently on shared infrastructure
 - Each organization has its own repository context, artifacts, work items, skills, and routines
 - Row-level data isolation is required (not table-per-tenant, not separate databases)
@@ -34,11 +42,11 @@ We will use **row-level tenant ID isolation** as the multi-tenancy pattern:
 
 ## Why Row-Level Over Alternatives
 
-| Pattern | Pros | Cons |
-|---------|------|------|
-| **Row-level** | Single schema, dynamic scaling, fast migrations, audit trail | Requires query discipline, risk of filter bypass |
-| **Table-per-tenant** | Trivial isolation, no filter risk | Schema explosion, hard to query across tenants, migration nightmare |
-| **DB-per-tenant** | Strongest isolation | Operational overhead, cost, complexity, migrations per tenant |
+| Pattern              | Pros                                                         | Cons                                                                |
+| -------------------- | ------------------------------------------------------------ | ------------------------------------------------------------------- |
+| **Row-level**        | Single schema, dynamic scaling, fast migrations, audit trail | Requires query discipline, risk of filter bypass                    |
+| **Table-per-tenant** | Trivial isolation, no filter risk                            | Schema explosion, hard to query across tenants, migration nightmare |
+| **DB-per-tenant**    | Strongest isolation                                          | Operational overhead, cost, complexity, migrations per tenant       |
 
 Row-level is the SaaS standard for good reasons: it scales, it's maintainable, and it leverages database constraints properly.
 
@@ -87,12 +95,12 @@ CREATE TABLE work_items (
 
 ## Risks & Mitigations
 
-| Risk | Mitigation |
-|------|-----------|
-| Developer forgets to filter by `tenant_id` in a query | Use ORM middleware + peer review + SQL linting |
-| Accidental cross-tenant data leak | Automated tests with multi-tenant fixtures; audit logging |
-| Performance: filtering adds latency | Index `tenant_id` on all tables; use composite keys |
-| Schema migration complexity | Migrations are standard; no per-tenant overhead |
+| Risk                                                  | Mitigation                                                |
+| ----------------------------------------------------- | --------------------------------------------------------- |
+| Developer forgets to filter by `tenant_id` in a query | Use ORM middleware + peer review + SQL linting            |
+| Accidental cross-tenant data leak                     | Automated tests with multi-tenant fixtures; audit logging |
+| Performance: filtering adds latency                   | Index `tenant_id` on all tables; use composite keys       |
+| Schema migration complexity                           | Migrations are standard; no per-tenant overhead           |
 
 ## Related Decisions
 
@@ -100,14 +108,13 @@ CREATE TABLE work_items (
 - **ADR 0003**: Per-tenant Vercel deployments → `tenant_id` maps to a Vercel project ID
 - **ADR 0004**: Webhook routing → webhook events routed to correct `tenant_id`
 
-## Open Questions
+## Current Status and Resolved Questions
 
-1. Should GitHub data (issues, PRs) be cached in Neon with `tenant_id`, or fetched on-demand from GitHub API?
-   - *Current lean*: Cache metadata with `tenant_id` for fast queries; GitHub is source of truth for content
-2. Should cross-tenant relationships be allowed (e.g., can an artifact reference a file from another org's repo)?
-   - *Current lean*: No; each org is isolated. Can revisit if cross-org workflows emerge.
-3. How do we audit data access across tenants for security?
-   - *Deferred*: Add audit logging in a later ADR if compliance requires it
+1. GitHub data is cached in Neon with `tenant_id` and GitHub remains the source of truth for repo content.
+   - This is the implemented pattern used for repos, issues, pull requests, and related metadata.
+2. Cross-tenant relationships remain disallowed.
+   - Each org is isolated by `tenant_id`; the system is designed to reject access outside the current tenant.
+3. Audit logging is still a future enhancement if compliance requirements or security review demand it.
 
 ## References
 

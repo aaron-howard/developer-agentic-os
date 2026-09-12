@@ -9,13 +9,16 @@ export async function GET(request: Request) {
 
   const link = await getGitHubLinkStatus(identity.userId);
   const requiredOrg = process.env.GITHUB_ORG?.trim() || null;
-  const membership = link.connected && requiredOrg ? await verifyGitHubOrgMembership(identity.userId, requiredOrg) : null;
+  const membership =
+    link.connected && requiredOrg
+      ? await verifyGitHubOrgMembership(identity.userId, requiredOrg)
+      : null;
 
   return NextResponse.json({
     connected: link.connected,
     username: link.username,
     requiredOrg,
-    orgVerified: requiredOrg ? membership?.verified ?? false : null,
+    orgVerified: requiredOrg ? (membership?.verified ?? false) : null,
     orgVerificationReason: membership?.reason ?? null,
   });
 }

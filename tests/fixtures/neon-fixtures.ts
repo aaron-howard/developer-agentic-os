@@ -1,9 +1,9 @@
 /**
  * Neon Test Fixtures
- * 
+ *
  * Provides sample data for testing multi-tenant isolation and adapter functionality.
  * Use these fixtures in unit tests and integration tests.
- * 
+ *
  * Usage:
  *   import { seedTestData } from "@/test/fixtures/neon-fixtures";
  *   const { tenantId, adapter } = await seedTestData();
@@ -41,10 +41,11 @@ export async function seedTestData(): Promise<TestFixture> {
   // Create test tenant
   const client = await (adapter as any).getClient();
   try {
-    await client.query(
-      "INSERT INTO organizations (id, name, clerk_org_id) VALUES ($1, $2, $3)",
-      [tenantId, "Test Org", `test-${randomUUID()}`]
-    );
+    await client.query("INSERT INTO organizations (id, name, clerk_org_id) VALUES ($1, $2, $3)", [
+      tenantId,
+      "Test Org",
+      `test-${randomUUID()}`,
+    ]);
   } finally {
     client.release();
   }
@@ -167,10 +168,7 @@ export async function seedTestData(): Promise<TestFixture> {
  * Clean up test data from a tenant.
  * Deletes all tables associated with a tenant.
  */
-export async function cleanupTestData(
-  adapter: NeonAdapter,
-  tenantId: string
-): Promise<void> {
+export async function cleanupTestData(adapter: NeonAdapter, tenantId: string): Promise<void> {
   const client = await (adapter as any).getClient();
   try {
     // Delete in reverse order of foreign key dependencies
@@ -201,22 +199,22 @@ export async function cleanupTestData(
 
 /**
  * Example test using fixtures.
- * 
+ *
  * Usage in jest:
  *   import { seedTestData, cleanupTestData } from "@/test/fixtures/neon-fixtures";
- *   
+ *
  *   describe("NeonAdapter", () => {
  *     let fixture: TestFixture;
- *     
+ *
  *     beforeAll(async () => {
  *       fixture = await seedTestData();
  *     });
- *     
+ *
  *     afterAll(async () => {
  *       await cleanupTestData(fixture.adapter, fixture.tenantId);
  *       await fixture.adapter.close();
  *     });
- *     
+ *
  *     test("should list artifacts for tenant", async () => {
  *       const artifacts = await fixture.adapter.listArtifacts();
  *       expect(artifacts).toHaveLength(fixture.artifacts.length);
@@ -266,7 +264,9 @@ export async function dumpFixtureData(fixture: TestFixture): Promise<void> {
   fixture.routines.forEach((r) => console.log(`  - ${(r as any).name}`));
 
   console.log("\nRepos:");
-  fixture.repos.forEach((r) => console.log(`  - ${(r as any).github_owner}/${(r as any).github_repo}`));
+  fixture.repos.forEach((r) =>
+    console.log(`  - ${(r as any).github_owner}/${(r as any).github_repo}`)
+  );
 
   console.log("======================\n");
 }

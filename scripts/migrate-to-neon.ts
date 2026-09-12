@@ -2,20 +2,20 @@
 
 /**
  * Migration Script: JSON → Neon PostgreSQL
- * 
+ *
  * Reads existing state from .developer-agentic-os/ JSON files and loads into Neon.
  * Creates a single test tenant to contain all migrated data.
- * 
+ *
  * Usage:
  *   npx tsx scripts/migrate-to-neon.ts
- * 
+ *
  * Environment variables required:
  *   - DATABASE_URL: Neon PostgreSQL connection string
  *   - CLERK_ORG_ID: Test org ID (creates organizations table entry)
  */
 
 import { Pool, PoolClient } from "pg";
-import { readdir, readFile } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { randomUUID } from "node:crypto";
 
@@ -58,10 +58,9 @@ async function createOrGetTenant(client: PoolClient): Promise<string> {
   console.log("Creating or retrieving test tenant...");
 
   // Check if tenant exists
-  const existing = await client.query(
-    "SELECT id FROM organizations WHERE clerk_org_id = $1",
-    [CLERK_ORG_ID]
-  );
+  const existing = await client.query("SELECT id FROM organizations WHERE clerk_org_id = $1", [
+    CLERK_ORG_ID,
+  ]);
 
   if (existing.rows.length > 0) {
     console.log(`✓ Tenant already exists: ${existing.rows[0].id}`);
@@ -70,16 +69,21 @@ async function createOrGetTenant(client: PoolClient): Promise<string> {
 
   // Create new tenant
   const tenantId = randomUUID();
-  await client.query(
-    "INSERT INTO organizations (id, name, clerk_org_id) VALUES ($1, $2, $3)",
-    [tenantId, "Test Organization", CLERK_ORG_ID]
-  );
+  await client.query("INSERT INTO organizations (id, name, clerk_org_id) VALUES ($1, $2, $3)", [
+    tenantId,
+    "Test Organization",
+    CLERK_ORG_ID,
+  ]);
 
   console.log(`✓ Created new tenant: ${tenantId}`);
   return tenantId;
 }
 
-async function migrateArtifacts(client: PoolClient, tenantId: string, data: unknown[]): Promise<void> {
+async function migrateArtifacts(
+  client: PoolClient,
+  tenantId: string,
+  data: unknown[]
+): Promise<void> {
   if (!Array.isArray(data) || data.length === 0) {
     console.log("  No artifacts to migrate");
     return;
@@ -114,7 +118,11 @@ async function migrateArtifacts(client: PoolClient, tenantId: string, data: unkn
   console.log(`✓ Migrated ${data.length} artifacts`);
 }
 
-async function migrateWorkItems(client: PoolClient, tenantId: string, data: unknown[]): Promise<void> {
+async function migrateWorkItems(
+  client: PoolClient,
+  tenantId: string,
+  data: unknown[]
+): Promise<void> {
   if (!Array.isArray(data) || data.length === 0) {
     console.log("  No work items to migrate");
     return;
@@ -185,7 +193,11 @@ async function migrateSkills(client: PoolClient, tenantId: string, data: unknown
   console.log(`✓ Migrated ${data.length} skills`);
 }
 
-async function migrateRoutines(client: PoolClient, tenantId: string, data: unknown[]): Promise<void> {
+async function migrateRoutines(
+  client: PoolClient,
+  tenantId: string,
+  data: unknown[]
+): Promise<void> {
   if (!Array.isArray(data) || data.length === 0) {
     console.log("  No routines to migrate");
     return;
@@ -305,9 +317,13 @@ async function main() {
 
     // Verify schema exists
     console.log("Verifying schema...");
-    const schemaCheck = await client.query("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' LIMIT 1");
+    const schemaCheck = await client.query(
+      "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' LIMIT 1"
+    );
     if (schemaCheck.rows.length === 0) {
-      console.error("ERROR: Schema not found in Neon. Run migrations first: psql $DATABASE_URL < migrations/001-init.sql");
+      console.error(
+        "ERROR: Schema not found in Neon. Run migrations first: psql $DATABASE_URL < migrations/001-init.sql"
+      );
       process.exit(1);
     }
     console.log("✓ Schema exists\n");

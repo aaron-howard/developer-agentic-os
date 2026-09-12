@@ -1,20 +1,41 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { EncryptedProtectedSecretStore, hostedDatabaseUrl } from "../src/server/hosted-persistence/neon-hosted-provider";
-import type { HostedState, HostedStateProvider } from "../src/server/hosted-domain/hosted-domain-store";
+import {
+  EncryptedProtectedSecretStore,
+  hostedDatabaseUrl,
+} from "../src/server/hosted-persistence/neon-hosted-provider";
+import type {
+  HostedState,
+  HostedStateProvider,
+} from "../src/server/hosted-domain/hosted-domain-store";
 import { HostedDomainStore } from "../src/server/hosted-domain/hosted-domain-store";
 import { RejectingHostedObjectStore } from "../src/server/hosted-domain/hosted-object-store";
-import type { HostedWorkspaceState, HostedWorkspaceStateProvider } from "../src/server/hosted-workspaces/hosted-workspace-store";
+import type {
+  HostedWorkspaceState,
+  HostedWorkspaceStateProvider,
+} from "../src/server/hosted-workspaces/hosted-workspace-store";
 import { HostedWorkspaceStore } from "../src/server/hosted-workspaces/hosted-workspace-store";
 
-const emptyDomainState = (): HostedState => ({ repositories: {}, records: {}, relationships: {}, snapshots: {}, connectors: [], credentials: [], audit: [] });
+const emptyDomainState = (): HostedState => ({
+  repositories: {},
+  records: {},
+  relationships: {},
+  snapshots: {},
+  connectors: [],
+  credentials: [],
+  audit: [],
+});
 const emptyWorkspaceState = (): HostedWorkspaceState => ({ users: {}, audit: [] });
 
 class MemoryDomainProvider implements HostedStateProvider {
   constructor(private state: HostedState) {}
-  async read(): Promise<HostedState> { return structuredClone(this.state); }
-  async write(state: HostedState): Promise<void> { this.state = structuredClone(state); }
+  async read(): Promise<HostedState> {
+    return structuredClone(this.state);
+  }
+  async write(state: HostedState): Promise<void> {
+    this.state = structuredClone(state);
+  }
 }
 
 class TransactionalMemoryDomainProvider implements HostedStateProvider {
@@ -28,30 +49,45 @@ class TransactionalMemoryDomainProvider implements HostedStateProvider {
   async read(): Promise<HostedState> {
     if (!this.inTransaction && this.synchronizeUnlockedReads) {
       this.readsWaiting += 1;
-      if (this.readsWaiting === 1) await new Promise<void>((resolve) => { this.releaseReads = resolve; });
+      if (this.readsWaiting === 1)
+        await new Promise<void>((resolve) => {
+          this.releaseReads = resolve;
+        });
       else this.releaseReads?.();
     }
     return structuredClone(this.state);
   }
 
-  async write(state: HostedState): Promise<void> { this.state = structuredClone(state); }
+  async write(state: HostedState): Promise<void> {
+    this.state = structuredClone(state);
+  }
 
   async withMutationLock<T>(operation: () => Promise<T>): Promise<T> {
     this.synchronizeUnlockedReads = false;
     const previous = this.transaction;
     let release: () => void = () => undefined;
-    this.transaction = new Promise<void>((resolve) => { release = resolve; });
+    this.transaction = new Promise<void>((resolve) => {
+      release = resolve;
+    });
     await previous;
     this.inTransaction = true;
-    try { return await operation(); }
-    finally { this.inTransaction = false; release(); }
+    try {
+      return await operation();
+    } finally {
+      this.inTransaction = false;
+      release();
+    }
   }
 }
 
 class MemoryWorkspaceProvider implements HostedWorkspaceStateProvider {
   constructor(private state: HostedWorkspaceState) {}
-  async read(): Promise<HostedWorkspaceState> { return structuredClone(this.state); }
-  async write(state: HostedWorkspaceState): Promise<void> { this.state = structuredClone(state); }
+  async read(): Promise<HostedWorkspaceState> {
+    return structuredClone(this.state);
+  }
+  async write(state: HostedWorkspaceState): Promise<void> {
+    this.state = structuredClone(state);
+  }
 }
 
 class TransactionalMemoryWorkspaceProvider implements HostedWorkspaceStateProvider {
@@ -65,23 +101,34 @@ class TransactionalMemoryWorkspaceProvider implements HostedWorkspaceStateProvid
   async read(): Promise<HostedWorkspaceState> {
     if (!this.inTransaction && this.synchronizeUnlockedReads) {
       this.readsWaiting += 1;
-      if (this.readsWaiting === 1) await new Promise<void>((resolve) => { this.releaseReads = resolve; });
+      if (this.readsWaiting === 1)
+        await new Promise<void>((resolve) => {
+          this.releaseReads = resolve;
+        });
       else this.releaseReads?.();
     }
     return structuredClone(this.state);
   }
 
-  async write(state: HostedWorkspaceState): Promise<void> { this.state = structuredClone(state); }
+  async write(state: HostedWorkspaceState): Promise<void> {
+    this.state = structuredClone(state);
+  }
 
   async withMutationLock<T>(operation: () => Promise<T>): Promise<T> {
     this.synchronizeUnlockedReads = false;
     const previous = this.transaction;
     let release: () => void = () => undefined;
-    this.transaction = new Promise<void>((resolve) => { release = resolve; });
+    this.transaction = new Promise<void>((resolve) => {
+      release = resolve;
+    });
     await previous;
     this.inTransaction = true;
-    try { return await operation(); }
-    finally { this.inTransaction = false; release(); }
+    try {
+      return await operation();
+    } finally {
+      this.inTransaction = false;
+      release();
+    }
   }
 }
 
@@ -89,13 +136,26 @@ test("hosted stores persist through injected deterministic providers", async () 
   const workspaceProvider = new MemoryWorkspaceProvider(emptyWorkspaceState());
   const domainProvider = new MemoryDomainProvider(emptyDomainState());
   const workspaceStore = new HostedWorkspaceStore(process.cwd(), workspaceProvider);
-  const domainStore = new HostedDomainStore(process.cwd(), workspaceStore, domainProvider, undefined, undefined, { put: async () => "test-secret-reference" });
+  const domainStore = new HostedDomainStore(
+    process.cwd(),
+    workspaceStore,
+    domainProvider,
+    undefined,
+    undefined,
+    { put: async () => "test-secret-reference" }
+  );
   const workspace = await domainStore.createWorkspace("alice", "Neon-shaped fixture");
   const repository = await domainStore.registerRepository("alice", workspace.id, "D:/repos/app");
-  const record = await domainStore.putRecord("alice", workspace.id, "workItems", { repositoryId: repository.id, title: "Persisted" });
+  const record = await domainStore.putRecord("alice", workspace.id, "workItems", {
+    repositoryId: repository.id,
+    title: "Persisted",
+  });
 
   assert.equal((await workspaceStore.list("alice"))[0].id, workspace.id);
-  assert.equal((await domainStore.listRecords("alice", workspace.id, "workItems"))[0].id, record.id);
+  assert.equal(
+    (await domainStore.listRecords("alice", workspace.id, "workItems"))[0].id,
+    record.id
+  );
   assert.equal((await domainStore.listRepositories("alice", workspace.id))[0].id, repository.id);
 });
 
@@ -127,7 +187,10 @@ test("hosted domain mutations delegate concurrency control to the shared provide
   ]);
 
   const records = await domainProvider.read();
-  assert.deepEqual(records.records[workspace.id].workItems?.map((record) => record.title).sort(), ["First", "Second"]);
+  assert.deepEqual(records.records[workspace.id].workItems?.map((record) => record.title).sort(), [
+    "First",
+    "Second",
+  ]);
 });
 
 test("transactional hosted domain providers commit denied connector audits", async () => {
@@ -139,7 +202,11 @@ test("transactional hosted domain providers commit denied connector audits", asy
   const repository = await domainStore.registerRepository("alice", workspace.id, "D:/repos/audit");
   const connector = await domainStore.registerConnector("alice", workspace.id, 60_000);
 
-  await assert.rejects(() => domainStore.connectorRequest("alice", connector.id, workspace.id, repository.id, "git.read"), /not granted/);
+  await assert.rejects(
+    () =>
+      domainStore.connectorRequest("alice", connector.id, workspace.id, repository.id, "git.read"),
+    /not granted/
+  );
 
   const audit = await domainStore.audit("alice", workspace.id);
   assert.equal(audit.at(-1)?.action, "connector.request");
@@ -172,11 +239,16 @@ test("production database configuration is explicit and credential encryption fa
     assert.equal(reference.includes("secret-value"), false);
     assert.equal(store.decrypt(reference), "secret-value");
   } finally {
-    if (previousUrl === undefined) delete environment.DEV_AGENTIC_OS_DATABASE_URL; else environment.DEV_AGENTIC_OS_DATABASE_URL = previousUrl;
-    if (previousUnpooled === undefined) delete environment.DEV_AGENTIC_OS_DATABASE_URL_UNPOOLED; else environment.DEV_AGENTIC_OS_DATABASE_URL_UNPOOLED = previousUnpooled;
-    if (previousStandardUrl === undefined) delete environment.DATABASE_URL; else environment.DATABASE_URL = previousStandardUrl;
-    if (previousStandardUnpooled === undefined) delete environment.DATABASE_URL_UNPOOLED; else environment.DATABASE_URL_UNPOOLED = previousStandardUnpooled;
-    if (previousKey === undefined) delete environment.DEV_AGENTIC_OS_SECRET_KEY; else environment.DEV_AGENTIC_OS_SECRET_KEY = previousKey;
+    if (previousUrl === undefined) delete environment.DEV_AGENTIC_OS_DATABASE_URL;
+    else environment.DEV_AGENTIC_OS_DATABASE_URL = previousUrl;
+    if (previousUnpooled === undefined) delete environment.DEV_AGENTIC_OS_DATABASE_URL_UNPOOLED;
+    else environment.DEV_AGENTIC_OS_DATABASE_URL_UNPOOLED = previousUnpooled;
+    if (previousStandardUrl === undefined) delete environment.DATABASE_URL;
+    else environment.DATABASE_URL = previousStandardUrl;
+    if (previousStandardUnpooled === undefined) delete environment.DATABASE_URL_UNPOOLED;
+    else environment.DATABASE_URL_UNPOOLED = previousStandardUnpooled;
+    if (previousKey === undefined) delete environment.DEV_AGENTIC_OS_SECRET_KEY;
+    else environment.DEV_AGENTIC_OS_SECRET_KEY = previousKey;
   }
 });
 
@@ -184,10 +256,19 @@ test("production object storage rejects artifact bodies until durable storage is
   const workspaceProvider = new MemoryWorkspaceProvider(emptyWorkspaceState());
   const workspaceStore = new HostedWorkspaceStore(process.cwd(), workspaceProvider);
   const workspace = await workspaceStore.create("alice", "Production-shaped workspace");
-  const domainStore = new HostedDomainStore(process.cwd(), workspaceStore, new MemoryDomainProvider(emptyDomainState()), new RejectingHostedObjectStore());
+  const domainStore = new HostedDomainStore(
+    process.cwd(),
+    workspaceStore,
+    new MemoryDomainProvider(emptyDomainState()),
+    new RejectingHostedObjectStore()
+  );
 
   await assert.rejects(
-    () => domainStore.putRecord("alice", workspace.id, "artifacts", { name: "report", content: { value: 1 } }),
-    /durable hosted object store/i,
+    () =>
+      domainStore.putRecord("alice", workspace.id, "artifacts", {
+        name: "report",
+        content: { value: 1 },
+      }),
+    /durable hosted object store/i
   );
 });

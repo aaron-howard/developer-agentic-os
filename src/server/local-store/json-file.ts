@@ -7,7 +7,8 @@ export async function readJsonFile<T>(path: string, fallback: T): Promise<T> {
   try {
     return JSON.parse(await readFile(path, "utf8")) as T;
   } catch (error) {
-    if (error && typeof error === "object" && "code" in error && error.code === "ENOENT") return fallback;
+    if (error && typeof error === "object" && "code" in error && error.code === "ENOENT")
+      return fallback;
     throw error;
   }
 }

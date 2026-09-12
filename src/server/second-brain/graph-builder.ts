@@ -2,14 +2,14 @@ import type { GraphLink, GraphNode } from "@/types/second-brain";
 
 /**
  * GraphBuilder: Deep module that encapsulates graph construction semantics.
- * 
+ *
  * Responsibilities:
  * - Create nodes with consistent ID generation and metadata handling
  * - Create links with type validation
  * - Handle context references
  * - Deduplicate links automatically
  * - Provide semantic helpers for common patterns (area -> file, skill -> artifact, etc.)
- * 
+ *
  * Benefits:
  * - All graph semantics in one place
  * - Node/link creation is consistent and type-safe
@@ -129,7 +129,11 @@ export class GraphBuilder {
   /**
    * Add context reference links (file/area references from an artifact or work item).
    */
-  addContextReferences(sourceId: string, references: Array<{ kind: string; ref: string }>, nodeExists: (id: string) => boolean): void {
+  addContextReferences(
+    sourceId: string,
+    references: Array<{ kind: string; ref: string }>,
+    nodeExists: (id: string) => boolean
+  ): void {
     for (const ref of references) {
       const targetId = `${ref.kind}:${ref.ref}`;
       if (nodeExists(targetId)) {
@@ -141,7 +145,11 @@ export class GraphBuilder {
   /**
    * Add workflow provenance links (what produced an artifact).
    */
-  addProvenanceLinks(targetId: string, workflowRefs: Array<{ kind: string; ref: string }>, nodeExists: (id: string) => boolean): void {
+  addProvenanceLinks(
+    targetId: string,
+    workflowRefs: Array<{ kind: string; ref: string }>,
+    nodeExists: (id: string) => boolean
+  ): void {
     for (const ref of workflowRefs) {
       const sourceId = `${ref.kind}:${ref.ref}`;
       if (nodeExists(sourceId)) {

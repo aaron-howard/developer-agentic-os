@@ -18,7 +18,15 @@ export default defineConfig({
     timeout: 120_000,
   },
   projects: [
-    { name: "desktop", testIgnore: /hosted-command-centre\.spec\.ts/, use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 1000 } } },
-    { name: "mobile", testIgnore: /hosted-command-centre\.spec\.ts/, use: { ...devices["Desktop Chrome"], viewport: { width: 390, height: 844 }, isMobile: true } },
+    {
+      name: "desktop",
+      testIgnore: /hosted-command-centre\.spec\.ts/,
+      use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 1000 } },
+    },
+    {
+      name: "mobile",
+      testIgnore: /hosted-command-centre\.spec\.ts/,
+      use: { ...devices["Desktop Chrome"], viewport: { width: 390, height: 844 }, isMobile: true },
+    },
   ],
 });
