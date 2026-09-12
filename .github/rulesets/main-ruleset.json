@@ -34,16 +34,20 @@
         "do_not_enforce_on_create": false,
         "required_status_checks": [
           {
-            "context": "Lint, Format & Typecheck"
+            "context": "Lint, Format & Typecheck",
+            "integration_id": 15368
           },
           {
-            "context": "Run Unit & Integration Tests"
+            "context": "Run Unit & Integration Tests",
+            "integration_id": 15368
           },
           {
-            "context": "Build Application"
+            "context": "Build Application",
+            "integration_id": 15368
           },
           {
-            "context": "CodeQL (javascript-typescript)"
+            "context": "CodeQL (javascript-typescript)",
+            "integration_id": 15368
           }
         ]
       }
