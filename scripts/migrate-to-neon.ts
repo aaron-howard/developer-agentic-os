@@ -97,7 +97,7 @@ async function migrateArtifacts(
       await client.query(
         `INSERT INTO artifacts (id, tenant_id, type, title, content, created_at, updated_at, is_draft, tags)
          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-         ON CONFLICT (id) DO NOTHING`,
+         ON CONFLICT (tenant_id, id) DO NOTHING`,
         [
           record.id || randomUUID(),
           tenantId,
@@ -136,7 +136,7 @@ async function migrateWorkItems(
       await client.query(
         `INSERT INTO work_items (id, tenant_id, title, description, status, priority, due_date, created_at, updated_at)
          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-         ON CONFLICT (id) DO NOTHING`,
+         ON CONFLICT (tenant_id, id) DO NOTHING`,
         [
           record.id || randomUUID(),
           tenantId,

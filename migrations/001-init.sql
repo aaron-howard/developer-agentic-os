@@ -61,6 +61,7 @@ CREATE TABLE IF NOT EXISTS repos (
   is_active BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW(),
+  UNIQUE (tenant_id, id),
   UNIQUE (tenant_id, github_owner, github_repo)
 );
 
@@ -71,13 +72,14 @@ CREATE INDEX IF NOT EXISTS idx_repos_github_owner_repo ON repos(github_owner, gi
 CREATE TABLE IF NOT EXISTS github_issues (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   tenant_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
-  repo_id UUID NOT NULL REFERENCES repos(id) ON DELETE CASCADE,
+  repo_id UUID NOT NULL,
   github_issue_number INTEGER NOT NULL,
   title VARCHAR(255),
   state VARCHAR(50),
   assignee VARCHAR(255),
   labels JSONB,
   synced_at TIMESTAMP DEFAULT NOW(),
+  FOREIGN KEY (tenant_id, repo_id) REFERENCES repos(tenant_id, id) ON DELETE CASCADE,
   UNIQUE (tenant_id, repo_id, github_issue_number)
 );
 
@@ -88,13 +90,14 @@ CREATE INDEX IF NOT EXISTS idx_github_issues_repo_id ON github_issues(repo_id);
 CREATE TABLE IF NOT EXISTS github_pull_requests (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   tenant_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
-  repo_id UUID NOT NULL REFERENCES repos(id) ON DELETE CASCADE,
+  repo_id UUID NOT NULL,
   github_pr_number INTEGER NOT NULL,
   title VARCHAR(255),
   state VARCHAR(50),
   author VARCHAR(255),
   labels JSONB,
   synced_at TIMESTAMP DEFAULT NOW(),
+  FOREIGN KEY (tenant_id, repo_id) REFERENCES repos(tenant_id, id) ON DELETE CASCADE,
   UNIQUE (tenant_id, repo_id, github_pr_number)
 );
 
@@ -153,7 +156,8 @@ CREATE TABLE IF NOT EXISTS artifacts (
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW(),
   is_draft BOOLEAN DEFAULT FALSE,
-  tags JSONB
+  tags JSONB,
+  UNIQUE (tenant_id, id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_artifacts_tenant_id ON artifacts(tenant_id);
@@ -168,12 +172,14 @@ CREATE TABLE IF NOT EXISTS work_items (
   status VARCHAR(50) DEFAULT 'open',
   priority VARCHAR(50) DEFAULT 'medium',
   assigned_to UUID REFERENCES users(id) ON DELETE SET NULL,
-  repo_id UUID REFERENCES repos(id) ON DELETE SET NULL,
+  repo_id UUID,
   related_github_issue INTEGER,
   due_date DATE,
   created_by UUID REFERENCES users(id) ON DELETE SET NULL,
   created_at TIMESTAMP DEFAULT NOW(),
-  updated_at TIMESTAMP DEFAULT NOW()
+  updated_at TIMESTAMP DEFAULT NOW(),
+  FOREIGN KEY (tenant_id, repo_id) REFERENCES repos(tenant_id, id) ON DELETE SET NULL,
+  UNIQUE (tenant_id, id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_work_items_tenant_id ON work_items(tenant_id);
@@ -189,10 +195,12 @@ CREATE TABLE IF NOT EXISTS incoming_signals (
   title VARCHAR(255) NOT NULL,
   body TEXT,
   triage_status VARCHAR(50) DEFAULT 'new',
-  related_work_item UUID REFERENCES work_items(id) ON DELETE SET NULL,
-  related_artifact UUID REFERENCES artifacts(id) ON DELETE SET NULL,
+  related_work_item UUID,
+  related_artifact UUID,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW(),
+  FOREIGN KEY (tenant_id, related_work_item) REFERENCES work_items(tenant_id, id) ON DELETE SET NULL,
+  FOREIGN KEY (tenant_id, related_artifact) REFERENCES artifacts(tenant_id, id) ON DELETE SET NULL,
   UNIQUE (tenant_id, source_type, source_id)
 );
 
@@ -214,6 +222,7 @@ CREATE TABLE IF NOT EXISTS skills (
   is_builtin BOOLEAN DEFAULT FALSE,
   is_active BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMP DEFAULT NOW(),
+  UNIQUE (tenant_id, id),
   UNIQUE (tenant_id, command)
 );
 
@@ -223,14 +232,16 @@ CREATE INDEX IF NOT EXISTS idx_skills_tenant_id ON skills(tenant_id);
 CREATE TABLE IF NOT EXISTS skill_runs (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   tenant_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
-  skill_id UUID REFERENCES skills(id) ON DELETE SET NULL,
+  skill_id UUID,
   command VARCHAR(255),
   status VARCHAR(50),
-  result_artifact_id UUID REFERENCES artifacts(id) ON DELETE SET NULL,
+  result_artifact_id UUID,
   error_message TEXT,
   started_at TIMESTAMP,
   completed_at TIMESTAMP,
-  created_at TIMESTAMP DEFAULT NOW()
+  created_at TIMESTAMP DEFAULT NOW(),
+  FOREIGN KEY (tenant_id, skill_id) REFERENCES skills(tenant_id, id) ON DELETE SET NULL,
+  FOREIGN KEY (tenant_id, result_artifact_id) REFERENCES artifacts(tenant_id, id) ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_skill_runs_tenant_id ON skill_runs(tenant_id);
@@ -246,6 +257,7 @@ CREATE TABLE IF NOT EXISTS routines (
   is_active BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW(),
+  UNIQUE (tenant_id, id),
   UNIQUE (tenant_id, name)
 );
 
@@ -255,13 +267,15 @@ CREATE INDEX IF NOT EXISTS idx_routines_tenant_id ON routines(tenant_id);
 CREATE TABLE IF NOT EXISTS routine_runs (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   tenant_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
-  routine_id UUID NOT NULL REFERENCES routines(id) ON DELETE CASCADE,
+  routine_id UUID NOT NULL,
   status VARCHAR(50),
   triggered_at TIMESTAMP DEFAULT NOW(),
   started_at TIMESTAMP,
   completed_at TIMESTAMP,
-  result_artifact_id UUID REFERENCES artifacts(id) ON DELETE SET NULL,
-  error_message TEXT
+  result_artifact_id UUID,
+  error_message TEXT,
+  FOREIGN KEY (tenant_id, routine_id) REFERENCES routines(tenant_id, id) ON DELETE CASCADE,
+  FOREIGN KEY (tenant_id, result_artifact_id) REFERENCES artifacts(tenant_id, id) ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_routine_runs_tenant_id ON routine_runs(tenant_id);
@@ -282,6 +296,7 @@ CREATE TABLE IF NOT EXISTS graph_nodes (
   metadata JSONB,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW(),
+  UNIQUE (tenant_id, id),
   UNIQUE (tenant_id, node_type, entity_id)
 );
 
@@ -292,10 +307,12 @@ CREATE INDEX IF NOT EXISTS idx_graph_nodes_node_type ON graph_nodes(node_type);
 CREATE TABLE IF NOT EXISTS graph_links (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   tenant_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
-  source_node_id UUID NOT NULL REFERENCES graph_nodes(id) ON DELETE CASCADE,
-  target_node_id UUID NOT NULL REFERENCES graph_nodes(id) ON DELETE CASCADE,
+  source_node_id UUID NOT NULL,
+  target_node_id UUID NOT NULL,
   link_type VARCHAR(50),
   created_at TIMESTAMP DEFAULT NOW(),
+  FOREIGN KEY (tenant_id, source_node_id) REFERENCES graph_nodes(tenant_id, id) ON DELETE CASCADE,
+  FOREIGN KEY (tenant_id, target_node_id) REFERENCES graph_nodes(tenant_id, id) ON DELETE CASCADE,
   UNIQUE (tenant_id, source_node_id, target_node_id, link_type)
 );
 
@@ -335,14 +352,16 @@ CREATE INDEX IF NOT EXISTS idx_handoffs_session_date ON handoffs(session_date);
 CREATE TABLE IF NOT EXISTS emails (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   tenant_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
-  email_message_id VARCHAR(255) UNIQUE,
+  email_message_id VARCHAR(255),
   sender VARCHAR(255),
   subject VARCHAR(255),
   body TEXT,
   received_at TIMESTAMP,
   is_processed BOOLEAN DEFAULT FALSE,
-  related_work_item UUID REFERENCES work_items(id) ON DELETE SET NULL,
-  created_at TIMESTAMP DEFAULT NOW()
+  related_work_item UUID,
+  created_at TIMESTAMP DEFAULT NOW(),
+  FOREIGN KEY (tenant_id, related_work_item) REFERENCES work_items(tenant_id, id) ON DELETE SET NULL,
+  UNIQUE (tenant_id, email_message_id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_emails_tenant_id ON emails(tenant_id);
@@ -355,11 +374,13 @@ CREATE INDEX IF NOT EXISTS idx_emails_received_at ON emails(received_at);
 CREATE TABLE IF NOT EXISTS focus_board_items (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   tenant_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
-  work_item_id UUID REFERENCES work_items(id) ON DELETE CASCADE,
-  artifact_id UUID REFERENCES artifacts(id) ON DELETE CASCADE,
+  work_item_id UUID,
+  artifact_id UUID,
   category VARCHAR(50),
   position INTEGER,
-  created_at TIMESTAMP DEFAULT NOW()
+  created_at TIMESTAMP DEFAULT NOW(),
+  FOREIGN KEY (tenant_id, work_item_id) REFERENCES work_items(tenant_id, id) ON DELETE CASCADE,
+  FOREIGN KEY (tenant_id, artifact_id) REFERENCES artifacts(tenant_id, id) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS idx_focus_board_items_tenant_id ON focus_board_items(tenant_id);
