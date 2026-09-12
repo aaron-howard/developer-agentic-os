@@ -6,7 +6,8 @@ import { HostedCommandCentre } from "@/components/command-centre/hosted-command-
 
 export default async function Home() {
   if (process.env.VERCEL === "1") {
-    const fixtureMode = process.env.NODE_ENV !== "production" && process.env.HOSTED_AUTH_FIXTURE_MODE === "true";
+    const fixtureMode =
+      process.env.NODE_ENV !== "production" && process.env.HOSTED_AUTH_FIXTURE_MODE === "true";
     if (!fixtureMode) {
       const session = await auth();
       if (!session.userId) redirect("/sign-in");

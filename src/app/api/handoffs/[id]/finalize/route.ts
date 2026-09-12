@@ -11,7 +11,8 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     const workspace = await createWorkspaceContext(context.path);
     return NextResponse.json(await workspace.handoffStore.finalize((await params).id, context.id));
   } catch (error) {
-    if (error instanceof HandoffError || error instanceof WorkspaceError) return NextResponse.json({ error: error.message }, { status: 404 });
+    if (error instanceof HandoffError || error instanceof WorkspaceError)
+      return NextResponse.json({ error: error.message }, { status: 404 });
     throw error;
   }
 }

@@ -14,7 +14,8 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
 
     return NextResponse.json(artifact);
   } catch (error) {
-    if (error instanceof WorkspaceError) return NextResponse.json({ error: error.message }, { status: 404 });
+    if (error instanceof WorkspaceError)
+      return NextResponse.json({ error: error.message }, { status: 404 });
     throw error;
   }
 }

@@ -1,12 +1,20 @@
 # ADR 0003: Per-Tenant Vercel Deployments
 
-**Status**: Proposed
+**Status**: Accepted and Implemented
 
 **Date**: 2026-09-09
+**Last Updated**: 2026-09-12
+
+## Status Update
+
+This tenant-scoped deployment mapping is now part of the hosted architecture. The application keeps a `vercel_projects` mapping keyed by `tenant_id`, and the Neon schema stores deployment metadata scoped to the authenticated organization.
+
+The Vercel project association is treated as an org-level resource rather than a shared global deployment target.
 
 ## Context
 
 Each tenant (Clerk org) in Developer Agentic OS should have its own Vercel project and deployment domain. This allows:
+
 - Isolated CI/CD pipelines per tenant
 - Custom domain assignment per org
 - Independent scaling and monitoring
@@ -118,7 +126,7 @@ export async function GET(req: Request) {
 
   // Find the repo and its tenant
   const repo = await db.repos.findUnique({
-    where: { github_owner_github_repo: { github_owner, github_repo } }
+    where: { github_owner_github_repo: { github_owner, github_repo } },
   });
 
   if (!repo) {
@@ -127,13 +135,15 @@ export async function GET(req: Request) {
 
   // Find the Vercel project for this tenant
   const vercelProject = await db.vercel_projects.findUnique({
-    where: { tenant_id: repo.tenant_id }
+    where: { tenant_id: repo.tenant_id },
   });
 
-  return new Response(JSON.stringify({
-    vercel_project_id: vercelProject?.vercel_project_id,
-    vercel_team_id: vercelProject?.vercel_team_id
-  }));
+  return new Response(
+    JSON.stringify({
+      vercel_project_id: vercelProject?.vercel_project_id,
+      vercel_team_id: vercelProject?.vercel_team_id,
+    })
+  );
 }
 ```
 
@@ -146,15 +156,15 @@ If the Developer Agentic OS application itself is a single monorepo deployed onc
 - GitHub Actions deploys the entire codebase to that org's Vercel project
 - Multitenancy is handled at the Next.js route layer (see ADR 0001)
 
-*This is simpler initially but limits per-org customization later.*
+_This is simpler initially but limits per-org customization later._
 
 ## Risks & Mitigations
 
-| Risk | Mitigation |
-|------|-----------|
-| Repo added but Vercel project not created → deploy fails | Create Vercel project during repo registration; use sensible defaults |
-| Vercel project ID wrong or outdated | Validate on each deploy; alert on API errors |
-| GitHub Actions token is compromised → bad actor redeploys | Use org-scoped tokens; rotate regularly; audit logs |
+| Risk                                                      | Mitigation                                                            |
+| --------------------------------------------------------- | --------------------------------------------------------------------- |
+| Repo added but Vercel project not created → deploy fails  | Create Vercel project during repo registration; use sensible defaults |
+| Vercel project ID wrong or outdated                       | Validate on each deploy; alert on API errors                          |
+| GitHub Actions token is compromised → bad actor redeploys | Use org-scoped tokens; rotate regularly; audit logs                   |
 
 ## Related Decisions
 
@@ -162,13 +172,13 @@ If the Developer Agentic OS application itself is a single monorepo deployed onc
 - **ADR 0002**: Clerk org + GitHub org identity
 - **ADR 0004**: Vercel webhook routing to tenants
 
-## Open Questions
+## Current Status and Deferred Extensions
 
-1. Should each org's developers also have the ability to configure custom Vercel settings (env vars, build commands)?
-   - *Deferred*: UI for settings later; hardcode defaults for v1
+1. Custom Vercel settings remain a later UI concern.
+   - The current implementation uses a default tenant-scoped project mapping with minimal configuration.
 
-2. What if a repo needs to deploy to multiple Vercel projects (e.g., staging + prod)?
-   - *Deferred*: Extend repo schema with multiple Vercel targets if needed
+2. Multi-project repo targeting is still out of scope.
+   - The model assumes one primary Vercel target per tenant unless a new requirement adds staging/prod split logic.
 
 ## References
 

@@ -31,17 +31,22 @@ export async function GET(request: Request = new Request("http://localhost")) {
     const workspace = await createWorkspaceContext(context.path);
     const operations = await new GitHubAdapter(process.env, fetch, context.path).getOperations();
     if (operations.status === "unhealthy" && operations.failure) {
-      await recordIntegrationFailure(context.path, {
-        provider: "github",
-        sourceId: `github:${operations.repository ?? context.id}:${operations.failure.kind}`,
-        title: `GitHub integration unhealthy: ${operations.failure.kind}`,
-        body: operations.failure.message,
-        repositoryId: context.id,
-      }, workspace);
+      await recordIntegrationFailure(
+        context.path,
+        {
+          provider: "github",
+          sourceId: `github:${operations.repository ?? context.id}:${operations.failure.kind}`,
+          title: `GitHub integration unhealthy: ${operations.failure.kind}`,
+          body: operations.failure.message,
+          repositoryId: context.id,
+        },
+        workspace
+      );
     }
     return NextResponse.json({ ...operations, repositoryId: context.id });
   } catch (error) {
-    if (error instanceof WorkspaceError) return NextResponse.json({ error: error.message }, { status: 404 });
+    if (error instanceof WorkspaceError)
+      return NextResponse.json({ error: error.message }, { status: 404 });
     throw error;
   }
 }

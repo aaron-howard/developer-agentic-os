@@ -17,7 +17,8 @@ export async function GET(request: Request) {
 
     return NextResponse.json({ artifacts });
   } catch (error) {
-    if (error instanceof WorkspaceError) return NextResponse.json({ error: error.message }, { status: 404 });
+    if (error instanceof WorkspaceError)
+      return NextResponse.json({ error: error.message }, { status: 404 });
     throw error;
   }
 }
@@ -37,11 +38,18 @@ export async function POST(request: Request) {
       content: body.content,
       tags: Array.isArray(body.tags) ? body.tags : [],
       contextRefs: Array.isArray(body.contextRefs) ? body.contextRefs : [],
-      provenance: Array.isArray(body.workflowRefs) ? { repositoryId: context.id, repositoryRoot: context.path, workflowRefs: body.workflowRefs } : undefined,
+      provenance: Array.isArray(body.workflowRefs)
+        ? {
+            repositoryId: context.id,
+            repositoryRoot: context.path,
+            workflowRefs: body.workflowRefs,
+          }
+        : undefined,
     });
     return NextResponse.json(artifact, { status: 201 });
   } catch (error) {
-    if (error instanceof WorkspaceError) return NextResponse.json({ error: error.message }, { status: 404 });
+    if (error instanceof WorkspaceError)
+      return NextResponse.json({ error: error.message }, { status: 404 });
     throw error;
   }
 }
