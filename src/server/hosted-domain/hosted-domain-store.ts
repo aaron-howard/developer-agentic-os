@@ -203,7 +203,7 @@ export class HostedDomainStore {
     private readonly workspaceStore = new HostedWorkspaceStore(root),
     private readonly provider: HostedStateProvider = new DeterministicJsonHostedStateProvider(root),
     private readonly objectStore: HostedObjectStore = new LocalHostedObjectStore(
-      join(resolve(root), ".developer-agentic-os", "hosted-objects")
+      join(root, ".developer-agentic-os", "hosted-objects")
     ),
     private readonly localExport: LocalStoreExportAdapter = new DeterministicLocalStoreExportAdapter(
       root

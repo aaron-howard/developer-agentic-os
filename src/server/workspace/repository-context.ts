@@ -44,9 +44,14 @@ export async function resolveRepositoryContext(
     }
   }
   if (root) {
-    const context = await contextFromRoot(root);
     const repositories = await workspaceStore.listRepositories();
-    const registered = repositories.find((repository) => repository.id === context.id);
+    const fallback = await workspaceStore.getActiveContext();
+    const allKnown = [fallback, ...repositories];
+    const resolvedInput = resolve(root);
+    const registered = allKnown.find(
+      (repository) =>
+        resolve(repository.path) === resolvedInput || repository.id === repositoryId(resolvedInput)
+    );
     if (registered) return registered;
     throw new WorkspaceError(
       "NOT_FOUND",
@@ -57,11 +62,12 @@ export async function resolveRepositoryContext(
 }
 
 export async function contextFromRoot(inputRoot: string): Promise<RepositoryContext> {
-  if (!inputRoot.trim())
+  if (!inputRoot || typeof inputRoot !== "string" || !inputRoot.trim())
     throw new WorkspaceError("INVALID_PATH", "Repository context root is required.");
+  const normalized = resolve(inputRoot);
   let path: string;
   try {
-    path = await realpath(resolve(inputRoot));
+    path = await realpath(normalized);
     if (!(await stat(path)).isDirectory()) throw new Error("not a directory");
   } catch {
     throw new WorkspaceError("INVALID_PATH", "Repository context root does not exist.");

@@ -21,9 +21,11 @@ export class RejectingHostedObjectStore implements HostedObjectStore {
 }
 
 export class LocalHostedObjectStore implements HostedObjectStore {
-  constructor(
-    private readonly root = join(resolve(process.cwd()), ".developer-agentic-os", "hosted-objects")
-  ) {}
+  private readonly root: string;
+
+  constructor(root?: string) {
+    this.root = root ?? join(process.cwd(), ".developer-agentic-os", "hosted-objects");
+  }
 
   async put(content: string | Uint8Array, contentType: string) {
     const bytes = typeof content === "string" ? Buffer.from(content) : Buffer.from(content);
