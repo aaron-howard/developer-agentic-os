@@ -19,7 +19,13 @@ export default defineConfig({
     timeout: 120_000,
   },
   projects: [
-    { name: "hosted-desktop", use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 1000 } } },
-    { name: "hosted-mobile", use: { ...devices["Desktop Chrome"], viewport: { width: 390, height: 844 }, isMobile: true } },
+    {
+      name: "hosted-desktop",
+      use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 1000 } },
+    },
+    {
+      name: "hosted-mobile",
+      use: { ...devices["Desktop Chrome"], viewport: { width: 390, height: 844 }, isMobile: true },
+    },
   ],
 });

@@ -10,7 +10,13 @@ test.beforeEach(async ({ page }) => {
 });
 
 test("keeps workspace features available when skills fail", async ({ page }) => {
-  await page.route("**/api/skills", (route) => route.fulfill({ status: 503, contentType: "application/json", body: JSON.stringify({ error: "Unavailable" }) }));
+  await page.route("**/api/skills", (route) =>
+    route.fulfill({
+      status: 503,
+      contentType: "application/json",
+      body: JSON.stringify({ error: "Unavailable" }),
+    })
+  );
   await page.goto("/");
 
   await expect(page.getByRole("heading", { name: "Today / Focus Board" })).toBeVisible();
@@ -23,9 +29,16 @@ test("keeps workspace features available when skills fail", async ({ page }) => 
 test("prevents duplicate work-item submissions", async ({ page }) => {
   let createRequests = 0;
   await page.route("**/api/hosted/domain**", async (route) => {
-    if (route.request().method() === "POST" && route.request().postData()?.includes("create-work-item")) {
+    if (
+      route.request().method() === "POST" &&
+      route.request().postData()?.includes("create-work-item")
+    ) {
       createRequests += 1;
-      await route.fulfill({ status: 201, contentType: "application/json", body: JSON.stringify({ workItem: { id: "guarded" } }) });
+      await route.fulfill({
+        status: 201,
+        contentType: "application/json",
+        body: JSON.stringify({ workItem: { id: "guarded" } }),
+      });
       return;
     }
     await route.continue();
@@ -45,17 +58,53 @@ test("prevents duplicate work-item submissions", async ({ page }) => {
 });
 
 test("keeps the latest workspace paired with its records", async ({ page }) => {
-  const alpha = { id: "workspace-alpha", ownerId: "user", name: "Alpha", createdAt: "2026-01-01T00:00:00.000Z" };
-  const beta = { id: "workspace-beta", ownerId: "user", name: "Beta", createdAt: "2026-01-01T00:00:00.000Z" };
-  await page.route("**/api/hosted/workspaces", (route) => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ workspaces: [alpha, beta], activeWorkspace: alpha }) }));
+  const alpha = {
+    id: "workspace-alpha",
+    ownerId: "user",
+    name: "Alpha",
+    createdAt: "2026-01-01T00:00:00.000Z",
+  };
+  const beta = {
+    id: "workspace-beta",
+    ownerId: "user",
+    name: "Beta",
+    createdAt: "2026-01-01T00:00:00.000Z",
+  };
+  await page.route("**/api/hosted/workspaces", (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({ workspaces: [alpha, beta], activeWorkspace: alpha }),
+    })
+  );
   await page.route("**/api/hosted/workspaces/*/select", async (route) => {
     const selected = route.request().url().includes(alpha.id) ? alpha : beta;
     if (selected === alpha) await new Promise((resolve) => setTimeout(resolve, 300));
-    await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ workspace: selected }) });
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({ workspace: selected }),
+    });
   });
   await page.route("**/api/hosted/domain**", (route) => {
     const title = route.request().url().includes(alpha.id) ? "Alpha record" : "Beta record";
-    return route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ records: { workItems: [{ id: title, title, status: "open", priority: "normal", createdAt: "2026-01-01T00:00:00.000Z" }] } }) });
+    return route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        records: {
+          workItems: [
+            {
+              id: title,
+              title,
+              status: "open",
+              priority: "normal",
+              createdAt: "2026-01-01T00:00:00.000Z",
+            },
+          ],
+        },
+      }),
+    });
   });
   await page.goto("/");
   await page.getByRole("button", { name: "Workspaces" }).click();

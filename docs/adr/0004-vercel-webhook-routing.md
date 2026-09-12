@@ -1,8 +1,15 @@
 # ADR 0004: Vercel Webhook Routing to Tenants
 
-**Status**: Proposed
+**Status**: Accepted and Implemented
 
 **Date**: 2026-09-09
+**Last Updated**: 2026-09-12
+
+## Status Update
+
+This routing pattern is now in place for hosted deployments. Vercel deployment metadata is stored with `tenant_id` in the Neon schema, and webhook events can be mapped back to the correct org by resolving the Vercel project ID in the `vercel_projects` table.
+
+The system treats deployment events as tenant-scoped signals and associates them with the organization that owns that project.
 
 ## Context
 
@@ -17,6 +24,7 @@ We will use **Vercel project ID ↔ tenant mapping** to route webhooks:
 ### Webhook Routing Flow
 
 1. **Vercel fires a webhook** for a deployment event (e.g., `deployment.ready`)
+
    ```json
    {
      "type": "deployment.ready",
@@ -31,11 +39,13 @@ We will use **Vercel project ID ↔ tenant mapping** to route webhooks:
    ```
 
 2. **Our webhook endpoint receives it**
+
    ```
    POST /api/webhooks/vercel
    ```
 
 3. **Look up tenant by Vercel project ID**
+
    ```sql
    SELECT tenant_id FROM vercel_projects
    WHERE vercel_project_id = 'prj_abc123'
@@ -90,7 +100,7 @@ export async function POST(req: Request) {
 
   // 1. Look up tenant by Vercel project ID
   const vercelProject = await db.vercel_projects.findUnique({
-    where: { vercel_project_id: body.projectId }
+    where: { vercel_project_id: body.projectId },
   });
 
   if (!vercelProject) {
@@ -120,7 +130,7 @@ async function handleDeploymentEvent(tenantId: UUID, event: any) {
     event_type: event.type,
     status: event.deployment?.state,
     url: event.deployment?.url,
-    commit_sha: event.meta?.githubCommitSha
+    commit_sha: event.meta?.githubCommitSha,
   });
 
   // Create a signal or work item if deployment failed
@@ -131,7 +141,7 @@ async function handleDeploymentEvent(tenantId: UUID, event: any) {
   // Emit to connected developers (via WebSocket, polling, etc.)
   await notifyTenant(tenantId, {
     type: "deployment_event",
-    event: event
+    event: event,
   });
 }
 ```
@@ -140,12 +150,12 @@ async function handleDeploymentEvent(tenantId: UUID, event: any) {
 
 Vercel sends several event types. We track:
 
-| Event | Action |
-|-------|--------|
-| `deployment.ready` | Deployment succeeded; show live URL |
-| `deployment.error` | Build or deploy failed; create Incoming Signal |
-| `deployment.created` | Build started; show status |
-| `comment.created` | (Future) Comment on PR from Vercel checks |
+| Event                | Action                                         |
+| -------------------- | ---------------------------------------------- |
+| `deployment.ready`   | Deployment succeeded; show live URL            |
+| `deployment.error`   | Build or deploy failed; create Incoming Signal |
+| `deployment.created` | Build started; show status                     |
+| `comment.created`    | (Future) Comment on PR from Vercel checks      |
 
 For v1, we handle `ready` (success) and `error` (failure).
 
@@ -156,17 +166,10 @@ For v1, we handle `ready` (success) and `error` (failure).
 Vercel signs each webhook with an HMAC. We validate it:
 
 ```typescript
-function verifyWebhookSignature(
-  body: any,
-  signature: string,
-  secret: string
-): boolean {
+function verifyWebhookSignature(body: any, signature: string, secret: string): boolean {
   const json = JSON.stringify(body);
-  const hash = crypto
-    .createHmac("sha256", secret)
-    .update(json)
-    .digest("hex");
-  
+  const hash = crypto.createHmac("sha256", secret).update(json).digest("hex");
+
   return signature === hash;
 }
 ```
@@ -180,16 +183,17 @@ function verifyWebhookSignature(
 ### Authenticate Webhook Origin
 
 Even with signature validation:
+
 - Only accept webhooks from Vercel's IP ranges (optional but extra layer)
 - Log all webhook attempts for audit
 
 ## Failure Modes
 
-| Scenario | Response |
-|----------|----------|
-| Webhook arrives but project not found in DB | 404; log for investigation |
-| Signature invalid | 401; log as potential security issue |
-| Deployment event stored but tenant notification fails | 200 anyway; alert ops |
+| Scenario                                              | Response                             |
+| ----------------------------------------------------- | ------------------------------------ |
+| Webhook arrives but project not found in DB           | 404; log for investigation           |
+| Signature invalid                                     | 401; log as potential security issue |
+| Deployment event stored but tenant notification fails | 200 anyway; alert ops                |
 
 ## Related Decisions
 
@@ -197,17 +201,16 @@ Even with signature validation:
 - **ADR 0003**: Per-tenant Vercel deployments
 - **ADR 0002**: Clerk org → tenant mapping
 
-## Open Questions
+## Current Status and Deferred Extensions
 
-1. Should webhook events trigger automatic Work Items or Artifacts?
-   - *Current lean*: Create an Incoming Signal (triage first); user decides on action
-   - *Alternative*: Auto-create Work Item for failed deployments if configured
+1. Deployment events currently route into tenant-scoped signals without auto-creating a Work Item by default.
+   - The implemented pattern favors triage-first handling, with a user or workflow deciding whether a signal becomes an actionable Work Item.
 
-2. Should we support custom webhooks per tenant (so each org sees only their events)?
-   - *Deferred*: Single endpoint is simpler for v1; per-tenant webhooks later if needed
+2. A single shared webhook endpoint remains the current model.
+   - The tenant is resolved from the mapped Vercel project, which keeps the routing simple and explicit.
 
-3. How long should we retain deployment event history?
-   - *Deferred*: Store indefinitely for now; add retention policy later
+3. Retention policy remains a later operational detail.
+   - Deployment history is kept as part of the tenant-scoped data model, with timeline retention to be tuned if needed.
 
 ## References
 
