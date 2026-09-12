@@ -110,7 +110,7 @@ The repository is protected by GitHub Actions workflows and a Main Branch Rulese
 - **CI Workflow** ([.github/workflows/ci.yml](.github/workflows/ci.yml)): Runs on every push and pull request to `main`. Executes Prettier format check (`npm run format:check`), ESLint (`npm run lint`), TypeScript typechecking (`npm run typecheck`), unit & integration tests (`npm test`), and Next.js application build (`npm run build`).
 - **CodeQL Security Analysis** ([.github/workflows/codeql.yml](.github/workflows/codeql.yml)): Performs advanced static code analysis and vulnerability scanning for JavaScript/TypeScript on pushes, pull requests, and a weekly schedule.
 - **Dependabot** ([.github/dependabot.yml](.github/dependabot.yml)): Automatically checks for npm dependency vulnerabilities and GitHub Actions version updates on a weekly schedule.
-- **Main Branch Ruleset** ([.github/rulesets/main-ruleset.json](.github/rulesets/main-ruleset.json)): Enforces active branch protection on `main`, requiring pull requests, thread resolution, blocking force pushes and deletions, and requiring all CI checks (`Lint, Format & Typecheck`, `Run Unit & Integration Tests`, `Build Application`, and `CodeQL`) to pass before merging.
+- **Main Branch Ruleset** ([.github/rulesets/main-ruleset.json](.github/rulesets/main-ruleset.json)): Enforces active branch protection on `main`, requiring pull requests, thread resolution, blocking force pushes and deletions, and requiring all CI checks (`Lint, Format & Typecheck`, `Run Unit & Integration Tests`, `Build Application`, and `CodeQL`) to pass before merging. Synchronize and verify the ruleset against the GitHub repository anytime with `npm run ruleset:sync`.
 
 ## Project References
 
