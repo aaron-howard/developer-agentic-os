@@ -113,7 +113,12 @@ export class GraphBuilder {
   /**
    * Add a work item node scoped to a context.
    */
-  addWorkItem(id: string, title: string, contextId: string, metadata?: GraphNode["metadata"]): void {
+  addWorkItem(
+    id: string,
+    title: string,
+    contextId: string,
+    metadata?: GraphNode["metadata"]
+  ): void {
     this.addNode({ id, type: "work_item", label: title, metadata });
     this.addLink(id, contextId, "scoped_to");
   }

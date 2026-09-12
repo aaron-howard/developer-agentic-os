@@ -24,12 +24,15 @@ async function getGitHubAccessToken(userId: string): Promise<string | null> {
 export type GitHubOrgMembershipReason = "no_token" | "not_a_member" | "api_error";
 export type GitHubOrgMembership = { verified: boolean; reason: GitHubOrgMembershipReason | null };
 
-type GitHubMembershipDependencies = {
+export type GitHubMembershipDependencies = {
   getAccessToken?: (userId: string) => Promise<string | null>;
   fetcher?: (input: string, init?: RequestInit) => Promise<Response>;
 };
 
-export function requiredGitHubOrgForTenant(tenantId: string, env: Record<string, string | undefined> = process.env): string | null {
+export function requiredGitHubOrgForTenant(
+  tenantId: string,
+  env: Record<string, string | undefined> = process.env
+): string | null {
   const mapValue = env.GITHUB_ORG_MAP?.trim();
   if (mapValue) {
     try {
@@ -44,22 +47,29 @@ export function requiredGitHubOrgForTenant(tenantId: string, env: Record<string,
   return fallback ? fallback : null;
 }
 
-export function githubOrgVerificationMessage(org: string, reason: GitHubOrgMembershipReason | null): string | null {
+export function githubOrgVerificationMessage(
+  org: string,
+  reason: GitHubOrgMembershipReason | null
+): string | null {
   if (!reason) return null;
   if (reason === "no_token") return `Link your GitHub account to verify access to ${org}.`;
-  if (reason === "not_a_member") return `You're not a member of the ${org} GitHub org yet. Ask your admin to add you there.`;
+  if (reason === "not_a_member")
+    return `You're not a member of the ${org} GitHub org yet. Ask your admin to add you there.`;
   return `We couldn't verify membership for ${org} on GitHub right now. Please try again.`;
 }
 
 // The tenant's GitHub org is a separate entitlement check from Clerk org membership (see ADR 0002).
 export async function verifyGitHubOrgMembership(
   userId: string,
-  org: string
+  org: string,
+  deps: GitHubMembershipDependencies = {}
 ): Promise<GitHubOrgMembership> {
-  const token = await getGitHubAccessToken(userId);
+  const getAccessToken = deps.getAccessToken ?? getGitHubAccessToken;
+  const token = await getAccessToken(userId);
   if (!token) return { verified: false, reason: "no_token" };
+  const fetcher = deps.fetcher ?? fetch;
   try {
-    const response = await fetch(
+    const response = await fetcher(
       `https://api.github.com/user/memberships/orgs/${encodeURIComponent(org)}`,
       {
         headers: {

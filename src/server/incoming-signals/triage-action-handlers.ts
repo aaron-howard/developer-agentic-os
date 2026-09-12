@@ -45,8 +45,9 @@ async function handleSnooze(
   signal: IncomingSignal,
   input: SignalTriageAction
 ): Promise<SignalTriageResult> {
+  const action = asAction(input, "snooze");
   const snoozedUntil =
-    (input as any).snoozedUntil ?? new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+    action.snoozedUntil ?? new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
   const updated = await context.incomingSignalStore.update(
     signal.id,
     { status: "snoozed", snoozedUntil },
@@ -60,6 +61,7 @@ async function handleCreateWorkItem(
   signal: IncomingSignal,
   input: SignalTriageAction
 ): Promise<SignalTriageResult> {
+  const action = asAction(input, "create_work_item");
   const signalRef = { kind: "incoming_signal" as const, ref: signal.id, label: signal.title };
   const integrationRef =
     signal.provider && signal.sourceId
@@ -92,7 +94,8 @@ async function handleAttachWorkItem(
   signal: IncomingSignal,
   input: SignalTriageAction
 ): Promise<SignalTriageResult> {
-  const workItemId = (input as any).workItemId;
+  const action = asAction(input, "attach_work_item");
+  const workItemId = action.workItemId;
   if (!workItemId?.trim()) throw new TriageActionError("INVALID_INPUT", "workItemId is required.");
 
   const signalRef = { kind: "incoming_signal" as const, ref: signal.id, label: signal.title };
@@ -124,15 +127,14 @@ async function handleInvokeSkill(
   signal: IncomingSignal,
   input: SignalTriageAction
 ): Promise<SignalTriageResult> {
-  const skillId = (input as any).skillId;
+  const action = asAction(input, "invoke_skill");
+  const skillId = action.skillId;
   if (!skillId?.trim()) throw new TriageActionError("INVALID_INPUT", "skillId is required.");
 
   const signalRef = { kind: "incoming_signal" as const, ref: signal.id, label: signal.title };
-  const result = await createSkillRegistry({ context }).runSkill(
-    skillId,
-    (input as any).input ?? {},
-    { workflowRefs: [signalRef] }
-  );
+  const result = await createSkillRegistry({ context }).runSkill(skillId, action.input ?? {}, {
+    workflowRefs: [signalRef],
+  });
 
   const triaged = await markTriaged(signal, context.incomingSignalStore, {
     kind: "skill_run",
@@ -146,6 +148,7 @@ async function handleCreateArtifact(
   signal: IncomingSignal,
   input: SignalTriageAction
 ): Promise<SignalTriageResult> {
+  const action = asAction(input, "create_artifact");
   const signalRef = { kind: "incoming_signal" as const, ref: signal.id, label: signal.title };
 
   const artifact = await context.artifactStore.createArtifact({
@@ -189,9 +192,10 @@ export const TriageActionHandlers: Record<
 
 function asAction<TAction extends SignalTriageAction["action"]>(
   action: SignalTriageAction,
-  expectedAction: TAction,
+  expectedAction: TAction
 ): Extract<SignalTriageAction, { action: TAction }> {
-  if (action.action !== expectedAction) throw new TriageActionError("INVALID_INPUT", `Expected action "${expectedAction}".`);
+  if (action.action !== expectedAction)
+    throw new TriageActionError("INVALID_INPUT", `Expected action "${expectedAction}".`);
   return action as Extract<SignalTriageAction, { action: TAction }>;
 }
 

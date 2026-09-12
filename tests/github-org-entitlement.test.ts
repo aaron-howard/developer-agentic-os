@@ -18,14 +18,29 @@ test("requiredGitHubOrgForTenant resolves per-tenant map and fallback", () => {
 
   assert.equal(requiredGitHubOrgForTenant("org-alpha", env), "alpha-github-org");
   assert.equal(requiredGitHubOrgForTenant("org-missing", env), "fallback-org");
-  assert.equal(requiredGitHubOrgForTenant("org-missing", { GITHUB_ORG: "fallback", GITHUB_ORG_MAP: "{not-json" }), "fallback");
+  assert.equal(
+    requiredGitHubOrgForTenant("org-missing", {
+      GITHUB_ORG: "fallback",
+      GITHUB_ORG_MAP: "{not-json",
+    }),
+    "fallback"
+  );
   assert.equal(requiredGitHubOrgForTenant("org-missing", {}), null);
 });
 
 test("githubOrgVerificationMessage returns operator-facing reasons", () => {
-  assert.equal(githubOrgVerificationMessage("acme", "no_token"), "Link your GitHub account to verify access to acme.");
-  assert.equal(githubOrgVerificationMessage("acme", "not_a_member"), "You're not a member of the acme GitHub org yet. Ask your admin to add you there.");
-  assert.equal(githubOrgVerificationMessage("acme", "api_error"), "We couldn't verify membership for acme on GitHub right now. Please try again.");
+  assert.equal(
+    githubOrgVerificationMessage("acme", "no_token"),
+    "Link your GitHub account to verify access to acme."
+  );
+  assert.equal(
+    githubOrgVerificationMessage("acme", "not_a_member"),
+    "You're not a member of the acme GitHub org yet. Ask your admin to add you there."
+  );
+  assert.equal(
+    githubOrgVerificationMessage("acme", "api_error"),
+    "We couldn't verify membership for acme on GitHub right now. Please try again."
+  );
   assert.equal(githubOrgVerificationMessage("acme", null), null);
 });
 
@@ -49,7 +64,9 @@ test("verifyGitHubOrgMembership classifies membership outcomes", async () => {
 
   const apiFailure = await verifyGitHubOrgMembership("user-1", "acme", {
     getAccessToken: async () => "token",
-    fetcher: async () => { throw new Error("network down"); },
+    fetcher: async () => {
+      throw new Error("network down");
+    },
   });
   assert.deepEqual(apiFailure, { verified: false, reason: "api_error" });
 });

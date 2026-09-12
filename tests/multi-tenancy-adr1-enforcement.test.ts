@@ -38,6 +38,9 @@ test("migration removes global email uniqueness and scopes it by tenant", async 
 
 test("migration script upserts artifacts and work items by tenant-scoped conflict keys", async () => {
   const script = await read(migrationScriptPath);
-  assert.equal((script.match(/ON CONFLICT \(tenant_id,\s*id\) DO NOTHING/g) ?? []).length >= 2, true);
+  assert.equal(
+    (script.match(/ON CONFLICT \(tenant_id,\s*id\) DO NOTHING/g) ?? []).length >= 2,
+    true
+  );
   assert.doesNotMatch(script, /ON CONFLICT \(id\) DO NOTHING/);
 });

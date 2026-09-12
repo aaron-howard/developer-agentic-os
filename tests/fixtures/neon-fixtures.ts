@@ -261,7 +261,9 @@ export async function dumpFixtureData(fixture: TestFixture): Promise<void> {
   console.log(`Tenant ID: ${fixture.tenantId}\n`);
 
   console.log("Artifacts:");
-  fixture.artifacts.forEach((a) => console.log(`  - ${String((a as { title?: unknown }).title ?? "")}`));
+  fixture.artifacts.forEach((a) =>
+    console.log(`  - ${String((a as { title?: unknown }).title ?? "")}`)
+  );
 
   console.log("\nWork Items:");
   fixture.workItems.forEach((w) => {
@@ -270,10 +272,14 @@ export async function dumpFixtureData(fixture: TestFixture): Promise<void> {
   });
 
   console.log("\nSkills:");
-  fixture.skills.forEach((s) => console.log(`  - ${String((s as { command?: unknown }).command ?? "")}`));
+  fixture.skills.forEach((s) =>
+    console.log(`  - ${String((s as { command?: unknown }).command ?? "")}`)
+  );
 
   console.log("\nRoutines:");
-  fixture.routines.forEach((r) => console.log(`  - ${String((r as { name?: unknown }).name ?? "")}`));
+  fixture.routines.forEach((r) =>
+    console.log(`  - ${String((r as { name?: unknown }).name ?? "")}`)
+  );
 
   console.log("\nRepos:");
   fixture.repos.forEach((r) =>

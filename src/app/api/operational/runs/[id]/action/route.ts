@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
 
 import { hostedIdentity } from "@/app/api/hosted/_shared";
-import { githubOrgVerificationMessage, requiredGitHubOrgForTenant, verifyGitHubOrgMembership } from "@/server/hosted-auth/github-link";
+import {
+  githubOrgVerificationMessage,
+  requiredGitHubOrgForTenant,
+  verifyGitHubOrgMembership,
+} from "@/server/hosted-auth/github-link";
 import { GitHubAdapter } from "@/server/integrations/github-adapter";
 import { VercelAdapter } from "@/server/integrations/vercel-adapter";
 import { OperationalStore, inputFingerprint } from "@/server/operational/operational-store";
@@ -36,6 +40,31 @@ export async function POST(
         { error: "Requested action does not match the approved action." },
         { status: 409 }
       );
+    if (body.providerAction === "github-rerun") {
+      const requiresHostedEntitlement =
+        Boolean(process.env.CLERK_SECRET_KEY) ||
+        request.headers.has("x-hosted-user-id") ||
+        request.headers.has("authorization");
+      if (requiresHostedEntitlement) {
+        const identity = await hostedIdentity(request);
+        if (identity instanceof NextResponse) return identity;
+        const requiredOrg = requiredGitHubOrgForTenant(identity.tenantId);
+        if (requiredOrg) {
+          const membership = await verifyGitHubOrgMembership(identity.userId, requiredOrg);
+          if (!membership.verified) {
+            return NextResponse.json(
+              {
+                error: githubOrgVerificationMessage(requiredOrg, membership.reason),
+                requiredOrg,
+                orgVerified: false,
+                orgVerificationReason: membership.reason,
+              },
+              { status: 403 }
+            );
+          }
+        }
+      }
+    }
     let action: { ok: boolean; status: number; response: Record<string, unknown> } | null;
     try {
       action =
